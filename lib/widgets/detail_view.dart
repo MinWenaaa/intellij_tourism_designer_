@@ -17,17 +17,17 @@ class POICard extends StatelessWidget {
   Widget build(BuildContext context) {
     switch(style){
       case 0:
-        return poiCard1(context);
+        return _poiCard1(context);
       case 1:
-        return poiCard2(context);
+        return _poiCard2(context);
       default:
         return Container();
     }
   }
 
-  Widget poiCard1(BuildContext context){
+  Widget _poiCard1(BuildContext context){
     return Row(
-        children:<Widget>[
+        children:[
           Flexible(
             flex:5,
             child: Column(
@@ -58,7 +58,7 @@ class POICard extends StatelessWidget {
         ]
     );
   }
-  Widget poiCard2(BuildContext context) {
+  Widget _poiCard2(BuildContext context) {
     return Row(
       children:<Widget>[
         Flexible(
@@ -106,7 +106,7 @@ class _POIDetailedViewState extends State<POIDetailedView> {
   @override
   Widget build(BuildContext context) {
     return Column(
-        children:<Widget>[
+        children: [
           const SizedBox(height:1),
           Image(image: AssetImage(poi.ImageURL)),
           SizedBox(

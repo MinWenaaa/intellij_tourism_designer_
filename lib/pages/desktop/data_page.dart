@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:intellij_tourism_designer/constants/theme.dart';
 import 'package:intellij_tourism_designer/widgets/map_view.dart';
 import 'package:intellij_tourism_designer/models/data_model.dart';
-import 'package:intellij_tourism_designer/widgets/city_stats.dart';
+import 'package:intellij_tourism_designer/pages/desktop/city_stats.dart';
 import 'package:intellij_tourism_designer/widgets/path_query.dart';
 import 'package:intellij_tourism_designer/helpers/POI_builder.dart';
 import 'package:intellij_tourism_designer/widgets/detail_view.dart';

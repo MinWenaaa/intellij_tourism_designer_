@@ -26,7 +26,7 @@ class _WelcomeState extends State<DemoMap> with TickerProviderStateMixin {
   static const _finishedId = 'AnimatedMapController#MoveFinished';
 
   late final MapController _mapController; //地图视角控制器
-  TileMap map = TileMap(MapServiceProvider.osm); // 底图
+  TileMap map = TileMap(MapServiceProvider.gaode); // 底图
   late var _markers = MarkerList.normalBookmark; // 地图标记
   bool _isDetail = false;
 
@@ -63,9 +63,7 @@ class _WelcomeState extends State<DemoMap> with TickerProviderStateMixin {
   }
   @override
   Widget build(BuildContext context) {
-    return Padding(
-        padding: const EdgeInsets.all(8),
-        child: LayoutBuilder(builder: (context, constraints) {
+    return LayoutBuilder(builder: (context, constraints) {
           return Column(
             children: [
               /*Padding(
@@ -84,15 +82,15 @@ class _WelcomeState extends State<DemoMap> with TickerProviderStateMixin {
                   children: [
                     ...mapBaseLayers(),
                     MarkerLayer(markers: _markers),
-                    ...mapDecorations(),
+                    //...mapDecorations(),
                   ],
                 ),
               )
             ],
           );
-        }));
+        });
   }
-
+  /*
   List<Widget> mapDecorations() {
     return [
       const FlutterMapZoomButtons(
@@ -117,18 +115,19 @@ class _WelcomeState extends State<DemoMap> with TickerProviderStateMixin {
     ];
   }
 
+
   List<Widget> mapChangeButtons() {
     List<MaterialButton> ButtonList = [
       MaterialButton(
         onPressed: () {
-          _changeMapProviderProvider(MapServiceProvider.osm);
+          _changeMapProviderProvider(MapServiceProvider.google);
           _changeBookmarkLevel(MarkerLevel.normal);
         },
         child: const Text('OpenStreetMap'),
       ),
       MaterialButton(
         onPressed: () {
-          _changeMapProviderProvider(MapServiceProvider.tianditu);
+          _changeMapProviderProvider(MapServiceProvider.mapbox);
           _changeBookmarkLevel(MarkerLevel.normal);
         },
         child: const Text('天地图'),
@@ -140,9 +139,16 @@ class _WelcomeState extends State<DemoMap> with TickerProviderStateMixin {
         },
         child: const Text('高德地图'),
       ),
+      MaterialButton(
+        onPressed: () {
+          _changeMapProviderProvider(MapServiceProvider.baidu);
+          _changeBookmarkLevel(MarkerLevel.none);
+        },
+        child: const Text('百度地图'),
+      )
     ];
     return ButtonList;
-  }
+  }*/
 
   List<Widget> controlButtons() {
     List<MaterialButton> ButtonList = [

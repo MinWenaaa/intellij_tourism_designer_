@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:intellij_tourism_designer/constants/theme.dart';
+import 'package:intellij_tourism_designer/route_utils.dart';
 import 'package:intellij_tourism_designer/widgets/map_view.dart';
 import 'package:intellij_tourism_designer/constants/constants.dart';
 import 'package:intellij_tourism_designer/widgets/detail_view.dart';
-//import 'package:intellij_tourism_designer/helpers/itinerary_builder.dart';
 
-//大概是人已经在路上的模块，还没想好叫什么名字
 
-class CompanionPage extends StatefulWidget {
-  const CompanionPage({super.key});
+class MemoryView extends StatefulWidget {
+  const MemoryView({super.key});
 
   @override
-  State<CompanionPage> createState() => _CompanionPageState();
+  State<MemoryView> createState() => _MemoryViewState();
 }
 
-class _CompanionPageState extends State<CompanionPage> {
+class _MemoryViewState extends State<MemoryView> {
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -26,8 +25,23 @@ class _CompanionPageState extends State<CompanionPage> {
             color:AppColors1.primaryColor3,
             child:WeatherCard(curWea:sampleWeather)
           )
+        ),
+        Positioned(
+          left: 20,top: 20,
+          child: _backButton()
         )
       ]
+    );
+  }
+
+  Widget _backButton(){
+    return GestureDetector(
+      onTap: (){
+        RouteUtils.pop(context);
+      },
+      child: Container(
+        child: Icon(Icons.arrow_back_ios),
+      ),
     );
   }
 }

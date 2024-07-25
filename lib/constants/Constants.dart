@@ -31,9 +31,19 @@ Itinerary sampleIti = Itinerary(name: "新建行程", wayPoints: [
   sampleWeather,
   sampleWeather
 ]);
+
 Weather sampleWeather = Weather(time: DateTime(2000), weather: "Sunny");
+
 Comment sampleCon = Comment(
     userName: "User",
     content: "好啊好啊",
     time: DateTime(2000),
     imageURL: ["assets/Sample.png", "assets/Sample.png", "assets/Sample.png"]);
+
+
+enum POItype{
+  attraction,
+  dining,
+  accomodation,
+  camera_postion,
+}

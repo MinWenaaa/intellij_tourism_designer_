@@ -5,13 +5,19 @@ pluginManagement {
         def flutterSdkPath = properties.getProperty("flutter.sdk")
         assert flutterSdkPath != null, "flutter.sdk not set in local.properties"
         return flutterSdkPath
-    }
-    settings.ext.flutterSdkPath = flutterSdkPath()
+    }()
 
-    includeBuild("${settings.ext.flutterSdkPath}/packages/flutter_tools/gradle")
+    includeBuild("$flutterSdkPath/packages/flutter_tools/gradle")
 
     repositories {
-        google()
+        maven { url=uri ("https://jitpack.io") }
+        maven { url=uri ("https://maven.aliyun.com/repository/releases") }
+        maven { url 'https://maven.aliyun.com/repository/jcenter' }
+        maven { url=uri ("https://maven.aliyun.com/repository/google") }
+        maven { url=uri ("https://maven.aliyun.com/repository/central") }
+        maven { url=uri ("https://maven.aliyun.com/repository/gradle-plugin") }
+        maven { url=uri ("https://maven.aliyun.com/repository/public") }
+        //google()
         mavenCentral()
         gradlePluginPortal()
     }
@@ -22,5 +28,21 @@ plugins {
     id "com.android.application" version "7.3.0" apply false
     id "org.jetbrains.kotlin.android" version "1.7.10" apply false
 }
+
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        maven { url=uri ("https://jitpack.io") }
+        maven { url=uri ("https://maven.aliyun.com/repository/releases") }
+        maven { url 'https://maven.aliyun.com/repository/jcenter' }
+        maven { url=uri ("https://maven.aliyun.com/repository/google") }
+        maven { url=uri ("https://maven.aliyun.com/repository/central") }
+        maven { url=uri ("https://maven.aliyun.com/repository/gradle-plugin") }
+        maven { url=uri ("https://maven.aliyun.com/repository/public") }
+        //google()
+        mavenCentral()
+    }
+}
+
 
 include ":app"

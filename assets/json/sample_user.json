@@ -1,0 +1,15 @@
+{
+  "id": "123456",
+  "password": "123456",
+  "user_name": "aaa",
+  "user_avatar": "https://gd-hbimg.huaban.com/0012232547458c7ce4599d0896c6ad5fc2cd8e4f368b7-bK8xeo_fw480webp",
+  "num_itinerary": 3,
+  "num_memory": 3,
+  "visit_history": [
+    "poi_id1",
+    "poi_id2",
+    "poi_id3",
+    "poi_id4",
+    "poi_id5"
+  ]
+}

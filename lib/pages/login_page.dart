@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intellij_tourism_designer/constants/theme.dart';
+import 'package:intellij_tourism_designer/route_utils.dart';
 
 //登录界面
 
@@ -16,7 +17,7 @@ class _LoginPageState extends State<LoginPage> {
   bool _rememberMe = false;
 
   void _login(){
-    Navigator.pushNamed(context, '/home');
+    RouteUtils.pop(context);
   }
 
   @override
