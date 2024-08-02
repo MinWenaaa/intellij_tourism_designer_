@@ -41,9 +41,11 @@ Comment sampleCon = Comment(
     imageURL: ["assets/Sample.png", "assets/Sample.png", "assets/Sample.png"]);
 
 
-enum POItype{
-  attraction,
-  dining,
-  accomodation,
-  camera_postion,
+class POItype{
+  POItype._();
+
+  static const String attraction = "旅游景点";
+  static const String dining = "餐饮美食";
+  static const String hotel = "酒店住宿";
+  static const String camera = "机位信息";
 }

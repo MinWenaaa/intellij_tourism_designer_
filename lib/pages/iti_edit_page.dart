@@ -25,44 +25,46 @@ class _ItiEditWidgetState extends State<ItiEditWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Row(
-        children:[
-          Flexible(
-            flex:1,
-            child: _days(),
-          ),
-          Flexible(
-            flex:5,
-            child: Column(
-              crossAxisAlignment:CrossAxisAlignment.center,
-              children:[
-                const SizedBox(height:5),
-                SizedBox(
-                  height:100,
-                  child: weatherView(widget.curIti.weathers[curDay])
-                ),
-                const SizedBox(height:5),
-                SizedBox(
-                    height:500,
-                    child: ListView(
-                      children:List.generate(widget.curIti.days[curDay].length,(index)=>
-                        ActCard(curAct: widget.curIti.days[curDay][index])
-                      )
-                    ),
+      body: SafeArea(
+        child: Row(
+          children:[
+            Flexible(
+              flex:1,
+              child: _days(),
+            ),
+            Flexible(
+              flex:5,
+              child: Column(
+                crossAxisAlignment:CrossAxisAlignment.center,
+                children:[
+                  const SizedBox(height:5),
+                  SizedBox(
+                    height:100,
+                    child: weatherView(widget.curIti.weathers[curDay])
                   ),
-                TextButton(
-                    onPressed:(){
-                      widget.curIti.days[curDay].add(sampleAct);
-                      setState((){});
-                    },
-                    style:AppButton.button1,
-                    child:const Icon(Icons.add),
-                  )
-                ]
+                  const SizedBox(height:5),
+                  SizedBox(
+                      height:500,
+                      child: ListView(
+                        children:List.generate(widget.curIti.days[curDay].length,(index)=>
+                          ActCard(curAct: widget.curIti.days[curDay][index])
+                        )
+                      ),
+                    ),
+                  TextButton(
+                      onPressed:(){
+                        widget.curIti.days[curDay].add(sampleAct);
+                        setState((){});
+                      },
+                      style:AppButton.button1,
+                      child:const Icon(Icons.add),
+                    )
+                  ]
+                )
               )
-            )
 
-        ]
+          ]
+        ),
       ),
     );
   }

@@ -16,21 +16,23 @@ class MemoryView extends StatefulWidget {
 class _MemoryViewState extends State<MemoryView> {
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children:[
-        const DemoMap(),
-        Positioned(
-          right:20,top:20,width:340,height:100,
-          child: Card(
-            color:AppColors1.primaryColor3,
-            child:WeatherCard(curWea:sampleWeather)
+    return SafeArea(
+      child: Stack(
+        children:[
+          const DemoMap(),
+          Positioned(
+            right:20,top:20,width:340,height:100,
+            child: Card(
+              color:AppColors1.primaryColor3,
+              child:WeatherCard(curWea:sampleWeather)
+            )
+          ),
+          Positioned(
+            left: 20,top: 20,
+            child: _backButton()
           )
-        ),
-        Positioned(
-          left: 20,top: 20,
-          child: _backButton()
-        )
-      ]
+        ]
+      ),
     );
   }
 

@@ -42,7 +42,7 @@ class Comment {
 
   Comment(
       {required this.userName,
-      required this.content,
-      required this.time,
-      required this.imageURL});
+        required this.content,
+        required this.time,
+        required this.imageURL});
 }
