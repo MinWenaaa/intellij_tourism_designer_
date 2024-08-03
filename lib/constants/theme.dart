@@ -19,9 +19,11 @@ class AppText {
 
   static const TextStyle bgStandard = TextStyle(color:AppColors1.backgroundColor,fontSize: 16);
   static const TextStyle pStandard = TextStyle(color:AppColors1.primaryColor,fontSize: 16);
-  static const TextStyle standard = TextStyle(color:AppColors1.textColor,fontSize: 16);
-  static const TextStyle small = TextStyle(color:AppColors1.textColor,fontSize: 12);
-  static const TextStyle big = TextStyle(color:AppColors1.textColor,fontSize: 16);
+  static const TextStyle Head1 = TextStyle(color: Colors.black, fontSize: 28);
+  static const TextStyle Head2 = TextStyle(color: Colors.black,fontSize: 20);
+  static const TextStyle standard = TextStyle(color:Colors.black87,fontSize: 16);
+  static const TextStyle small = TextStyle(color:Colors.black87,fontSize: 12);
+  static const TextStyle big = TextStyle(color:Colors.black87,fontSize: 16);
 
 }
 
