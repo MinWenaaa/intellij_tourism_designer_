@@ -53,7 +53,7 @@ dependencies:
   oktoast: ^3.4.0
   pull_to_refresh: ^2.0.0
   flutter_swiper_view: ^1.1.8
-  geolocator: ^10.1.0
+  geolocator: ^7.0.0
 
 dev_dependencies:
   flutter_test:

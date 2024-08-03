@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:intellij_tourism_designer/constants/Constants.dart';
 import 'package:intellij_tourism_designer/helpers/poi_list_view_data.dart';
 import 'package:intellij_tourism_designer/models/home_view_model.dart';
@@ -113,7 +114,7 @@ class _HomePageState extends State<HomePage> {
         itemCount: vm.listData?.length ?? 0,
         itemBuilder: (context, index) {
           return GestureDetector(
-            onTap: () {
+            onTap: () async {
               RouteUtils.push(context, Poidetailpage(id: vm.listData![index].pid??1));
             },
             child: _ListViewItem(vm.listData?[index]),
