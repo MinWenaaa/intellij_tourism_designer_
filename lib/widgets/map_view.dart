@@ -5,7 +5,6 @@ import 'package:intellij_tourism_designer/constants/markers.dart';
 import 'package:intellij_tourism_designer/constants/geojson.dart';
 import 'package:intellij_tourism_designer/constants/constants.dart';
 import 'package:intellij_tourism_designer/constants/locations.dart';
-import 'package:intellij_tourism_designer/widgets/zoom_button.dart';
 import 'package:intellij_tourism_designer/helpers/tile_providers.dart';
 import 'package:intellij_tourism_designer/helpers/geojson_providers.dart';
 
@@ -66,14 +65,6 @@ class _WelcomeState extends State<DemoMap> with TickerProviderStateMixin {
     return LayoutBuilder(builder: (context, constraints) {
           return Column(
             children: [
-              /*Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: Row(children: controlButtons())
-              ),
-              Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: Row(children: mapChangeButtons())
-              ),*/
               Flexible(
                 fit: FlexFit.tight,
                 child: FlutterMap(
