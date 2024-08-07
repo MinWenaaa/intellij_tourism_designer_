@@ -14,16 +14,16 @@ enum MapServiceProvider {
   gaode,
 }
 
-class TileMap {
+class BaseTileMap {
   //瓦片地图封装类
   final MapServiceProvider provider;
   final TileLayer map;
   final TextSourceAttribution info;
 
-  TileMap(MapServiceProvider mapProvider)
+  BaseTileMap(MapServiceProvider mapProvider)
       : provider = mapProvider,
-        map = _tileMap(mapProvider),
-        info = _tileInfo(mapProvider);
+        map = _baseTileMap(mapProvider),
+        info = _baseTileInfo(mapProvider);
 }
 
 //瓦片地图服务商实例化
@@ -69,7 +69,7 @@ TileLayer get gaodeTileLayer => TileLayer(
       tileProvider: CancellableNetworkTileProvider(),
     );
 
-TextSourceAttribution _tileInfo(MapServiceProvider provider) {
+TextSourceAttribution _baseTileInfo(MapServiceProvider provider) {
   TextSourceAttribution info;
   switch (provider) {
     case MapServiceProvider.osm:
@@ -115,7 +115,7 @@ TextSourceAttribution _tileInfo(MapServiceProvider provider) {
   return info;
 }
 
-TileLayer _tileMap(MapServiceProvider provider) {
+TileLayer _baseTileMap(MapServiceProvider provider) {
   //assert(provider != null, 'provider must not be null');
   TileLayer tileLayer;
 
@@ -142,4 +142,17 @@ TileLayer _tileMap(MapServiceProvider provider) {
       throw AssertionError('Unsupported TileProvider $provider.');
   }
   return tileLayer;
+}
+
+
+
+TileLayer WMS_ours({required String layerName}) {
+  return TileLayer(
+    wmsOptions: WMSTileLayerOptions(
+      baseUrl: "http://182.92.251.24:8080/geoserver/Esri_c657/wms?",
+      layers: [layerName],
+      otherParameters: {"request":"GetMap"},
+    ),
+    tileProvider: CancellableNetworkTileProvider(),
+  );
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intellij_tourism_designer/widgets/zoom_button.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:intellij_tourism_designer/constants/markers.dart';
@@ -7,6 +8,17 @@ import 'package:intellij_tourism_designer/constants/constants.dart';
 import 'package:intellij_tourism_designer/constants/locations.dart';
 import 'package:intellij_tourism_designer/helpers/tile_providers.dart';
 import 'package:intellij_tourism_designer/helpers/geojson_providers.dart';
+
+//用于判断地图移动的状态从而优化地图移动的动画
+class MapAnimation{
+  MapAnimation._();
+
+  static const startedId = 'AnimatedMapController#MoveStarted';
+  static const inProgressId = 'AnimatedMapController#MoveInProgress';
+  static const finishedId = 'AnimatedMapController#MoveFinished';
+}
+
+
 
 class DemoMap extends StatefulWidget {
   const DemoMap({super.key});
@@ -19,13 +31,8 @@ class _WelcomeState extends State<DemoMap> with TickerProviderStateMixin {
  *首页用于显示路径点选规划过程的地图.
 */
 
-  //用于判断地图移动的状态从而优化地图移动的动画
-  static const _startedId = 'AnimatedMapController#MoveStarted';
-  static const _inProgressId = 'AnimatedMapController#MoveInProgress';
-  static const _finishedId = 'AnimatedMapController#MoveFinished';
-
   late final MapController _mapController; //地图视角控制器
-  TileMap map = TileMap(MapServiceProvider.gaode); // 底图
+  BaseTileMap baseTile = BaseTileMap(MapServiceProvider.gaode); // 底图
   late var _markers = MarkerList.normalBookmark; // 地图标记
   bool _isDetail = false;
 
@@ -53,7 +60,8 @@ class _WelcomeState extends State<DemoMap> with TickerProviderStateMixin {
 
   List<Widget> mapBaseLayers() {
     List<Widget> layers = [
-      map.map,
+      baseTile.map,
+      //test,
       if (_isDetail) ...polygonsGeoJSON.mapFeature(buildingGeoJSON),
       if (_isDetail) ...pointsGeoJSON.mapFeature(entranceGeoJSON),
       if (_isDetail) ...polylinesGeoJSON.mapFeature(roadGeoJSON),
@@ -63,25 +71,21 @@ class _WelcomeState extends State<DemoMap> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
-          return Column(
-            children: [
-              Flexible(
-                fit: FlexFit.tight,
-                child: FlutterMap(
-                  mapController: _mapController,
-                  options: initMapOption(),
-                  children: [
-                    ...mapBaseLayers(),
-                    MarkerLayer(markers: _markers),
-                    //...mapDecorations(),
-                  ],
-                ),
-              )
-            ],
-          );
-        });
+      return FlutterMap(children: [
+          ...mapBaseLayers(),
+          MarkerLayer(markers: _markers),
+          ...mapDecorations(),
+          GestureDetector(
+
+          )
+        ],
+        mapController: _mapController,
+        options: initMapOption(),
+        );
+      }
+    );
   }
-  /*
+
   List<Widget> mapDecorations() {
     return [
       const FlutterMapZoomButtons(
@@ -96,7 +100,7 @@ class _WelcomeState extends State<DemoMap> with TickerProviderStateMixin {
         animationConfig: const ScaleRAWA(),
         showFlutterMapAttribution: false,
         attributions: [
-          map.info,
+          baseTile.info,
           const TextSourceAttribution(
             "首页用于显示路径点选规划过程的地图.",
             prependCopyright: false,
@@ -139,7 +143,7 @@ class _WelcomeState extends State<DemoMap> with TickerProviderStateMixin {
       )
     ];
     return ButtonList;
-  }*/
+  }
 
   List<Widget> controlButtons() {
     List<MaterialButton> ButtonList = [
@@ -181,9 +185,8 @@ class _WelcomeState extends State<DemoMap> with TickerProviderStateMixin {
   }
 
   void _changeMapProviderProvider(MapServiceProvider provider) {
-    setState(() {
-      map = TileMap(provider);
-    });
+    baseTile = BaseTileMap(provider);
+    setState(() {});
   }
 
   void _changeBookmarkLevel(MarkerLevel level) {
@@ -225,17 +228,17 @@ class _WelcomeState extends State<DemoMap> with TickerProviderStateMixin {
     // to detect an appropriate animated movement event which contains the
     // target zoom/center.
     final startIdWithTarget =
-        '$_startedId#${destLocation.latitude},${destLocation.longitude},$destZoom';
+        '$MapAnimation.startedId#${destLocation.latitude},${destLocation.longitude},$destZoom';
     bool hasTriggeredMove = false;
 
     controller.addListener(() {
       final String id;
       if (animation.value == 1.0) {
-        id = _finishedId;
+        id = MapAnimation.finishedId;
       } else if (!hasTriggeredMove) {
         id = startIdWithTarget;
       } else {
-        id = _inProgressId;
+        id = MapAnimation.inProgressId;
       }
 
       hasTriggeredMove |= _mapController.move(

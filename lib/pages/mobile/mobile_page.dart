@@ -14,7 +14,7 @@ class MobilePage extends StatefulWidget {
 
 class _MobilePageState extends State<MobilePage> {
 
-  int currentIndex = 0;
+  int currentIndex = 2;
 
   @override
   Widget build(BuildContext context) {
