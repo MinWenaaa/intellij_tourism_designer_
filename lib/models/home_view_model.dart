@@ -19,9 +19,8 @@ class HomeViewModel with ChangeNotifier{
       }else{
         listData = value;
       }
+      notifyListeners();
     });
-
-    notifyListeners();
   }
 }
 

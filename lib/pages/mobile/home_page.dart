@@ -4,7 +4,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:intellij_tourism_designer/constants/Constants.dart';
 import 'package:intellij_tourism_designer/helpers/poi_list_view_data.dart';
 import 'package:intellij_tourism_designer/models/home_view_model.dart';
-import 'package:intellij_tourism_designer/pages/mobile/POIDetailPage.dart';
+import 'package:intellij_tourism_designer/pages/mobile/poi_detail_page.dart';
 import 'package:intellij_tourism_designer/route_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';

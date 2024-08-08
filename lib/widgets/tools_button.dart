@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:intellij_tourism_designer/widgets/buttom_sheet.dart';
 
 class FlutterMapZoomButtons extends StatelessWidget {
   final double minZoom;
@@ -72,6 +73,39 @@ class FlutterMapZoomButtons extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class ToolsButton extends StatelessWidget {
+  const ToolsButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.bottomRight,
+      child: Container(
+        margin: EdgeInsets.symmetric(horizontal: 12, vertical: 24),
+        width: 50, height: 80,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(18)),
+            color: Colors.white
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            GestureDetector(
+              child: Text("工具"),
+              onTap: (){ToolsButtomSheet(context);},
+            ),
+            Divider(height: 1,),
+            GestureDetector(
+              child: Text("图层"),
+              onTap: (){LayerSetButtomSheet(context);},
+            )
+          ],
+        ),
       ),
     );
   }

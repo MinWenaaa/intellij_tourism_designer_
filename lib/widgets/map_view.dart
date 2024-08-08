@@ -1,24 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:intellij_tourism_designer/widgets/zoom_button.dart';
+import 'package:intellij_tourism_designer/models/map_view_model.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:intellij_tourism_designer/constants/markers.dart';
-import 'package:intellij_tourism_designer/constants/geojson.dart';
 import 'package:intellij_tourism_designer/constants/constants.dart';
 import 'package:intellij_tourism_designer/constants/locations.dart';
 import 'package:intellij_tourism_designer/helpers/tile_providers.dart';
-import 'package:intellij_tourism_designer/helpers/geojson_providers.dart';
+import 'package:provider/provider.dart';
 
-//用于判断地图移动的状态从而优化地图移动的动画
+/*
+ 基本地图视图
+*/
+
+
 class MapAnimation{
+  //用于判断地图移动的状态从而优化地图移动的动画
   MapAnimation._();
 
   static const startedId = 'AnimatedMapController#MoveStarted';
   static const inProgressId = 'AnimatedMapController#MoveInProgress';
   static const finishedId = 'AnimatedMapController#MoveFinished';
+
 }
-
-
 
 class DemoMap extends StatefulWidget {
   const DemoMap({super.key});
@@ -27,14 +29,8 @@ class DemoMap extends StatefulWidget {
 }
 
 class _WelcomeState extends State<DemoMap> with TickerProviderStateMixin {
-/*
- *首页用于显示路径点选规划过程的地图.
-*/
 
   late final MapController _mapController; //地图视角控制器
-  BaseTileMap baseTile = BaseTileMap(MapServiceProvider.gaode); // 底图
-  late var _markers = MarkerList.normalBookmark; // 地图标记
-  bool _isDetail = false;
 
   @override
   void initState() {
@@ -58,150 +54,36 @@ class _WelcomeState extends State<DemoMap> with TickerProviderStateMixin {
     );
   }
 
-  List<Widget> mapBaseLayers() {
-    List<Widget> layers = [
-      baseTile.map,
-      //test,
-      if (_isDetail) ...polygonsGeoJSON.mapFeature(buildingGeoJSON),
-      if (_isDetail) ...pointsGeoJSON.mapFeature(entranceGeoJSON),
-      if (_isDetail) ...polylinesGeoJSON.mapFeature(roadGeoJSON),
-    ];
-    return layers;
-  }
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
-      return FlutterMap(children: [
-          ...mapBaseLayers(),
-          MarkerLayer(markers: _markers),
-          ...mapDecorations(),
-          GestureDetector(
-
-          )
-        ],
+      return FlutterMap(
         mapController: _mapController,
         options: initMapOption(),
-        );
-      }
-    );
-  }
-
-  List<Widget> mapDecorations() {
-    return [
-      const FlutterMapZoomButtons(
-        maxZoom: MAXZOOM,
-        minZoom: MINZOOM,
-        mini: true,
-        padding: 10,
-        alignment: Alignment.topLeft,
-      ),
-      RichAttributionWidget(
-        popupInitialDisplayDuration: const Duration(seconds: 5),
-        animationConfig: const ScaleRAWA(),
-        showFlutterMapAttribution: false,
-        attributions: [
-          baseTile.info,
-          const TextSourceAttribution(
-            "首页用于显示路径点选规划过程的地图.",
-            prependCopyright: false,
+        children: [
+          Selector<MapViewModel, String>(
+            selector: (context, provider) => provider.mapProvider,
+            builder: (context, data, child) => baseTileLayer(data),
           ),
+/*
+          ...List.generate(4, (index) =>
+            Selector<MapViewModel, bool>(
+              selector: (context, provider) => provider.thematicMap[index],
+              builder: (context, flag, child) => flag ?
+                WMS_ours(layerName: MapServiceProvider.thematicLayerName[index]) : const SizedBox(),
+            )
+          ),
+
+          ...List.generate(4, (index) =>
+              Selector<MapViewModel, bool>(
+                selector: (context, provider) => provider.thematicMap[index],
+                builder: (context, flag, child) => flag ?
+                WMS_ours(layerName: MapServiceProvider.thematicLayerName[index]) : const SizedBox(),
+              )
+          )*/
+
         ],
-      ),
-    ];
-  }
-
-
-  List<Widget> mapChangeButtons() {
-    List<MaterialButton> ButtonList = [
-      MaterialButton(
-        onPressed: () {
-          _changeMapProviderProvider(MapServiceProvider.google);
-          _changeBookmarkLevel(MarkerLevel.normal);
-        },
-        child: const Text('OpenStreetMap'),
-      ),
-      MaterialButton(
-        onPressed: () {
-          _changeMapProviderProvider(MapServiceProvider.mapbox);
-          _changeBookmarkLevel(MarkerLevel.normal);
-        },
-        child: const Text('天地图'),
-      ),
-      MaterialButton(
-        onPressed: () {
-          _changeMapProviderProvider(MapServiceProvider.gaode);
-          _changeBookmarkLevel(MarkerLevel.none);
-        },
-        child: const Text('高德地图'),
-      ),
-      MaterialButton(
-        onPressed: () {
-          _changeMapProviderProvider(MapServiceProvider.baidu);
-          _changeBookmarkLevel(MarkerLevel.none);
-        },
-        child: const Text('百度地图'),
-      )
-    ];
-    return ButtonList;
-  }
-
-  List<Widget> controlButtons() {
-    List<MaterialButton> ButtonList = [
-      MaterialButton(
-        onPressed: () {
-          setState(() {
-            if (_isDetail) {
-              _changeBookmarkLevel(MarkerLevel.normal);
-            } else {
-              _changeBookmarkLevel(MarkerLevel.detailed);
-            }
-            _isDetail = !_isDetail;
-          });
-        },
-        child: _isDetail ? const Text('隐藏未来城校园信息') : const Text('显示未来城校园信息'),
-      ),
-      MaterialButton(
-        //onPressed: () => _mapController.move(Location.nanwangshan, 15),
-        onPressed: () => _animatedMapMove(Location.nanwangshan, 15),
-        child: const Text('南望山校区'),
-      ),
-      MaterialButton(
-        //onPressed: () => _mapController.move(Location.weilaicheng, 15),
-        onPressed: () => _animatedMapMove(Location.weilaicheng, 15),
-        child: const Text('未来城校区'),
-      ),
-      MaterialButton(
-        //onPressed: () => _mapController.move(Location.home, 10),
-        onPressed: () => _animatedMapMove(Location.home, 10),
-        child: const Text('我的家乡'),
-      ),
-      MaterialButton(
-        //onPressed: () => _mapController.move(Location.wuhan, 7),
-        onPressed: () => _animatedMapMove(Location.wuhan, 7),
-        child: const Text('武汉市公园绿地'),
-      )
-    ];
-    return ButtonList;
-  }
-
-  void _changeMapProviderProvider(MapServiceProvider provider) {
-    baseTile = BaseTileMap(provider);
-    setState(() {});
-  }
-
-  void _changeBookmarkLevel(MarkerLevel level) {
-    setState(() {
-      switch (level) {
-        case MarkerLevel.normal:
-          _markers = MarkerList.normalBookmark;
-          break;
-        case MarkerLevel.none:
-          _markers = MarkerList.noneBookmark;
-          break;
-        case MarkerLevel.detailed:
-          _markers = MarkerList.weilaichengBookmark;
-          break;
-      }
+      );
     });
   }
 
