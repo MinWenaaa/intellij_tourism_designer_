@@ -7,6 +7,8 @@ import 'package:intellij_tourism_designer/widgets/map_view.dart';
 import 'package:intellij_tourism_designer/widgets/tools_button.dart';
 import 'package:provider/provider.dart';
 
+import '../../widgets/searching_bar.dart';
+
 /*
   地图查看模块
  */
@@ -46,6 +48,7 @@ class _MapPageState extends State<MapPage> {
                   ),
                 ),
                 ToolsButton(),
+                SearchingBar(),
               ],
             )
           ),

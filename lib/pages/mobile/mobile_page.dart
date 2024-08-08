@@ -3,6 +3,7 @@ import 'package:intellij_tourism_designer/pages/mobile/map_page.dart';
 import 'package:intellij_tourism_designer/pages/iti_list_page.dart';
 import 'package:intellij_tourism_designer/pages/memory_list_page.dart';
 import 'package:intellij_tourism_designer/pages/mobile/user_page.dart';
+import 'package:intellij_tourism_designer/widgets/searching_bar.dart';
 import 'home_page.dart';
 
 class MobilePage extends StatefulWidget {
