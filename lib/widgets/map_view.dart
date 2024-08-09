@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:intellij_tourism_designer/models/map_view_model.dart';
+import 'package:intellij_tourism_designer/models/global_model.dart';
+import 'package:intellij_tourism_designer/widgets/tools_button.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:intellij_tourism_designer/constants/constants.dart';
@@ -40,7 +41,7 @@ class _WelcomeState extends State<DemoMap> with TickerProviderStateMixin {
 
   MapOptions initMapOption() {
     return MapOptions(
-      initialCenter: Location.nanwangshan,
+      initialCenter: LatLng(30.6,114.3),
       initialZoom: 16.5,
       maxZoom: MAXZOOM,
       minZoom: MINZOOM,
@@ -61,10 +62,12 @@ class _WelcomeState extends State<DemoMap> with TickerProviderStateMixin {
         mapController: _mapController,
         options: initMapOption(),
         children: [
-          Selector<MapViewModel, String>(
-            selector: (context, provider) => provider.mapProvider,
+          Selector<GlobalModel, int>(
+            selector: (context, provider) => provider.baseProvider,
             builder: (context, data, child) => baseTileLayer(data),
           ),
+          //WMS_ours(layerName: "240620_wuhan_0"),
+          //WCS_ours(layerName: "usa"),
 /*
           ...List.generate(4, (index) =>
             Selector<MapViewModel, bool>(

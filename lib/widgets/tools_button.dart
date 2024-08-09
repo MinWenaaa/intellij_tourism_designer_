@@ -78,6 +78,8 @@ class FlutterMapZoomButtons extends StatelessWidget {
   }
 }
 
+
+
 class ToolsButton extends StatelessWidget {
   const ToolsButton({super.key});
 
@@ -97,16 +99,27 @@ class ToolsButton extends StatelessWidget {
           children: [
             GestureDetector(
               child: Text("工具"),
-              onTap: (){ToolsButtomSheet(context);},
+              onTap: () => showModalBottomSheet<void>(
+                  context: context,
+                  builder: (context)=>ToolsSettingDemo()),
             ),
             Divider(height: 1,),
             GestureDetector(
               child: Text("图层"),
-              onTap: (){LayerSetButtomSheet(context);},
+              onTap: () => showModalBottomSheet<void>(
+                context: context,
+                builder: (context)=>LayerSettingDemo()),
             )
           ],
         ),
       ),
     );
   }
+
+  Future<dynamic> comeUp(BuildContext context, Widget child){
+    return showModalBottomSheet<void>(
+        context: context,
+        builder: (BuildContext context)=>child);
+  }
+
 }

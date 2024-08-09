@@ -3,7 +3,7 @@ import 'package:intellij_tourism_designer/route_utils.dart';
 import 'package:intellij_tourism_designer/widgets/map_view.dart';
 import 'package:intellij_tourism_designer/widgets/tools_button.dart';
 import 'package:provider/provider.dart';
-import '../../models/map_view_model.dart';
+import '../../models/global_model.dart';
 
 class RecordPage extends StatefulWidget {
   const RecordPage({super.key});
@@ -14,11 +14,11 @@ class RecordPage extends StatefulWidget {
 
 class _RecordPageState extends State<RecordPage> {
 
-  MapViewModel viewModel = MapViewModel();
+  GlobalModel viewModel = GlobalModel();
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<MapViewModel>(
+    return ChangeNotifierProvider<GlobalModel>(
       create: (context){return viewModel;},
       child: Scaffold(
           body: SafeArea(

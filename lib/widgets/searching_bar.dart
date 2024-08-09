@@ -33,7 +33,7 @@ class _SearchingBarState extends State<SearchingBar> {
             actions: _actions(),
             progress: model.isLoadding,
             onQueryChanged: (query)=>model.onQueryChanged(type: "旅游景点", keyword: query),
-            builder: (BuildContext context, _) => _buildExpandableBody(model),
+            builder: (BuildContext context, _) => _buildExpandableBody(model, context),
             onKeyEvent: (KeyEvent keyEvent) {
               if (keyEvent.logicalKey == LogicalKeyboardKey.escape) {
                 controller.query = '';
@@ -60,7 +60,7 @@ class _SearchingBarState extends State<SearchingBar> {
     ];
   }
 
-  Widget _buildExpandableBody(SearchModel model){
+  Widget _buildExpandableBody(SearchModel model, BuildContext context){
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16),
       child: Material(
@@ -70,11 +70,15 @@ class _SearchingBarState extends State<SearchingBar> {
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
-            children: List.generate(model.itemList.length, (index)=>Container(
-              width: 240, height: 100,
-              child: _searchItem(context, model.itemList[index]!, model.itemList.length-1==index),
-            ))
-          ),
+            children: List.generate(model.itemList.length,
+              (index)=>Builder(builder: (context)=>
+                Container(
+                  width: 240, height: 100,
+                  child: _searchItem(context, model.itemList[index]!, model.itemList.length-1==index),
+                )
+              )
+            )
+          )
         )
       ),
     );
@@ -83,10 +87,9 @@ class _SearchingBarState extends State<SearchingBar> {
   Widget _searchItem(BuildContext context, SearchItemData item, bool isLast){
     return Column(
       children: [
-        GestureDetector(
+        InkWell(
           onTap: (){
             FloatingSearchBar.of(context)?.close();
-            searchModel.clear();
           },
           child: Row(
               children: [
@@ -100,11 +103,11 @@ class _SearchingBarState extends State<SearchingBar> {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text(item.pname??"",),
+                      Text(item.pname??"",maxLines: 1,),
                       const SizedBox(height: 2),
-                      Text(item.pintroduceShort??""),
+                      Text(item.pintroduceShort??"",maxLines: 1,),
                       const SizedBox(height: 2),
-                      Text(item.paddress??""),
+                      Text(item.paddress??"",maxLines: 1,),
                     ],
                   ),
                 ),

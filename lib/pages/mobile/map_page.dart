@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intellij_tourism_designer/models/map_view_model.dart';
+import 'package:intellij_tourism_designer/models/global_model.dart';
 import 'package:intellij_tourism_designer/pages/mobile/record_page.dart';
 import 'package:intellij_tourism_designer/route_utils.dart';
 import 'package:intellij_tourism_designer/widgets/map_view.dart';
@@ -22,7 +22,6 @@ class MapPage extends StatefulWidget {
 
 class _MapPageState extends State<MapPage> {
 
-  MapViewModel viewModel = MapViewModel();
 
   @override
   void initState(){
@@ -32,9 +31,7 @@ class _MapPageState extends State<MapPage> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<MapViewModel>(
-      create: (context){return viewModel;},
-      child: Scaffold(
+    return Scaffold(
         body: SafeArea(
           child: Expanded(
             child:  Stack(
@@ -53,7 +50,6 @@ class _MapPageState extends State<MapPage> {
             )
           ),
         )
-      ),
     );
   }
 
