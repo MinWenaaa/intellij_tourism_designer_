@@ -61,6 +61,8 @@ class _DeskTopPageState extends State<DeskTopPage> {
                 MapPage(),
                 ItineraryPage(),
                 CityStatsPage(),
+                CityStatsPage(),
+                CityStatsPage(),
               ],
             ),
           )

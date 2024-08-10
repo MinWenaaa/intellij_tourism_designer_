@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:intellij_tourism_designer/constants/theme.dart';
+import 'package:intellij_tourism_designer/http/Api.dart';
+import 'package:intellij_tourism_designer/pages/desktop/desktop_page.dart';
+import 'package:intellij_tourism_designer/pages/mobile/mobile_page.dart';
+import 'package:intellij_tourism_designer/pages/register_page.dart';
 import 'package:intellij_tourism_designer/route_utils.dart';
+import 'package:oktoast/oktoast.dart';
+import 'package:provider/provider.dart';
+
+import '../models/global_model.dart';
 
 //登录界面
 
@@ -12,132 +20,88 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  bool _rememberMe = false;
 
-  void _login(){
-    RouteUtils.pop(context);
-  }
+  String _userName = "";
+  String _passWord = "";
 
   @override
   Widget build(BuildContext context) {
+
+    final vm = Provider.of<GlobalModel>(context,listen: false);
+
     return Scaffold(
-      backgroundColor:AppColors.primary,
-      body:Center(
-        child:SizedBox(
-          width:780,
-          height:520,
-          child:Card(
-            //surfaceTintColor:AppColors.backgroundColor,
-            //shadowColor:AppColors.accentColor,
-            elevation:14,
-            shape: const Border(),
-            clipBehavior:Clip.antiAlias,
-            child:Row(
-              children:<Widget>[
-                Container(
-                  width:420,
-                  height:520,
-                  color:AppColors.primary,
-                  child:const Center(
-                    child:Column(
-                      children:<Widget>[
-                        SizedBox(height:200),
-                        Text("Welcome Page",style:TextStyle(fontSize: 36, letterSpacing:2)),
-                        Text("sign in to your accout",style:TextStyle(fontSize: 12, letterSpacing:1))
-                      ]
-                    )
-                  )
+        backgroundColor: Colors.teal,
+        body: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 8),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _commonInput(lableText: "账号", controller: _usernameController,
+                callback: (value)=>_userName=value),
+              SizedBox(height: 20,),
+              _commonInput(lableText: "密码", controller: _passwordController,
+                callback: (value)=>_passWord=value),
+              SizedBox(height: 50,),
+              GestureDetector(
+                onTap: () async {
+                  await vm.Login(name: _userName, password: _passWord).then((value){
+                    if(value){
+                      RouteUtils.push(context, MobilePage());
+                    }else{
+                    showToast("账号或密码错误");
+                    }
+                  });
+                },
+                child: Container(
+                  width: double.infinity, height: 45,
+                  margin: EdgeInsets.symmetric(horizontal: 40),
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.white, width: 1),
+                      borderRadius: BorderRadius.all(Radius.circular(22.5))
+                  ),
+                  child: Text("登录", style: TextStyle(fontSize: 14, color: Colors.white)),
                 ),
-                SizedBox(
-                  width:350,
-                  height:520,
-                  child:Column(
-                  children: <Widget>[
-                    const SizedBox(height:52),
-                    const SizedBox(
-                      height:120,
-                      child:Row(
-                      children:<Widget>[
-                        SizedBox(width:26),
-                        Icon(Icons.map,size:90,color:AppColors.primary),
-                        SizedBox(width:6),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children:<Widget>[
-                          SizedBox(height:32),
-                          Text("Hello!",style:TextStyle(fontSize:20,color:AppColors.matter)),
-                          Text("Good Morning",style:TextStyle(fontSize:20,color:AppColors.primary)),
-                        ]
-                      )
-                    ]
-                  )
+              ),
+              SizedBox(height: 20,),
+              GestureDetector(
+                onTap: (){
+                  RouteUtils.push(context, RegisterPage());
+                },
+                child: Container(
+                  alignment: Alignment.center,
+                  width: 100, height: 45,
+                  child: Text("注册", style: TextStyle(fontSize: 14, color: Colors.white)),
                 ),
-                    Row(
-                    children:<Widget>[
-                      const SizedBox(width:55),
-                      SizedBox(
-                        width:230,
-                        child:Column(
-                        children:<Widget>[
-                          TextField(
-                          controller: _usernameController,
-                          decoration: const InputDecoration(
-                            contentPadding: EdgeInsets.fromLTRB(16.0, 10.0, 16.0, 0),
-                            labelText: '用户名',
-                            labelStyle:AppText.matter
-                            ),
-                          ),
-                          const SizedBox(height: 32),
-                          TextField(
-                            controller: _passwordController,
-                            obscureText: true,
-                            decoration: const InputDecoration(
-                              contentPadding: EdgeInsets.fromLTRB(16.0, 10.0, 16.0,0),
-                              labelText: '密码',
-                              labelStyle:AppText.matter
-                            ),
-                          ),
-                          const SizedBox(height: 22),
-                          Row(
-                            children: [
-                              Checkbox(
-                                value: _rememberMe,
-                                activeColor:AppColors.primary,
-                                hoverColor:AppColors.primary,
-                                splashRadius: 8,
-                                visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
-                                onChanged: (value) {
-                                  setState(() {_rememberMe = value ?? false;});
-                                },
-                              ),
-                              const Text('记住我',style:TextStyle(fontSize: 10,color:AppColors.matter))
-                            ],
-                          ),
-                          const SizedBox(height: 26),
-                          SizedBox(
-                            height:36,
-                            width:230,
-                            child:ElevatedButton(
-                              style:AppButton.button1,
-                              onPressed: _login,
-                              child: const Text('注册/登录'),
-                            )
-                          )
-                        ]
-                      )
-                    )
-                  ]
-                )
-              ],
-            ),
-          )
-        ]
-      )
-    )
-    )
-    )
+              ),
+              SizedBox(height: 20,),
+            ],
+          ),
+        )
+    );
+  }
+
+  Widget _commonInput(
+      {required TextEditingController controller,
+        required callback,
+        required String lableText}){
+    return TextField(
+      controller: controller,
+      onChanged: callback,
+      style: TextStyle(color: Colors.white, fontSize: 14),
+      decoration: InputDecoration(
+          enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.white, width: 0.5)
+          ),
+          focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.white, width: 1)
+          ),
+          labelText: lableText,
+          labelStyle: TextStyle(color: Colors.white)
+      ),
     );
   }
 }
