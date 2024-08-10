@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intellij_tourism_designer/constants/theme.dart';
 import 'package:intellij_tourism_designer/models/global_model.dart';
 import 'package:intellij_tourism_designer/pages/mobile/record_page.dart';
 import 'package:intellij_tourism_designer/route_utils.dart';
@@ -39,10 +40,10 @@ class _MapPageState extends State<MapPage> {
                 DemoMap(),
                 Align(
                   alignment: Alignment.bottomCenter,
-                  child: ElevatedButton(
-                    child: Text("开始记录"),
-                    onPressed: (){RouteUtils.push(context, RecordPage());},
-                  ),
+                  child: primaryInkWell(
+                    callback: () => RouteUtils.push(context, RecordPage()),
+                    text: "开始记录",
+                  )
                 ),
                 ToolsButton(),
                 SearchingBar(),

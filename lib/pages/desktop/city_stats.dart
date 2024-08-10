@@ -21,7 +21,7 @@ class _CityStatsPageState extends State<CityStatsPage> {
     return SizedBox(
       height: size.height - AppSize.buttonHeight1,
       width:size.width-AppSize.toolBarWidth1,
-      child:const CityFeatureStackBarChart()
+      child:Container()//const CityFeatureStackBarChart()
     );
   }
 }

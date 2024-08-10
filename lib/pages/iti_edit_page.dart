@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intellij_tourism_designer/route_utils.dart';
-import 'package:provider/provider.dart';
 import 'package:intellij_tourism_designer/constants/theme.dart';
-import 'package:intellij_tourism_designer/models/data_model.dart';
 import 'package:intellij_tourism_designer/constants/constants.dart';
 import 'package:intellij_tourism_designer/widgets/detail_view.dart';
 import 'package:intellij_tourism_designer/helpers/itinerary_builder.dart';
@@ -71,7 +69,7 @@ class _ItiEditWidgetState extends State<ItiEditWidget> {
 
   Widget _days(){
     return Container(
-        color:AppColors1.primaryColor,
+        color:AppColors.primary,
         child:Column(
           children: [
             GestureDetector(
@@ -111,15 +109,15 @@ class _ItiEditWidgetState extends State<ItiEditWidget> {
       children:[
         Flexible(
           flex:3,
-          child:Icon(Icons.sunny,color:AppColors1.primaryColor),
+          child:Icon(Icons.sunny,color:AppColors.primary),
         ),
         Flexible(
           flex:5,
           child:Column(
             children:[
-              Text("时间",style: AppText.big),
-              Text("天气",style: AppText.big),
-              Text("温度",style: AppText.big),
+              Text("时间",style: AppText.Head2),
+              Text("天气",style: AppText.Head2),
+              Text("温度",style: AppText.Head2),
             ]
           )
         )

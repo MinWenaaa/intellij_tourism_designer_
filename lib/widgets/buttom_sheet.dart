@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intellij_tourism_designer/helpers/tile_providers.dart';
 import 'package:intellij_tourism_designer/models/global_model.dart';
+import 'package:intellij_tourism_designer/pages/mobile/free_plan_page.dart';
+import 'package:intellij_tourism_designer/route_utils.dart';
 import 'package:provider/provider.dart';
 
 class LayerSettingDemo extends StatefulWidget {
@@ -20,6 +22,7 @@ class _LayerSettingDemoState extends State<LayerSettingDemo> {
   @override
   Widget build(BuildContext context) {
     final vm = Provider.of<GlobalModel>(context,listen: false);
+
     return Container(
       height: 400,
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 24),
@@ -113,6 +116,9 @@ class ToolsSettingDemo extends StatefulWidget {
 class _ToolsSettingDemoState extends State<ToolsSettingDemo> {
   @override
   Widget build(BuildContext context) {
+
+    final vm = Provider.of<GlobalModel>(context,listen: false);
+
     return  Container(
         height: 200,
         color: Colors.amber,
@@ -121,16 +127,27 @@ class _ToolsSettingDemoState extends State<ToolsSettingDemo> {
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              const Text('Modal BottomSheet'),
-              ElevatedButton(
-                child: const Text('Close BottomSheet'),
-                onPressed: () => Navigator.pop(context),
-              ),
+              _freePlaningButton(context: context, model: vm)
             ],
           ),
         )
     );
   }
+
+  Widget _freePlaningButton({
+    required BuildContext context, required GlobalModel model
+  }){
+    return InkWell(
+      onTap: (){
+        RouteUtils.pop(context);
+        RouteUtils.push(context, FreePlanPage());
+      },
+      child: Container(
+        child: Text("自由规划"),
+      ),
+    );
+  }
+
 }
 
 

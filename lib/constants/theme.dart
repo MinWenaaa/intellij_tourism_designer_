@@ -1,9 +1,11 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 /*
 * 制作主题颜色
 */
-class AppColors1 {
-  AppColors1._();
+class AppColors2 {
+  AppColors2._();
 
   static const Color primaryColor = Color(0xFFFFDE59); // 主色调
   static const Color primaryColor2 = Color(0xCCFFDE59);
@@ -14,39 +16,84 @@ class AppColors1 {
   static const Color textColor = Color(0xff737373); // 文本颜色
 }
 
+class AppColors {
+  AppColors._();
+
+  static const Color primary = Color(0xffff7287);
+  static const Color secondary = Color(0xffe9e4ff);
+  static const Color deepSecondary = Color(0xff8995d4);
+  static const Color headline = Colors.black;
+  static const Color matter = Colors.black87;
+  static const Color detail = Colors.black38;
+}
+
 class AppText {
   AppText._();
 
-  static const TextStyle bgStandard = TextStyle(color:AppColors1.backgroundColor,fontSize: 16);
-  static const TextStyle pStandard = TextStyle(color:AppColors1.primaryColor,fontSize: 16);
-  static const TextStyle Head1 = TextStyle(color: Colors.black, fontSize: 28);
-  static const TextStyle Head2 = TextStyle(color: Colors.black,fontSize: 20);
-  static const TextStyle standard = TextStyle(color:Colors.black87,fontSize: 16);
-  static const TextStyle small = TextStyle(color:Colors.black87,fontSize: 12);
-  static const TextStyle big = TextStyle(color:Colors.black87,fontSize: 16);
+  static const TextStyle Head1 = TextStyle(color: AppColors.headline, fontSize: 22);
+  static const TextStyle primaryHead = TextStyle(color: AppColors.primary, fontSize: 22);
+  static const TextStyle secodaryHead = TextStyle(color: Colors.white, fontSize: 22);
+  static const TextStyle whiteHead = TextStyle(color: Colors.white, fontSize: 22);
+  static const TextStyle Head2 = TextStyle(color: AppColors.headline, fontSize: 20);
+  static const TextStyle matter = TextStyle(color: AppColors.matter, fontSize: 16);
+  static const TextStyle detail = TextStyle(color: AppColors.detail, fontSize: 16);
 
 }
 
 class AppButton{
+  AppButton._();
+
   static final ButtonStyle button1 = ElevatedButton.styleFrom(
-    backgroundColor:AppColors1.primaryColor,
-    foregroundColor:AppColors1.backgroundColor,
-    textStyle:AppText.bgStandard,
-    shape:const RoundedRectangleBorder(borderRadius: BorderRadius.zero)
+      backgroundColor:AppColors.primary,
+      //foregroundColor:AppColors.background,
+      textStyle:AppText.matter,
+      shape:const RoundedRectangleBorder(borderRadius: BorderRadius.zero)
   );
   static final ButtonStyle button2 = ElevatedButton.styleFrom(
-      backgroundColor:AppColors1.backgroundColor,
-      foregroundColor:AppColors1.primaryColor,
-      textStyle:AppText.bgStandard,
+      //backgroundColor:AppColors1.backgroundColor,
+      //foregroundColor:AppColors1.primaryColor,
+      //textStyle:AppText.bgStandard,
       shape:const RoundedRectangleBorder(borderRadius: BorderRadius.zero)
   );
   static final ButtonStyle button3 = ElevatedButton.styleFrom(
-      //backgroundColor:AppColors1.primaryColor3,
-      shadowColor:AppColors1.primaryColor2,
-      foregroundColor:AppColors1.textColor,
-      textStyle:AppText.small
+    //backgroundColor:AppColors1.primaryColor3,
+      //shadowColor:AppColors1.primaryColor2,
+      //foregroundColor:AppColors1.textColor,
+      textStyle:AppText.matter
   );
 }
+
+Widget primaryInkWell({required callback, required String text,}){
+  return InkWell(
+    onTap: callback,
+    child: Container(
+      width: 180, height: 56, alignment: Alignment.center,
+      margin: const EdgeInsets.only(bottom: 24),
+      decoration: const BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(28)),
+        color: AppColors.primary
+      ),
+      child: Text(text, style: AppText.whiteHead,),
+    ),
+  );
+}
+
+Widget secondaryInkWell({required callback, required String text}){
+  return InkWell(
+    onTap: callback,
+    child: Container(
+      width: 180, height: 56, alignment: Alignment.center,
+      margin: const EdgeInsets.only(bottom: 24),
+      decoration: const BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(28)),
+          color: AppColors.secondary
+      ),
+      child: Text(text, style: AppText.Head1,),
+    ),
+  );
+}
+
+
 
 class AppSize{
   static const double buttonHeight2=42;

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intellij_tourism_designer/constants/Markers.dart';
 import 'package:intellij_tourism_designer/models/global_model.dart';
 import 'package:intellij_tourism_designer/widgets/tools_button.dart';
 import 'package:latlong2/latlong.dart';
@@ -41,7 +42,7 @@ class _WelcomeState extends State<DemoMap> with TickerProviderStateMixin {
 
   MapOptions initMapOption() {
     return MapOptions(
-      initialCenter: LatLng(30.6,114.3),
+      initialCenter: LatLng(30.56,114.32),
       initialZoom: 16.5,
       maxZoom: MAXZOOM,
       minZoom: MINZOOM,
@@ -58,33 +59,40 @@ class _WelcomeState extends State<DemoMap> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
-      return FlutterMap(
-        mapController: _mapController,
-        options: initMapOption(),
+      return Stack(
         children: [
-          Selector<GlobalModel, int>(
-            selector: (context, provider) => provider.baseProvider,
-            builder: (context, data, child) => baseTileLayer(data),
-          ),
-          //WMS_ours(layerName: "240620_wuhan_0"),
-          //WCS_ours(layerName: "usa"),
-/*
-          ...List.generate(4, (index) =>
-            Selector<MapViewModel, bool>(
-              selector: (context, provider) => provider.thematicMap[index],
-              builder: (context, flag, child) => flag ?
-                WMS_ours(layerName: MapServiceProvider.thematicLayerName[index]) : const SizedBox(),
-            )
-          ),
+          recordCenter(context),
+          FlutterMap(
+            mapController: _mapController,
+            options: initMapOption(),
+            children: [
+              Selector<GlobalModel, int>(
+                selector: (context, provider) => provider.baseProvider,
+                builder: (context, data, child) => baseTileLayer(data),
+              ),
+              //WMS_ours(layerName: "240720"),
+              //WCS_ours(layerName: "usa"),
+              freePlanPointMarker(),
+              freePlanRoute()
+          /*
+              ...List.generate(4, (index) =>
+                Selector<MapViewModel, bool>(
+                  selector: (context, provider) => provider.thematicMap[index],
+                  builder: (context, flag, child) => flag ?
+                    WMS_ours(layerName: MapServiceProvider.thematicLayerName[index]) : const SizedBox(),
+                )
+              ),
 
-          ...List.generate(4, (index) =>
-              Selector<MapViewModel, bool>(
-                selector: (context, provider) => provider.thematicMap[index],
-                builder: (context, flag, child) => flag ?
-                WMS_ours(layerName: MapServiceProvider.thematicLayerName[index]) : const SizedBox(),
-              )
-          )*/
+              ...List.generate(4, (index) =>
+                  Selector<MapViewModel, bool>(
+                    selector: (context, provider) => provider.thematicMap[index],
+                    builder: (context, flag, child) => flag ?
+                    WMS_ours(layerName: MapServiceProvider.thematicLayerName[index]) : const SizedBox(),
+                  )
+              )*/
 
+            ],
+          ),
         ],
       );
     });
@@ -142,5 +150,43 @@ class _WelcomeState extends State<DemoMap> with TickerProviderStateMixin {
     });
 
     controller.forward();
+  }
+
+  //记录当前中心，请求导航，非显示组件
+  Widget recordCenter(BuildContext context){
+    print("rebuild map view - sizedbox");
+    final vm = Provider.of<GlobalModel>(context,listen: false);
+
+    return Selector<GlobalModel, bool>(
+      selector: (context, provider) => provider.recordCenter,
+      builder: (context, flag, child) {
+        print("call sizedbox selector builder");
+        LatLng temp = _mapController.camera.center;
+        print("get center of map: $temp");
+        vm.addPoint(temp);
+        return const SizedBox();
+      }
+    );
+  }
+
+  Widget freePlanPointMarker(){
+    print("marker layer rebuild");
+    return Selector<GlobalModel, List<LatLng>>(
+      selector: (context, provider) => provider.points,
+      builder: (context, data, child) => MarkerLayer(
+        markers: List.generate(data.length,
+                (index) => deepSecondaryMarker(data[index]))
+
+      )
+    );
+  }
+
+  Widget freePlanRoute(){
+    print("route layer rebuild");
+    return Selector<GlobalModel, List<LatLng>>(
+        selector: (context, provider) => provider.Route,
+        builder: (context, data, child) => PolylineLayer(polylines: [planPolyline(data)])
+
+    );
   }
 }

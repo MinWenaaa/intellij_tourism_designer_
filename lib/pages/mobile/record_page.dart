@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intellij_tourism_designer/constants/theme.dart';
 import 'package:intellij_tourism_designer/route_utils.dart';
 import 'package:intellij_tourism_designer/widgets/map_view.dart';
 import 'package:intellij_tourism_designer/widgets/tools_button.dart';
@@ -14,57 +15,52 @@ class RecordPage extends StatefulWidget {
 
 class _RecordPageState extends State<RecordPage> {
 
-  GlobalModel viewModel = GlobalModel();
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<GlobalModel>(
-      create: (context){return viewModel;},
-      child: Scaffold(
+
+    return Scaffold(
           body: SafeArea(
             child: Column(
               children: [
                 _appBar(),
                 Expanded(
-                  child: Stack(
-                    children: [
-                      DemoMap(),
-                      ToolsButton(),
-                      Align(
-                        alignment: Alignment.topCenter,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            GestureDetector(
-                              child: Container(
-                                child: Text("返回主页"),
-                              ),
-                              onTap: (){RouteUtils.pop(context);},
+                      child: Stack(
+                        children: [
+                          DemoMap(),
+                          ToolsButton(),
+                          Align(
+                            alignment: Alignment.bottomCenter,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                primaryInkWell(
+                                  callback: (){},
+                                  text: "停止记录",
+                                ),
+                                secondaryInkWell(
+                                    callback: () => RouteUtils.pop(context),
+                                    text: "返回主页"
+                                )
+                              ],
                             ),
-                            GestureDetector(
-                              child: Container(
-                                child: Text("停止记录"),
-                              ),
-                              onTap: (){},
-                            )
-                          ],
-                        ),
+                          )
+                        ]
                       )
-                    ],
-                  )
-                ),
+                    ),
               ],
             ),
           )
-      ),
+
     );
   }
+
 
   Widget _appBar(){
     return Container(
       height:30,
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           Text("坐标：31.286391N, 114.2831893E"),
           Text("温度：35"),
@@ -72,6 +68,7 @@ class _RecordPageState extends State<RecordPage> {
       ),
     );
   }
+
 
 
 }

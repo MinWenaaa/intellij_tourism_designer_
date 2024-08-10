@@ -8,6 +8,7 @@ import 'package:intellij_tourism_designer/constants/theme.dart';
 //一些统计图表
 
 //城市旅游属性堆叠条形图
+/*
 class CityFeatureStackBarChart extends StatefulWidget {
   const CityFeatureStackBarChart({super.key});
 
@@ -42,7 +43,8 @@ class _CityFeatureStackBarChartState extends State<CityFeatureStackBarChart> {
             titlesData: FlTitlesData(
                 bottomTitles: AxisTitles(
                     axisNameWidget: const Icon(Icons.ac_unit,
-                        color: AppColors1.primaryColor),
+                        //color: AppColors.primaryColor
+    ),
                     sideTitles: SideTitles(
                       showTitles: true,
                       getTitlesWidget: getTitles,
@@ -62,21 +64,21 @@ class _CityFeatureStackBarChartState extends State<CityFeatureStackBarChart> {
         //showingTooltipIndicators: isTouched ? [0] : [],
         barRods: [
           BarChartRodData(toY: sum, width: barWidth, rodStackItems: [
-            BarChartRodStackItem(0, data[0], AppColors1.textColor),
+            BarChartRodStackItem(0, data[0], AppColors.matter),
             BarChartRodStackItem(
-                data[0], data[0] + data[1], AppColors1.primaryColor),
+                data[0], data[0] + data[1], AppColors.primary),
             BarChartRodStackItem(data[0] + data[1], data[0] + data[1] + data[2],
-                AppColors1.primaryColor2),
+                AppColors.primary),
             BarChartRodStackItem(
                 data[0] + data[1] + data[2],
                 data[0] + data[1] + data[2] + data[3],
-                AppColors1.primaryColor3),
+                AppColors.primary),
           ])
         ]);
   }
 
   Widget getTitles(double value, TitleMeta meta) {
-    return Text('??$value', style: AppText.pStandard);
+    return Text('??$value', style: AppText.matter);
   }
 }
 
@@ -84,17 +86,17 @@ class BarChartSample1 extends StatefulWidget {
   const BarChartSample1({super.key});
 
   List<Color> get availableColors => const <Color>[
-        AppColors1.backgroundColor,
-        AppColors1.textColor,
-        AppColors1.primaryColor,
-        AppColors1.accentColor,
-        AppColors1.accentColor,
-        AppColors1.primaryColor2,
+        AppColors.backgroundColor,
+        AppColors.textColor,
+        AppColors.primaryColor,
+        AppColors.accentColor,
+        AppColors.accentColor,
+        AppColors.primaryColor2,
       ];
 
-  final Color barBackgroundColor = AppColors1.textColor;
-  final Color barColor = AppColors1.primaryColor3;
-  final Color touchedBarColor = AppColors1.backgroundColor;
+  final Color barBackgroundColor = AppColors.textColor;
+  final Color barColor = AppColors.primaryColor3;
+  final Color touchedBarColor = AppColors.backgroundColor;
 
   @override
   State<StatefulWidget> createState() => BarChartSample1State();
@@ -120,7 +122,7 @@ class BarChartSample1State extends State<BarChartSample1> {
               children: <Widget>[
                 const Text('Mingguan',
                     style: TextStyle(
-                      color: AppColors1.primaryColor,
+                      color: AppColors.primaryColor,
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                     )),
@@ -129,7 +131,7 @@ class BarChartSample1State extends State<BarChartSample1> {
                 ),
                 const Text('Grafik konsumsi kalori',
                     style: TextStyle(
-                      color: AppColors1.textColor,
+                      color: AppColors.textColor,
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                     )),
@@ -158,7 +160,7 @@ class BarChartSample1State extends State<BarChartSample1> {
               child: IconButton(
                 icon: Icon(
                   isPlaying ? Icons.pause : Icons.play_arrow,
-                  color: AppColors1.textColor,
+                  color: AppColors.textColor,
                 ),
                 onPressed: () {
                   setState(() {
@@ -193,7 +195,7 @@ class BarChartSample1State extends State<BarChartSample1> {
           color: isTouched ? widget.touchedBarColor : barColor,
           width: width,
           borderSide: isTouched
-              ? const BorderSide(color: AppColors1.textColor)
+              ? const BorderSide(color: AppColors.textColor)
               : const BorderSide(color: Colors.white, width: 0),
           backDrawRodData: BackgroundBarChartRodData(
             show: true,
@@ -462,4 +464,4 @@ class BarChartSample1State extends State<BarChartSample1> {
       await refreshState();
     }
   }
-}
+}*/

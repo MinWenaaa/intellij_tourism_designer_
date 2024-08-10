@@ -45,7 +45,7 @@ class _DataPageState extends State<DataPage> {
       Container(
         height: size.height - AppSize.topBarHeight,
         width: AppSize.toolBarWidth1,
-        color:AppColors1.primaryColor,
+        color:AppColors.primary,
         child: Column(
           children: featureButtonBar(),
         ),
@@ -93,7 +93,7 @@ class _DataPageState extends State<DataPage> {
                         mapLayer[index] = newValue ?? false;
                       });
                     }),
-                  Text("Map$index", style: AppText.small)
+                  Text("Map$index", style: AppText.matter)
                 ],
               ),
             )));

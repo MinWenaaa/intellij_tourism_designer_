@@ -1,4 +1,6 @@
 
+import 'package:latlong2/latlong.dart';
+
 class NavigationData {
   NavigationData({
       this.status, 
@@ -32,6 +34,9 @@ class NavigationData {
     return map;
   }
 
+  List<LatLng> getPointList() {
+    return route?.getPointList()??[];
+  }
 }
 
 
@@ -63,6 +68,14 @@ class Route {
       map['paths'] = paths?.map((v) => v.toJson()).toList();
     }
     return map;
+  }
+
+  List<LatLng> getPointList() {
+
+    List<LatLng> list = [];
+    paths?.forEach((step) => list.addAll(step.getPointList()));
+    return list;
+
   }
 
 }
@@ -97,6 +110,15 @@ class Paths {
     }
     return map;
   }
+
+  List<LatLng> getPointList() {
+
+    List<LatLng> list = [];
+    steps?.forEach((step) => list.addAll(step.getPointList()));
+    return list;
+
+  }
+
 
 }
 
@@ -150,6 +172,20 @@ class Steps {
     }
     map['walk_type'] = walkType;
     return map;
+  }
+
+
+  List<LatLng> getPointList(){
+    List<LatLng> list = [];
+
+    if(polyline != null) {
+      polyline!.split(';').forEach((nums){
+        var parts = nums.split(',');
+        list.add(LatLng(double.parse(parts[0]),double.parse(parts[1])));
+      });
+    }
+
+    return list;
   }
 
 }

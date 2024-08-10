@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intellij_tourism_designer/pages/mobile/mobile_page.dart';
 import 'package:provider/provider.dart';
-
 import '../models/global_model.dart';
+
 class MoblieApp extends StatelessWidget {
   const MoblieApp({super.key});
 
@@ -14,7 +14,7 @@ class MoblieApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
         useMaterial3: true,
       ),
       home: const MobilePage(),

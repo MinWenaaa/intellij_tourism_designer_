@@ -23,7 +23,7 @@ class _MemoryViewState extends State<MemoryView> {
           Positioned(
             right:20,top:20,width:340,height:100,
             child: Card(
-              color:AppColors1.primaryColor3,
+              //color:AppColors.primaryColor3,
               child:WeatherCard(curWea:sampleWeather)
             )
           ),

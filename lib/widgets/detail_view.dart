@@ -122,7 +122,7 @@ class _POIDetailedViewState extends State<POIDetailedView> {
                 //Text(_facility["info"]),
                 const Text("评分"),
                 const Text(""),
-                const Divider(color:AppColors1.primaryColor, height:50, thickness:3, indent:30, endIndent:30),
+                const Divider(color:AppColors.primary, height:50, thickness:3, indent:30, endIndent:30),
                 TextButton(
                   onPressed:(){setState(() {comments.add(sampleCon);});},
                   style:AppButton.button2,
@@ -134,8 +134,8 @@ class _POIDetailedViewState extends State<POIDetailedView> {
                     children:List.generate(comments.length,(index)=>
                       Column(
                         children:[
-                          Text(comments[index].userName,style:AppText.standard),
-                          Text(comments[index].content,style:AppText.standard)
+                          Text(comments[index].userName,style:AppText.matter),
+                          Text(comments[index].content,style:AppText.matter)
                         ]
                       )
                     )
@@ -162,8 +162,8 @@ class ItiCard1 extends StatelessWidget {
           flex:3,
           child: Column(
             children:[
-              Text(curIti.name,style:AppText.small),
-              const Text("时间",style:AppText.small),
+              Text(curIti.name,style:AppText.matter),
+              const Text("时间",style:AppText.matter),
             ]
           ),
         ),
@@ -191,10 +191,10 @@ class ActCard extends StatelessWidget {
               Row(
                 children:[
                   const Icon(Icons.abc),
-                  Text(curAct.point.Name,style:AppText.small),
+                  Text(curAct.point.Name,style:AppText.matter),
                 ]
               ),
-              const Text("时间：",style:AppText.small)
+              const Text("时间：",style:AppText.matter)
             ]
           )
         ),
@@ -221,10 +221,10 @@ class WeatherCard extends StatelessWidget {
           flex:5,
           child:Column(
             children: [
-              Text('时间：????-??-??',style:AppText.small),
+              Text('时间：????-??-??',style:AppText.matter),
               Card(
-                surfaceTintColor:AppColors1.primaryColor,
-                child:Text("天气：         温度：           ",style:AppText.pStandard),
+                surfaceTintColor:AppColors.primary,
+                child:Text("天气：         温度：           ",style:AppText.matter),
               )
             ]
           )

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:intellij_tourism_designer/constants/theme.dart';
 import 'package:intellij_tourism_designer/pages/mobile/map_page.dart';
 import 'package:intellij_tourism_designer/pages/iti_list_page.dart';
 import 'package:intellij_tourism_designer/pages/memory_list_page.dart';
 import 'package:intellij_tourism_designer/pages/mobile/user_page.dart';
-import 'package:provider/provider.dart';
-import '../../models/global_model.dart';
 import 'home_page.dart';
 
 class MobilePage extends StatefulWidget {
@@ -29,8 +28,8 @@ class _MobilePageState extends State<MobilePage> {
           child: BottomNavigationBar(
             type: BottomNavigationBarType.fixed,
             currentIndex: currentIndex,
-            selectedLabelStyle: TextStyle(fontSize: 14, color: Colors.black),
-            unselectedLabelStyle: TextStyle(fontSize: 12, color: Colors.teal),
+            selectedLabelStyle: TextStyle(fontSize: 12, color: AppColors.primary),
+            unselectedLabelStyle: TextStyle(fontSize: 12, color: AppColors.detail),
             items: _barItemList(),
             onTap: (index){
               currentIndex = index;
@@ -49,32 +48,21 @@ class _MobilePageState extends State<MobilePage> {
 
   List<BottomNavigationBarItem> _barItemList(){
     return [
-      BottomNavigationBarItem(
-          icon: Icon(Icons.home_filled, color: Colors.black38, size: 32),
-          activeIcon: Icon(Icons.home_filled, color: Colors.greenAccent, size: 32),
-          label: "首页"
-      ),
-      BottomNavigationBarItem(
-          icon: Icon(Icons.medication, color: Colors.black38, size: 32),
-          activeIcon: Icon(Icons.medication, color: Colors.greenAccent, size: 32),
-          label: "规划"
-      ),
-      BottomNavigationBarItem(
-          icon: Icon(Icons.photo, color: Colors.black38, size: 32),
-          activeIcon: Icon(Icons.photo, color: Colors.greenAccent, size: 32),
-          label: "地图"
-      ),
-      BottomNavigationBarItem(
-          icon: Icon(Icons.supervised_user_circle, color: Colors.black38, size: 32),
-          activeIcon: Icon(Icons.supervised_user_circle, color: Colors.greenAccent, size: 32),
-          label: "记录"
-      ),
-      BottomNavigationBarItem(
-          icon: Icon(Icons.supervised_user_circle, color: Colors.black38, size: 32),
-          activeIcon: Icon(Icons.supervised_user_circle, color: Colors.greenAccent, size: 32),
-          label: "我的"
-      )
+      _bottomBarItem(text: "首页", icons: Icons.home),
+      _bottomBarItem(text: "规划", icons: Icons.alarm_on),
+      _bottomBarItem(text: "地图", icons: Icons.photo),
+      _bottomBarItem(text: "记录", icons: Icons.camera),
+      _bottomBarItem(text: "首页", icons: Icons.person),
+
     ];
+  }
+
+  BottomNavigationBarItem _bottomBarItem({required String text, required IconData icons}){
+    return BottomNavigationBarItem(
+      icon: Icon(icons, color: AppColors.detail, size: 32,),
+      activeIcon: Icon(icons, color: AppColors.primary, size: 32,),
+      label: text
+    );
   }
 
 }

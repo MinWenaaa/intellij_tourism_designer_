@@ -1,6 +1,8 @@
 import 'package:flutter_map/flutter_map.dart';
 import 'package:intellij_tourism_designer/constants/locations.dart';
 import 'package:flutter/material.dart';
+import 'package:intellij_tourism_designer/constants/theme.dart';
+import 'package:latlong2/latlong.dart';
 /*
 * 制作存储各级图斑
 */
@@ -36,6 +38,25 @@ class MarkerElement{//制作图斑要素
     });
     return dict;
   }
+
+
+
+
+}
+
+Marker deepSecondaryMarker(LatLng point){
+  return Marker(
+      width: 40, height: 40,
+      point: point,
+      child: Icon(Icons.location_on_sharp, color: AppColors.deepSecondary)
+  );
+}
+
+Polyline planPolyline(List<LatLng> points){
+  return Polyline(
+    points: points,
+    color: AppColors.secondary
+  );
 }
 
 enum MarkerLevel{//划分显示图斑的等级与样式
