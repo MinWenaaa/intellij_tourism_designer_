@@ -104,7 +104,6 @@ class _WelcomeState extends State<PathPlanningPage> with TickerProviderStateMixi
                     Selector<PathPlanModel, List<Marker>>(
                         selector: (context, provider) => provider.markers,
                         builder: (context, data, child) {
-                          print("merker rebuild");
                           return MarkerLayer(
                               markers: data
                           );

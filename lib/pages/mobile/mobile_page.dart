@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intellij_tourism_designer/constants/theme.dart';
 import 'package:intellij_tourism_designer/pages/mobile/map_page.dart';
-import 'package:intellij_tourism_designer/pages/iti_list_page.dart';
-import 'package:intellij_tourism_designer/pages/memory_list_page.dart';
+import 'package:intellij_tourism_designer/pages/mobile/iti_list_page.dart';
+import 'package:intellij_tourism_designer/pages/mobile/memory_list_page.dart';
 import 'package:intellij_tourism_designer/pages/mobile/user_page.dart';
 import '../../widgets/calendar.dart';
 import 'home_page.dart';
@@ -18,6 +18,11 @@ class _MobilePageState extends State<MobilePage> {
 
   int currentIndex = 2;
 
+  void onTabTapped(int index) {
+    currentIndex = index;
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,16 +37,18 @@ class _MobilePageState extends State<MobilePage> {
             selectedLabelStyle: TextStyle(fontSize: 12, color: AppColors.primary),
             unselectedLabelStyle: TextStyle(fontSize: 12, color: AppColors.detail),
             items: _barItemList(),
-            onTap: (index){
-              currentIndex = index;
-              setState(() {});
-            },
+            onTap: onTabTapped
           ),
         ),
         body: SafeArea(
             child: IndexedStack(
               index: currentIndex,
-              children: [HomePage(), ItiListPage(), MapPage(), MemoryListPage(), UserPage()],
+              children: [
+                HomePage(),
+                ItiListPage(changeNavigate: ()=>onTabTapped(2)),
+                MapPage(),
+                MemoryListPage(changeNavigate: ()=>onTabTapped(2)),
+                UserPage()],
             )
         )
       );

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:intellij_tourism_designer/constants/theme.dart';
 import 'package:intellij_tourism_designer/models/global_model.dart';
+import 'package:intellij_tourism_designer/widgets/detail_view.dart';
 import 'package:intellij_tourism_designer/widgets/tools_button.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
@@ -20,66 +21,9 @@ class MapPage extends StatefulWidget {
   State<MapPage> createState() => _MapPageState();
 }
 
-class _MapPageState extends State<MapPage> {
+class _MapPageState extends State<MapPage> with TickerProviderStateMixin{
 
-
-  @override
-  void initState(){
-    super.initState();
-  }
-
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        body: SafeArea(
-          child: Expanded(
-            child:  Stack(
-              children: [
-                DemoMap(),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Padding(
-                    padding: const EdgeInsets.all(24),
-                    child: primaryInkWell(
-                      callback: () {},
-                      text: "开始记录",
-                    ),
-                  )
-                ),
-                ToolsButton(),
-                SearchingBar(),
-              ],
-            )
-          ),
-        )
-    );
-  }
-
-
-
-}
-
-
-class MapAnimation{
-  //用于判断地图移动的状态从而优化地图移动的动画
-  MapAnimation._();
-
-  static const startedId = 'AnimatedMapController#MoveStarted';
-  static const inProgressId = 'AnimatedMapController#MoveInProgress';
-  static const finishedId = 'AnimatedMapController#MoveFinished';
-
-}
-
-class DemoMap extends StatefulWidget {
-  const DemoMap({super.key});
-  @override
-  State<DemoMap> createState() => _WelcomeState();
-}
-
-class _WelcomeState extends State<DemoMap> with TickerProviderStateMixin {
-
-  late final MapController _mapController; //地图视角控制器
+  late final MapController _mapController;
 
   @override
   void initState() {
@@ -95,7 +39,6 @@ class _WelcomeState extends State<DemoMap> with TickerProviderStateMixin {
       minZoom: MINZOOM,
       cameraConstraint: CameraConstraint.contain(
         bounds: LatLngBounds(
-          // unlimit the map range
           const LatLng(-90, -180),
           const LatLng(90, 180),
         ),
@@ -105,41 +48,43 @@ class _WelcomeState extends State<DemoMap> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constraints) {
-      return Stack(
-        children: [
-          FlutterMap(
-            mapController: _mapController,
-            options: initMapOption(),
-            children: [
-              Selector<GlobalModel, int>(
-                selector: (context, provider) => provider.baseProvider,
-                builder: (context, data, child) => baseTileLayer(data),
-              ),
-              //WMS_ours(layerName: "240720"),
-              //WCS_ours(layerName: "usa"),
-              /*
-              ...List.generate(4, (index) =>
-                Selector<MapViewModel, bool>(
-                  selector: (context, provider) => provider.thematicMap[index],
-                  builder: (context, flag, child) => flag ?
-                    WMS_ours(layerName: MapServiceProvider.thematicLayerName[index]) : const SizedBox(),
-                )
-              ),
-
-              ...List.generate(4, (index) =>
-                  Selector<MapViewModel, bool>(
-                    selector: (context, provider) => provider.thematicMap[index],
-                    builder: (context, flag, child) => flag ?
-                    WMS_ours(layerName: MapServiceProvider.thematicLayerName[index]) : const SizedBox(),
+    return Scaffold(
+        body: SafeArea(
+          child: Stack(
+              children: [
+                FlutterMap(
+                  mapController: _mapController,
+                  options: initMapOption(),
+                  children: [
+                    Selector<GlobalModel, int>(
+                      selector: (context, provider) => provider.baseProvider,
+                      builder: (context, data, child) => baseTileLayer(data),
+                    ),
+                  ],
+                ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Padding(
+                    padding: const EdgeInsets.all(24),
+                    child: primaryInkWell(
+                      callback: () {},
+                      text: "开始记录",
+                    ),
                   )
-              )*/
-
-            ],
-          ),
-        ],
-      );
-    });
+                ),
+                ToolsButton(),
+                SearchingBar(),
+                /*Positioned(
+                  top: 80, right: 10,
+                  child: WeatherCard(
+                    height: 80, width: 80,
+                    location: LatLng(30.56,114.32)
+                  ),
+                )*/
+              ],
+            )
+        )
+    );
   }
 
   void _animatedMapMove(LatLng destLocation, double destZoom) {
@@ -196,5 +141,16 @@ class _WelcomeState extends State<DemoMap> with TickerProviderStateMixin {
     controller.forward();
   }
 
+}
+
+
+class MapAnimation{
+  //用于判断地图移动的状态从而优化地图移动的动画
+  MapAnimation._();
+
+  static const startedId = 'AnimatedMapController#MoveStarted';
+  static const inProgressId = 'AnimatedMapController#MoveInProgress';
+  static const finishedId = 'AnimatedMapController#MoveFinished';
 
 }
+

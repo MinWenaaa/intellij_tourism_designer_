@@ -41,10 +41,10 @@ class _DeskTopPageState extends State<DeskTopPage> {
                 icon: Icon(Icons.supervised_user_circle),
                 label: Text("主页")),
               NavigationRailDestination(
-                  icon: Icon(Icons.map),
+                  icon: Icon(Icons.photo),
                   label: Text("主页")),
               NavigationRailDestination(
-                  icon: Icon(Icons.fmd_good),
+                  icon: Icon(Icons.alarm_on),
                   label: Text("主页")),
               NavigationRailDestination(
                   icon: Icon(Icons.add_chart),

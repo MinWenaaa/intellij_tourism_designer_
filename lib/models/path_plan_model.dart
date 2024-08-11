@@ -13,7 +13,6 @@ class PathPlanModel with ChangeNotifier{
 
 
   Future<void> addPoint(LatLng point) async {
-    print("triger addPoint: ${point}");
     if(points.isNotEmpty){
       Api.instance.navigationRequire(
         origin: points.last,
@@ -30,7 +29,6 @@ class PathPlanModel with ChangeNotifier{
     }
     points.add(point);
     markers.add(deepSecondaryMarker(point));
-    print("now: $points");
 
     if (this.hasListeners) {
       notifyListeners();

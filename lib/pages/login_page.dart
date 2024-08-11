@@ -50,7 +50,7 @@ class _LoginPageState extends State<LoginPage> {
                   await vm.Login(name: _userName, password: _passWord).then((value){
                     if(value){
                       RouteUtils.pop(context);
-                      RouteUtils.push(context, const MobilePage());
+                      RouteUtils.push(context, MobilePage());//MobilePage()  DeskTopPage()
                     }else{
                       showToast("账号或密码错误");
                     }

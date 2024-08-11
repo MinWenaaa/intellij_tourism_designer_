@@ -6,6 +6,7 @@ import 'package:intellij_tourism_designer/helpers/poi_list_view_data.dart';
 import 'package:intellij_tourism_designer/helpers/search_result_data.dart';
 import 'package:latlong2/latlong.dart';
 import '../helpers/User.dart';
+import '../helpers/weather_data.dart';
 import 'dio_instance.dart';
 
 class Api {
@@ -18,7 +19,7 @@ class Api {
   Future<User?> UserLogin(
       {required String name, required String password}) async{
     Response response = await Dio_database.instance().get(
-        path: "/user/login",
+        path: "user/login",
         queryParameters: {"name": name, "password": password}
     );
     User user = User.fromJson(response.data);
@@ -28,7 +29,7 @@ class Api {
   //获取POI列表
   Future<List<PoiListViewData>?> getPOIList(String type, int count) async{
     Response response = await Dio_database.instance().get(
-        path: "/feature/homepage",
+        path: "feature/homepage",
         queryParameters: {"type": type, "i": count}
     );
     PoiListData poiListData = PoiListData.fromJson(response.data);
@@ -38,7 +39,7 @@ class Api {
   //获取POI详细信息
   Future<PoiDetail?> getPoiDetail(num id) async{
     Response response = await Dio_database.instance().get(
-      path: "/feature/detail",
+      path: "feature/detail",
       queryParameters: {"id": id}
     );
     return PoiDetail.fromJson(response.data);
@@ -47,7 +48,7 @@ class Api {
   //获取评论列表
   Future<List<CommentData>?> getCommentList(num id) async{
     Response response = await Dio_database.instance().get(
-        path: "/feature/comments",
+        path: "feature/comments",
         queryParameters: {"id": id}
     );
     CommentListData commnetListData = CommentListData.fromJson(response.data);
@@ -58,7 +59,7 @@ class Api {
   //获取搜索结果
   Future<List<SearchItemData?>?> Search({required String keyword, required String type}) async {
     Response response = await Dio_database.instance().get(
-      path: "/feature/search",
+      path: "feature/search",
       queryParameters: {"name": keyword, "type": type}
     );
     SearchListData searchListData = SearchListData.fromJson(response.data);
@@ -71,14 +72,13 @@ class Api {
     print("require navigation: origin${origin.longitude},${origin.latitude}, ${target.longitude},${target.latitude}");
 
     Response response = await Dio_database.instance().get(
-      path: "/designer/navigation",
+      path: "designer/navigation",
       queryParameters: {
         "origin": "${origin.longitude},${origin.latitude}",
         "destination": "${target.longitude},${target.latitude}",
-        "key": "	3a1ca59e1a7cde051a8875cc0aa9e2a6"
       },
     );
-    print("success");
+    print("navigation request success");
     NavigationData navigationData = NavigationData.fromJson(response.data);
     return navigationData.getPointList();
 
@@ -93,4 +93,32 @@ class Api {
   //获取回忆详细信息
 
   //获取天气数据
+  Future<WeatherData?> getWeather({required LatLng location}) async {
+    Response response1 = await Dio_qw.instance().get(
+        path: "weather/now",
+        queryParameters: {
+          "location": "${location.longitude},${location.latitude}",
+          "key": "5d778ca0412d4b599fd38ff17c043786",
+        }
+    );
+    print("weather data get: ${response1}");
+
+    Response response2 = await Dio_qw.instance().get(
+        path: "astronomy/sun",
+        queryParameters: {
+          "location": "${location.longitude},${location.latitude}",
+          "date": "20240815",
+          "key": "5d778ca0412d4b599fd38ff17c043786",
+        }
+    );
+    print("sun data get: ${response2}");
+
+    WeatherData weatherData = WeatherData.fromJson(response1.data);
+    Sun sun = Sun.fromJson(response2.data);
+    weatherData.sunrise = sun.sunrise;
+    weatherData.sunset = sun.sunset;
+
+    return weatherData;
+  }
+
 }

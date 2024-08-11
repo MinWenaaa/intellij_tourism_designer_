@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:intellij_tourism_designer/constants/Constants.dart';
-import 'package:intellij_tourism_designer/pages/iti_list_page.dart';
+import 'package:intellij_tourism_designer/pages/mobile/iti_list_page.dart';
 import 'package:intellij_tourism_designer/pages/login_page.dart';
-import 'package:intellij_tourism_designer/pages/memory_list_page.dart';
+import 'package:intellij_tourism_designer/pages/mobile/memory_list_page.dart';
 import 'package:intellij_tourism_designer/route_utils.dart';
 import 'package:intellij_tourism_designer/widgets/detail_view.dart';
+import '../../widgets/calendar.dart';
 
 /*
   个人主页
@@ -20,15 +19,15 @@ class PersonalPage extends StatelessWidget {
       children: [
         Flexible(
           flex: 5,
-          child: ItiListPage()
+          child: _ItiList()
         ),
         Flexible(
           flex: 5,
-          child: MemoryListPage()
+          child: _MemoryList()
         ),
         Flexible(
           fit: FlexFit.tight,
-          flex: 6,
+          flex: 5,
           child: _UserCard(context)
         ),
       ],
@@ -59,6 +58,56 @@ class PersonalPage extends StatelessWidget {
         SizedBox(height: 50,)
       ],
     )
+    );
+  }
+
+  Widget _MemoryList(){
+    return Column(
+        children: [
+          const SizedBox(height: 18,),
+          Container(
+            width: double.infinity,
+            margin: EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+            child: Calendar(),
+          ),
+          const Divider(),
+          const SizedBox(height: 18,),
+          Expanded(
+            child: ListView.builder(
+              itemBuilder: (context, index) => GestureDetector(
+                  onTap: (){},
+                  child: ItiCard(),
+              ),
+              itemCount: 10,
+            ),
+          )
+        ]
+    );
+  }
+
+  Widget _ItiList(){
+    return Column(
+        children: [
+          const SizedBox(height: 18,),
+          Container(
+            width: double.infinity,
+            margin: EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+            child: Calendar(),
+          ),
+          const Divider(),
+          const SizedBox(height: 18,),
+          Expanded(
+            child: ListView.builder(
+              itemBuilder: (context, index){
+                return GestureDetector(
+                  onTap: () {},
+                  child: ItiCard(),
+                );;
+              },
+              itemCount: 10,
+            ),
+          )
+        ]
     );
   }
 

@@ -8,6 +8,8 @@ import 'package:intellij_tourism_designer/widgets/path_query.dart';
 import 'package:intellij_tourism_designer/helpers/POI_builder.dart';
 import 'package:intellij_tourism_designer/widgets/detail_view.dart';
 
+import '../poi_detail_page.dart';
+
 //信息查看模块
 enum FeatureState {
   thematicMaps,
@@ -114,7 +116,7 @@ class _DataPageState extends State<DataPage> {
               builder: (BuildContext context, POI curPOI, Widget? child) {
                 return Stack(
                   children: [
-                    POIDetailedView(poi: curPOI),
+                    Poidetailpage(id: 1),
                     TextButton(
                       onPressed: () {
                         Provider.of<ShareDataPage>(context, listen: false).changeDetailed(false);
@@ -159,7 +161,7 @@ class _DataPageState extends State<DataPage> {
             vertical: 10.0,
             horizontal: 20.0,
           ),
-          child: POICard(style: 0, poi: model.poiList[index]),
+          child: SizedBox()//POIListItem(model.poiList[index]),
         );
       },
     );

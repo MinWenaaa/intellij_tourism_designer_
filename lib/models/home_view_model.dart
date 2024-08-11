@@ -26,14 +26,10 @@ class HomeViewModel with ChangeNotifier{
 
 
 
-class POIDetialViewModel with ChangeNotifier{
-  PoiDetail? poi;
-  List<CommentData>? commentList;
+class CommentModel with ChangeNotifier{
 
-  Future getPoi({required num id}) async {
-    poi = await Api.instance.getPoiDetail(id);
-    notifyListeners();
-  }
+  List<CommentData>? commentList = [];
+
 
   Future getComment({required num id}) async {
     commentList = await Api.instance.getCommentList(id);

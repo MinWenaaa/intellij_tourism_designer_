@@ -1,19 +1,15 @@
-import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:flutter/material.dart';
-import 'package:intellij_tourism_designer/constants/Constants.dart';
-import 'package:intellij_tourism_designer/constants/theme.dart';
-import 'package:intellij_tourism_designer/helpers/itinerary_builder.dart';
-import 'package:intellij_tourism_designer/route_utils.dart';
 import 'package:intellij_tourism_designer/widgets/detail_view.dart';
-import 'package:intellij_tourism_designer/pages/iti_edit_page.dart';
-
-import '../widgets/calendar.dart';
+import '../../widgets/calendar.dart';
 
 class ItiListPage extends StatefulWidget {
-  const ItiListPage({super.key});
+
+  final Function changeNavigate;
+  const ItiListPage({required this.changeNavigate, super.key});
 
   @override
   State<ItiListPage> createState() => _ItiListPageState();
+
 }
 
 class _ItiListPageState extends State<ItiListPage> {
@@ -35,22 +31,16 @@ class _ItiListPageState extends State<ItiListPage> {
           Expanded(
             child: ListView.builder(
               itemBuilder: (context, index){
-                return _Item(sampleIti);
+                return GestureDetector(
+                    onTap: () => widget.changeNavigate.call(),
+                    child: ItiCard(),
+                );;
               },
               itemCount: 10,
             ),
           )
         ]
       )
-    );
-  }
-
-  Widget _Item(Itinerary iti){
-    return GestureDetector(
-      onTap: (){
-        RouteUtils.push(context, ItiEditWidget(curIti: iti));
-      },
-      child: ItiCard1(curIti: iti),
     );
   }
 

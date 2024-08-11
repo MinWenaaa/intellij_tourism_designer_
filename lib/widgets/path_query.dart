@@ -37,7 +37,7 @@ class _PathQueryWidgetState extends State<PathQueryWidget> {
                 child: TextButton(
                   onPressed:(){},
                   style:AppButton.button2,
-                  child:POICard(style:1,poi:wayPoint[index]),
+                  child:SizedBox()//POICard(style:1,poi:wayPoint[index]),
                 ),
               )
             ),
@@ -138,7 +138,7 @@ class _PathQueryWidgetState extends State<PathQueryWidget> {
             vertical: 10.0,
             horizontal: 20.0,
           ),
-          child: POICard(style: 1, poi: model.poiList[index]),
+          child: SizedBox()//POICard(style: 1, poi: model.poiList[index]),
         );
       },
     );

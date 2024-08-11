@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intellij_tourism_designer/helpers/weather_data.dart';
 import 'package:intellij_tourism_designer/route_utils.dart';
 import 'package:intellij_tourism_designer/pages/mobile/path_planing_page.dart';
 import 'package:intellij_tourism_designer/constants/constants.dart';
@@ -23,7 +24,10 @@ class _MemoryViewState extends State<MemoryView> {
             right:20,top:20,width:340,height:100,
             child: Card(
               //color:AppColors.primaryColor3,
-              child:WeatherCard(curWea:sampleWeather)
+              child:SizedBox()/*WeatherCard(
+                weather: WeatherData(),
+                width: 80, height: 50,
+              )*/
             )
           ),
           Positioned(
