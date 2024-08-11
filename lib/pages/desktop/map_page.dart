@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:intellij_tourism_designer/widgets/map_view.dart';
+import 'package:intellij_tourism_designer/pages/mobile/path_planing_page.dart';
 
 /*
   地图查看模块
@@ -15,6 +15,6 @@ class MapPage extends StatefulWidget {
 class _MapPageState extends State<MapPage> {
   @override
   Widget build(BuildContext context) {
-    return DemoMap();
+    return PathPlanningPage();
   }
 }

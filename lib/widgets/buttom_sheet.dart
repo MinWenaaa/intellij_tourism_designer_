@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intellij_tourism_designer/helpers/tile_providers.dart';
 import 'package:intellij_tourism_designer/models/global_model.dart';
-import 'package:intellij_tourism_designer/pages/mobile/free_plan_page.dart';
+import 'package:intellij_tourism_designer/pages/mobile/path_planing_page.dart';
 import 'package:intellij_tourism_designer/route_utils.dart';
 import 'package:provider/provider.dart';
 
@@ -140,7 +140,7 @@ class _ToolsSettingDemoState extends State<ToolsSettingDemo> {
     return InkWell(
       onTap: (){
         RouteUtils.pop(context);
-        RouteUtils.push(context, FreePlanPage());
+        RouteUtils.push(context, PathPlanningPage());
       },
       child: Container(
         child: Text("自由规划"),

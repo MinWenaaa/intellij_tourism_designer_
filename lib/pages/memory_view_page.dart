@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:intellij_tourism_designer/constants/theme.dart';
 import 'package:intellij_tourism_designer/route_utils.dart';
-import 'package:intellij_tourism_designer/widgets/map_view.dart';
+import 'package:intellij_tourism_designer/pages/mobile/path_planing_page.dart';
 import 'package:intellij_tourism_designer/constants/constants.dart';
 import 'package:intellij_tourism_designer/widgets/detail_view.dart';
 
@@ -19,7 +18,7 @@ class _MemoryViewState extends State<MemoryView> {
     return SafeArea(
       child: Stack(
         children:[
-          const DemoMap(),
+          const PathPlanningPage(),
           Positioned(
             right:20,top:20,width:340,height:100,
             child: Card(

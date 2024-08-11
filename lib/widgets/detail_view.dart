@@ -53,7 +53,8 @@ class POICard extends StatelessWidget {
           ),
           Flexible(
             flex:4,
-            child: Image(image: AssetImage(poi.ImageURL)),
+            child:Image.network("https://gd-hbimg.huaban.com/b0053b05eb42accdcd2a832f26f043d19a5a3809b12-lJacpy_fw1200webp")
+            ,
           )
         ]
     );
@@ -77,7 +78,8 @@ class POICard extends StatelessWidget {
         ),
         Flexible(
           flex:2,
-          child: Image(image: AssetImage(poi.ImageURL))
+          child: Image.network("https://gd-hbimg.huaban.com/b0053b05eb42accdcd2a832f26f043d19a5a3809b12-lJacpy_fw1200webp")
+
         ),
       ]
     );
@@ -108,7 +110,8 @@ class _POIDetailedViewState extends State<POIDetailedView> {
     return Column(
         children: [
           const SizedBox(height:1),
-          Image(image: AssetImage(poi.ImageURL)),
+          Image.network("https://gd-hbimg.huaban.com/b0053b05eb42accdcd2a832f26f043d19a5a3809b12-lJacpy_fw1200webp")
+          ,
           SizedBox(
             height:AppSize.imgHeight1,
             child: ListView(
@@ -169,7 +172,7 @@ class ItiCard1 extends StatelessWidget {
         ),
         Flexible(
         flex:2,
-        child: Image(image: AssetImage(curIti.imageURLs[0]))
+        child: Image.network("https://gd-hbimg.huaban.com/b0053b05eb42accdcd2a832f26f043d19a5a3809b12-lJacpy_fw1200webp")
         )
       ]
     );
@@ -200,7 +203,7 @@ class ActCard extends StatelessWidget {
         ),
         Flexible(
           flex:2,
-          child:Image(image: AssetImage(curAct.point.ImageURL))
+          child:Image.network("https://gd-hbimg.huaban.com/b0053b05eb42accdcd2a832f26f043d19a5a3809b12-lJacpy_fw1200webp")
         ),
       ]
     );

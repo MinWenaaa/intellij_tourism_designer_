@@ -1,54 +1,54 @@
-
 import 'package:latlong2/latlong.dart';
 
 class NavigationData {
   NavigationData({
-      this.status, 
+      this.count, 
       this.info, 
       this.infocode, 
-      this.count, 
-      this.route,});
+      this.route, 
+      this.status,});
 
   NavigationData.fromJson(dynamic json) {
-    status = json['status'];
+    count = json['count'];
     info = json['info'];
     infocode = json['infocode'];
-    count = json['count'];
     route = json['route'] != null ? Route.fromJson(json['route']) : null;
+    status = json['status'];
   }
-  String? status;
+  String? count;
   String? info;
   String? infocode;
-  String? count;
   Route? route;
+  String? status;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
-    map['status'] = status;
+    map['count'] = count;
     map['info'] = info;
     map['infocode'] = infocode;
-    map['count'] = count;
     if (route != null) {
       map['route'] = route?.toJson();
     }
+    map['status'] = status;
     return map;
   }
 
   List<LatLng> getPointList() {
     return route?.getPointList()??[];
   }
+
 }
 
 
 class Route {
   Route({
-      this.origin, 
       this.destination, 
+      this.origin, 
       this.paths,});
 
   Route.fromJson(dynamic json) {
-    origin = json['origin'];
     destination = json['destination'];
+    origin = json['origin'];
     if (json['paths'] != null) {
       paths = [];
       json['paths'].forEach((v) {
@@ -56,14 +56,14 @@ class Route {
       });
     }
   }
-  String? origin;
   String? destination;
+  String? origin;
   List<Paths>? paths;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
-    map['origin'] = origin;
     map['destination'] = destination;
+    map['origin'] = origin;
     if (paths != null) {
       map['paths'] = paths?.map((v) => v.toJson()).toList();
     }
@@ -119,61 +119,57 @@ class Paths {
 
   }
 
-
 }
 
 
 class Steps {
   Steps({
-      this.instruction, 
-      this.orientation, 
-      this.road, 
-      this.distance, 
-      this.duration, 
-      this.polyline, 
       this.action, 
       this.assistantAction, 
+      this.distance, 
+      this.duration, 
+      this.instruction, 
+      this.orientation, 
+      this.polyline, 
+      this.road, 
       this.walkType,});
 
   Steps.fromJson(dynamic json) {
-    instruction = json['instruction'];
-    orientation = json['orientation'];
-    road = json['road'];
+    action = json['action'];
+    assistantAction = json['assistant_action'];
     distance = json['distance'];
     duration = json['duration'];
+    instruction = json['instruction'];
+    orientation = json['orientation'];
     polyline = json['polyline'];
-    action = json['action'];
-    assistantAction = json['assistantAction'];
+    road = json['road'];
     walkType = json['walk_type'];
   }
-  String? instruction;
-  String? orientation;
-  List<dynamic>? road;
+  dynamic? action;
+  dynamic? assistantAction;
   String? distance;
   String? duration;
+  String? instruction;
+  dynamic? orientation;
   String? polyline;
-  String? action;
-  List<dynamic>? assistantAction;
+  dynamic? road;
   String? walkType;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
-    map['instruction'] = instruction;
-    map['orientation'] = orientation;
-    if (road != null) {
-      map['road'] = road?.map((v) => v.toJson()).toList();
-    }
-    map['distance'] = distance;
-    map['duration'] = duration;
-    map['polyline'] = polyline;
     map['action'] = action;
     if (assistantAction != null) {
       map['assistant_action'] = assistantAction?.map((v) => v.toJson()).toList();
     }
+    map['distance'] = distance;
+    map['duration'] = duration;
+    map['instruction'] = instruction;
+    map['orientation'] = orientation;
+    map['polyline'] = polyline;
+    map['road'] = road;
     map['walk_type'] = walkType;
     return map;
   }
-
 
   List<LatLng> getPointList(){
     List<LatLng> list = [];
@@ -181,7 +177,7 @@ class Steps {
     if(polyline != null) {
       polyline!.split(';').forEach((nums){
         var parts = nums.split(',');
-        list.add(LatLng(double.parse(parts[0]),double.parse(parts[1])));
+        list.add(LatLng(double.parse(parts[1]),double.parse(parts[0])));
       });
     }
 

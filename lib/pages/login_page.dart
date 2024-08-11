@@ -24,8 +24,8 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  String _userName = "";
-  String _passWord = "";
+  String _userName = "abcdefg123";
+  String _passWord = "123456";
 
   @override
   Widget build(BuildContext context) {
@@ -33,51 +33,38 @@ class _LoginPageState extends State<LoginPage> {
     final vm = Provider.of<GlobalModel>(context,listen: false);
 
     return Scaffold(
-        backgroundColor: Colors.teal,
+
         body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               _commonInput(lableText: "账号", controller: _usernameController,
                 callback: (value)=>_userName=value),
-              SizedBox(height: 20,),
+              const SizedBox(height: 20,),
               _commonInput(lableText: "密码", controller: _passwordController,
                 callback: (value)=>_passWord=value),
-              SizedBox(height: 50,),
-              GestureDetector(
-                onTap: () async {
+              const SizedBox(height: 50,),
+              primaryInkWell(
+                callback: () async {
                   await vm.Login(name: _userName, password: _passWord).then((value){
                     if(value){
-                      RouteUtils.push(context, MobilePage());
+                      RouteUtils.pop(context);
+                      RouteUtils.push(context, const MobilePage());
                     }else{
-                    showToast("账号或密码错误");
+                      showToast("账号或密码错误");
                     }
                   });
                 },
-                child: Container(
-                  width: double.infinity, height: 45,
-                  margin: EdgeInsets.symmetric(horizontal: 40),
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                      border: Border.all(color: Colors.white, width: 1),
-                      borderRadius: BorderRadius.all(Radius.circular(22.5))
-                  ),
-                  child: Text("登录", style: TextStyle(fontSize: 14, color: Colors.white)),
-                ),
+                text: "登录",
+                width: 320, height: 52
               ),
-              SizedBox(height: 20,),
-              GestureDetector(
-                onTap: (){
-                  RouteUtils.push(context, RegisterPage());
-                },
-                child: Container(
-                  alignment: Alignment.center,
-                  width: 100, height: 45,
-                  child: Text("注册", style: TextStyle(fontSize: 14, color: Colors.white)),
-                ),
+              const SizedBox(height: 20,),
+              transpDeepSecGesture(
+                text: "注册",
+                callback: () => RouteUtils.push(context, const RegisterPage()),
+                width: 320, height: 52
               ),
-              SizedBox(height: 20,),
             ],
           ),
         )
@@ -91,16 +78,16 @@ class _LoginPageState extends State<LoginPage> {
     return TextField(
       controller: controller,
       onChanged: callback,
-      style: TextStyle(color: Colors.white, fontSize: 14),
+      style: const TextStyle(color: AppColors.deepSecondary, fontSize: 14),
       decoration: InputDecoration(
-          enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.white, width: 0.5)
+          enabledBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: AppColors.secondary),
           ),
-          focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.white, width: 1)
+          focusedBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: AppColors.deepSecondary),
           ),
           labelText: lableText,
-          labelStyle: TextStyle(color: Colors.white)
+          labelStyle: const TextStyle(color: AppColors.deepSecondary)
       ),
     );
   }

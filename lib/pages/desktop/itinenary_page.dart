@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intellij_tourism_designer/widgets/itinerary_feature.dart';
 import 'package:provider/provider.dart';
 import 'package:intellij_tourism_designer/constants/theme.dart';
-import 'package:intellij_tourism_designer/widgets/map_view.dart';
+import 'package:intellij_tourism_designer/pages/mobile/path_planing_page.dart';
 import 'package:intellij_tourism_designer/models/data_model.dart';
 import 'package:intellij_tourism_designer/pages/iti_edit_page.dart';
 import 'package:intellij_tourism_designer/helpers/itinerary_builder.dart';
@@ -38,7 +38,7 @@ class _ItineraryPageState extends State<ItineraryPage> {
       ),*/
       Flexible(
         flex: 3,
-          child: const DemoMap())
+          child: const PathPlanningPage())
     ]);
   }
 }

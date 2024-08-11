@@ -22,21 +22,21 @@ class AppColors {
   static const Color primary = Color(0xffff7287);
   static const Color secondary = Color(0xffe9e4ff);
   static const Color deepSecondary = Color(0xff8995d4);
-  static const Color headline = Colors.black;
-  static const Color matter = Colors.black87;
+  static const Color headline = Colors.black87;
+  static const Color matter = Color(0xff444444);
   static const Color detail = Colors.black38;
 }
 
 class AppText {
   AppText._();
 
-  static const TextStyle Head1 = TextStyle(color: AppColors.headline, fontSize: 22);
-  static const TextStyle primaryHead = TextStyle(color: AppColors.primary, fontSize: 22);
-  static const TextStyle secodaryHead = TextStyle(color: Colors.white, fontSize: 22);
-  static const TextStyle whiteHead = TextStyle(color: Colors.white, fontSize: 22);
-  static const TextStyle Head2 = TextStyle(color: AppColors.headline, fontSize: 20);
+  static const TextStyle Head1 = TextStyle(color: AppColors.headline, fontSize: 20);
+  static const TextStyle primaryHead = TextStyle(color: AppColors.primary, fontSize: 20);
+  static const TextStyle secodaryHead = TextStyle(color: AppColors.deepSecondary, fontSize: 20);
+  static const TextStyle whiteHead = TextStyle(color: Colors.white, fontSize: 20);
+  static const TextStyle Head2 = TextStyle(color: AppColors.headline, fontSize: 16);
   static const TextStyle matter = TextStyle(color: AppColors.matter, fontSize: 16);
-  static const TextStyle detail = TextStyle(color: AppColors.detail, fontSize: 16);
+  static const TextStyle detail = TextStyle(color: AppColors.detail, fontSize: 14);
 
 }
 
@@ -63,14 +63,16 @@ class AppButton{
   );
 }
 
-Widget primaryInkWell({required callback, required String text,}){
+Widget primaryInkWell({
+  required callback, required String text,
+  double width=180, double height=52
+}){
   return InkWell(
     onTap: callback,
     child: Container(
-      width: 180, height: 56, alignment: Alignment.center,
-      margin: const EdgeInsets.only(bottom: 24),
+      width: width, height: height, alignment: Alignment.center,
       decoration: const BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(28)),
+        borderRadius: BorderRadius.all(Radius.circular(26)),
         color: AppColors.primary
       ),
       child: Text(text, style: AppText.whiteHead,),
@@ -78,14 +80,16 @@ Widget primaryInkWell({required callback, required String text,}){
   );
 }
 
-Widget secondaryInkWell({required callback, required String text}){
+Widget secondaryInkWell({
+  required callback, required String text,
+  double width=180, double height=52
+}){
   return InkWell(
     onTap: callback,
     child: Container(
-      width: 180, height: 56, alignment: Alignment.center,
-      margin: const EdgeInsets.only(bottom: 24),
+      width: width, height: height, alignment: Alignment.center,
       decoration: const BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(28)),
+          borderRadius: BorderRadius.all(Radius.circular(26)),
           color: AppColors.secondary
       ),
       child: Text(text, style: AppText.Head1,),
@@ -93,6 +97,22 @@ Widget secondaryInkWell({required callback, required String text}){
   );
 }
 
+Widget transpDeepSecGesture({
+  required callback, required String text,
+  double width=180, double height=52
+}){
+  return GestureDetector(
+    onTap: callback,
+    child: Container(
+      width: width, height: height, alignment: Alignment.center,
+      decoration: BoxDecoration(
+        border: Border.all(color: AppColors.deepSecondary, width: 1),
+        borderRadius: BorderRadius.all(Radius.circular(26))
+      ),
+      child: Text(text, style: AppText.secodaryHead),
+    ),
+  );
+}
 
 
 class AppSize{

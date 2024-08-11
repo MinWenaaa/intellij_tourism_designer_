@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper_view/flutter_swiper_view.dart';
+import 'package:intellij_tourism_designer/constants/theme.dart';
 import 'package:intellij_tourism_designer/helpers/comment_list.dart';
 import 'package:intellij_tourism_designer/helpers/poi_detail_data.dart';
 import 'package:intellij_tourism_designer/models/home_view_model.dart';
-import 'package:intellij_tourism_designer/route_utils.dart';
 import 'package:provider/provider.dart';
 
 class Poidetailpage extends StatefulWidget {
@@ -33,42 +33,43 @@ class _PoidetailpageState extends State<Poidetailpage> {
       child: Scaffold(
         body: SafeArea(
           child: SingleChildScrollView(
-            child: Stack(
-              children: [
-                Selector<POIDetialViewModel, PoiDetail?>(
+            child: Selector<POIDetialViewModel, PoiDetail?>(
                   selector: (context, vm)=> vm.poi,
                   builder: (context, poi, child)=> Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       _bannerView(poi?.pphoto),
+                      const SizedBox(height: 5,),
                       Row(
                         children: [
-                          Icon(Icons.photo, size: 50,),
-                          Text(poi?.pname??"加载中"),
-                          Text(poi?.pclass??"")
+                          Icon(Icons.photo, size: 50, color: AppColors.deepSecondary,),
+                          Text(poi?.pname??"加载中", style: AppText.Head2,),
+                          const SizedBox(width: 10,),
+                          Text(poi?.pclass??"", style: AppText.detail,)
                         ],
                       ),
-                      Text(poi?.pintroduceLong??""),
-                      _TextView(Head: "时间", content: poi?.popenTime??""),
-                      _TextView(Head: "地址", content: poi?.paddress??""),
-                      _TextView(Head: "推荐时间", content: poi?.precommendedDuration??""),
-                      _TextView(Head: "等级", content: poi?.pgrade??""),
-                      _TextView(Head: "等级", content: poi?.plevel??""),
-                      _TextView(Head: "电话", content: poi?.pphonenumber??"meiyou"),
-                      _TextView(Head: "预算", content: poi?.pprice??""),
-                      _TextView(Head: "等级", content: poi?.prank??""),
-                      SizedBox(height: 50,),
+                      Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(poi?.pintroduceLong??"", style: AppText.matter,),
+                            const SizedBox(height: 8,),
+                            _TextView(Head: " 时间", content: poi?.popenTime??""),
+                            _TextView(Head: " 地址", content: poi?.paddress??""),
+                            _TextView(Head: " 推荐时间", content: poi?.precommendedDuration??""),
+                            _TextView(Head: " 等级", content: poi?.pgrade??""),
+                            _TextView(Head: " 等级", content: poi?.plevel??""),
+                            _TextView(Head: " 电话", content: poi?.pphonenumber??"meiyou"),
+                            _TextView(Head: " 预算", content: poi?.pprice??""),
+                            _TextView(Head: " 等级", content: poi?.prank??""),]
+                        ),
+                      ),
+                      const SizedBox(height: 30,),
+                      Divider(),
                       _CommentList()
                     ],
                   ),
-                ),
-                GestureDetector(
-                  onTap: (){RouteUtils.pop(context);},
-                  child: Container(
-                    child: Icon(Icons.arrow_back_ios),
-                  ),
-                )
-              ]
             ),
           ),
         ),
@@ -97,7 +98,7 @@ class _PoidetailpageState extends State<Poidetailpage> {
   Widget _TextView({required String Head, required String content}){
     return RichText(text: TextSpan(
       children: [
-        TextSpan(text: "${Head}：", style: TextStyle(fontSize: 14, color: Colors.black87)),
+        TextSpan(text: "${Head}：", style: AppText.matter),
         TextSpan(text: content, style: TextStyle(fontSize: 14, color: Colors.black54))
       ]
     ));

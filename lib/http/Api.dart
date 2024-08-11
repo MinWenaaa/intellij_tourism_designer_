@@ -68,19 +68,19 @@ class Api {
   //获取导航信息
   Future<List<LatLng>?> navigationRequire({required LatLng origin, required LatLng target}) async{
 
-    print("require navigation: origin${origin}, target:${target}");
+    print("require navigation: origin${origin.longitude},${origin.latitude}, ${target.longitude},${target.latitude}");
 
-    Response response = await Dio_gaode.instance().get(
-      path: "/direction/walking",
+    Response response = await Dio_database.instance().get(
+      path: "/designer/navigation",
       queryParameters: {
         "origin": "${origin.longitude},${origin.latitude}",
         "destination": "${target.longitude},${target.latitude}",
-        "key": "3a1ca59e1a7cde051a8875cc0aa9e2a6",
-      }
+        "key": "	3a1ca59e1a7cde051a8875cc0aa9e2a6"
+      },
     );
-
-    NavigationData navigationdata = NavigationData.fromJson(response);
-    return navigationdata.getPointList();
+    print("success");
+    NavigationData navigationData = NavigationData.fromJson(response.data);
+    return navigationData.getPointList();
 
   }
 

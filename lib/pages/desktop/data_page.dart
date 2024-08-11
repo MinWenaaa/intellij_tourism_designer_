@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intellij_tourism_designer/constants/theme.dart';
-import 'package:intellij_tourism_designer/widgets/map_view.dart';
+import 'package:intellij_tourism_designer/pages/mobile/path_planing_page.dart';
 import 'package:intellij_tourism_designer/models/data_model.dart';
 import 'package:intellij_tourism_designer/pages/desktop/city_stats.dart';
 import 'package:intellij_tourism_designer/widgets/path_query.dart';
@@ -57,7 +57,7 @@ class _DataPageState extends State<DataPage> {
             -((curState==FeatureState.infrestructureCheck)?AppSize.contentWidth2:0)
             -((curState==FeatureState.pathQuery)?AppSize.contentWidth3:0),
         height:size.height - AppSize.topBarHeight,
-        child:const DemoMap()
+        child:const PathPlanningPage()
       ),
     ]);
   }
@@ -144,7 +144,7 @@ class _DataPageState extends State<DataPage> {
         return SizedBox(
           width: size.width,
           height: size.height - AppSize.topBarHeight,
-          child: const DemoMap(),
+          child: const PathPlanningPage(),
         );
     }
   }
