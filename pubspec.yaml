@@ -48,12 +48,14 @@ dependencies:
   provider: ^6.1.2
   fl_chart: ^0.67.0
   easy_date_timeline: ^1.0.7
+  calendar_date_picker2: ^1.1.5
   dio: ^5.5.0+1
   oktoast: ^3.4.0
   pull_to_refresh: ^2.0.0
   flutter_swiper_view: ^1.1.8
   geolocator: ^7.0.0
   material_floating_search_bar_2: ^0.5.0
+  flutter_localization: ^0.2.1
 
 dev_dependencies:
   flutter_test:

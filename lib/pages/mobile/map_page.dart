@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:intellij_tourism_designer/constants/theme.dart';
 import 'package:intellij_tourism_designer/models/global_model.dart';
-import 'package:intellij_tourism_designer/pages/mobile/record_page.dart';
-import 'package:intellij_tourism_designer/route_utils.dart';
 import 'package:intellij_tourism_designer/widgets/tools_button.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
@@ -44,7 +42,7 @@ class _MapPageState extends State<MapPage> {
                   child: Padding(
                     padding: const EdgeInsets.all(24),
                     child: primaryInkWell(
-                      callback: () => RouteUtils.push(context, RecordPage()),
+                      callback: () {},
                       text: "开始记录",
                     ),
                   )

@@ -159,7 +159,7 @@ class _HomePageState extends State<HomePage> {
             Flexible(
               flex: 3,
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
