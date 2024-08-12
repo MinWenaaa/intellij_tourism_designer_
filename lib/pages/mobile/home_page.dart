@@ -1,13 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intellij_tourism_designer/constants/Constants.dart';
 import 'package:intellij_tourism_designer/constants/theme.dart';
-import 'package:intellij_tourism_designer/helpers/poi_list_view_data.dart';
 import 'package:intellij_tourism_designer/models/home_view_model.dart';
 import 'package:intellij_tourism_designer/pages/poi_detail_page.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-
+import '../../constants/constants.dart';
 import '../../widgets/detail_view.dart';
 
 class HomePage extends StatefulWidget {
@@ -21,7 +19,7 @@ class _HomePageState extends State<HomePage> {
   HomeViewModel viewModel = HomeViewModel();
   RefreshController refreshController = RefreshController();
 
-  String type = POItype.attraction;
+  String type = ConstantString.attraction;
   bool is_detail = false;
   num currentID = 0;
 
@@ -77,10 +75,10 @@ class _HomePageState extends State<HomePage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      _typeItem(tartgetType: POItype.attraction, color: Colors.amberAccent, text: "景点"),
-                      _typeItem(tartgetType: POItype.dining, color: Colors.amberAccent, text: "餐饮"),
-                      _typeItem(tartgetType: POItype.hotel, color: Colors.amberAccent, text: "住宿"),
-                      _typeItem(tartgetType: POItype.camera, color: Colors.amberAccent, text: "机位"),
+                      _typeItem(tartgetType: ConstantString.attraction, color: Colors.amberAccent, text: "景点"),
+                      _typeItem(tartgetType: ConstantString.dining, color: Colors.amberAccent, text: "餐饮"),
+                      _typeItem(tartgetType: ConstantString.hotel, color: Colors.amberAccent, text: "住宿"),
+                      _typeItem(tartgetType: ConstantString.camera, color: Colors.amberAccent, text: "机位"),
                     ],
                   ),
                   const SizedBox(height:10),

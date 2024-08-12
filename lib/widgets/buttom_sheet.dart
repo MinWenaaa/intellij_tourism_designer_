@@ -92,10 +92,10 @@ class _LayerSettingDemoState extends State<LayerSettingDemo> {
 
   Widget _makersButton({required int index, required GlobalModel model}){
     return Selector<GlobalModel, bool>(
-      selector: (context, vm) => vm.poiMarker[index],
+      selector: (context, vm) => vm.isShowPOI[index],
       builder: (context, flag, child) => Row(
         children: [
-          Checkbox(value: flag, onChanged: (value) => model.changePoiMarker(index, value!)),
+          Checkbox(value: flag, onChanged: (value) => model.changePoiMarkerShowState(index, value!)),
           Text("CheckBox")
         ],
       ),

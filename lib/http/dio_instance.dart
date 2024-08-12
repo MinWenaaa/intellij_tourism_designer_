@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:intellij_tourism_designer/http/rsp_interceptor.dart';
+import '../constants/constants.dart';
 
 class Dio_database{
   static Dio_database? _instance;
@@ -10,30 +11,20 @@ class Dio_database{
     return _instance ??= Dio_database._();
   }
 
-  final Dio _dio = Dio();
-  final Duration _defaultTime = const Duration(seconds: 30);
+  final Dio _dio = Dio(
+      BaseOptions(
+          method: "GET",
+          baseUrl: "http://121.41.170.185:5000/",
+          connectTimeout: defaultTime,
+          receiveTimeout: defaultTime,
+          sendTimeout: defaultTime,
+          responseType: ResponseType.json,
+          persistentConnection: true
+      )
+  );
 
-  void initDio({
-    required String baseUrl,
-    String? httpMethod = "GET",
-    Duration? connectTimeout,
-    Duration? receiveTimeout,
-    Duration? sendTimeout,
-    ResponseType? responseType,
-    String? contentType,}
-  ){
-    _dio.options = BaseOptions(
-        method: httpMethod,
-        baseUrl: baseUrl,
-        connectTimeout: connectTimeout??_defaultTime,
-        receiveTimeout: receiveTimeout??_defaultTime,
-        sendTimeout: sendTimeout??_defaultTime,
-        responseType: responseType??ResponseType.json,
-        contentType: contentType,
-        persistentConnection: true
-    );
-    _dio.interceptors.add(ResponseInterceptor());
-  }
+  void initDio() => _dio.interceptors.add(ResponseInterceptor());
+
 
   Future<Response> get({
     required String path,
@@ -44,7 +35,7 @@ class Dio_database{
     return await _dio.get(
         path,
         queryParameters: queryParameters,
-        options: options??Options(method: "GET", receiveTimeout: _defaultTime, sendTimeout: _defaultTime),
+        options: options??Options(method: "GET", receiveTimeout: defaultTime, sendTimeout: defaultTime),
         cancelToken: cancelToken
     );
   }
@@ -60,7 +51,10 @@ class Dio_database{
         path,
         data: data,
         queryParameters: queryParameters,
-        options: options??Options(method: "POST", receiveTimeout: _defaultTime, sendTimeout: _defaultTime),
+        options: options??Options(
+            method: "POST",
+            receiveTimeout: defaultTime,
+            sendTimeout: defaultTime),
         cancelToken: cancelToken
     );
   }
@@ -75,30 +69,17 @@ class Dio_gaode{
     return _instance ??= Dio_gaode._();
   }
 
-  final Dio _dio = Dio();
-  final Duration _defaultTime = const Duration(seconds: 30);
-
-  void initDio({
-    required String baseUrl,
-    String? httpMethod = "GET",
-    Duration? connectTimeout,
-    Duration? receiveTimeout,
-    Duration? sendTimeout,
-    ResponseType? responseType,
-    String? contentType,}
-      ){
-    _dio.options = BaseOptions(
-      method: httpMethod,
-      baseUrl: baseUrl,
-      connectTimeout: connectTimeout??_defaultTime,
-      receiveTimeout: receiveTimeout??_defaultTime,
-      sendTimeout: sendTimeout??_defaultTime,
-      responseType: responseType??ResponseType.json,
-      contentType: contentType,
-      persistentConnection: true
-    );
-    _dio.interceptors.add(ResponseInterceptor());
-  }
+  final Dio _dio = Dio(
+      BaseOptions(
+          method: "GET",
+          baseUrl: "http://182.92.251.24:5000/",
+          connectTimeout: defaultTime,
+          receiveTimeout: defaultTime,
+          sendTimeout: defaultTime,
+          responseType: ResponseType.json,
+          persistentConnection: true
+      )
+  );
 
   Future<Response> get({
     required String path,
@@ -109,28 +90,12 @@ class Dio_gaode{
     return await _dio.get(
         path,
         queryParameters: queryParameters,
-        options: options??Options(method: "GET", receiveTimeout: _defaultTime, sendTimeout: _defaultTime),
+        options: options??Options(method: "GET", receiveTimeout: defaultTime, sendTimeout: defaultTime),
         cancelToken: cancelToken
     );
   }
 
-  Future<Response> post({
-    required String path,
-    Object? data,
-    Map<String,dynamic>? queryParameters,
-    Options? options,
-    CancelToken? cancelToken
-  })async{
-    return await _dio.post(
-        path,
-        data: data,
-        queryParameters: queryParameters,
-        options: options??Options(method: "POST", receiveTimeout: _defaultTime, sendTimeout: _defaultTime),
-        cancelToken: cancelToken
-    );
-  }
 }
-
 
 class Dio_enterprise{
   static Dio_enterprise? _instance;
@@ -141,30 +106,17 @@ class Dio_enterprise{
     return _instance ??= Dio_enterprise._();
   }
 
-  final Dio _dio = Dio();
-  final Duration _defaultTime = const Duration(seconds: 30);
-
-  void initDio({
-    required String baseUrl,
-    String? httpMethod = "GET",
-    Duration? connectTimeout,
-    Duration? receiveTimeout,
-    Duration? sendTimeout,
-    ResponseType? responseType,
-    String? contentType,}
-      ){
-    _dio.options = BaseOptions(
-      method: httpMethod,
-      baseUrl: baseUrl,
-      connectTimeout: connectTimeout??_defaultTime,
-      receiveTimeout: receiveTimeout??_defaultTime,
-      sendTimeout: sendTimeout??_defaultTime,
-      responseType: responseType??ResponseType.json,
-      contentType: contentType,
-      persistentConnection: true
-    );
-    _dio.interceptors.add(ResponseInterceptor());
-  }
+  final Dio _dio = Dio(
+      BaseOptions(
+          method: "GET",
+          baseUrl: "http://182.92.251.24:8080/",
+          connectTimeout: defaultTime,
+          receiveTimeout: defaultTime,
+          sendTimeout: defaultTime,
+          responseType: ResponseType.json,
+          persistentConnection: true
+      )
+  );
 
   Future<Response> get({
     required String path,
@@ -175,23 +127,7 @@ class Dio_enterprise{
     return await _dio.get(
         path,
         queryParameters: queryParameters,
-        options: options??Options(method: "GET", receiveTimeout: _defaultTime, sendTimeout: _defaultTime),
-        cancelToken: cancelToken
-    );
-  }
-
-  Future<Response> post({
-    required String path,
-    Object? data,
-    Map<String,dynamic>? queryParameters,
-    Options? options,
-    CancelToken? cancelToken
-  })async{
-    return await _dio.post(
-        path,
-        data: data,
-        queryParameters: queryParameters,
-        options: options??Options(method: "POST", receiveTimeout: _defaultTime, sendTimeout: _defaultTime),
+        options: options??Options(method: "GET", receiveTimeout: defaultTime, sendTimeout: defaultTime),
         cancelToken: cancelToken
     );
   }
@@ -206,30 +142,17 @@ class Dio_qw{
     return _instance ??= Dio_qw._();
   }
 
-  final Dio _dio = Dio();
-  final Duration _defaultTime = const Duration(seconds: 30);
-
-  void initDio({
-    required String baseUrl,
-    String? httpMethod = "GET",
-    Duration? connectTimeout,
-    Duration? receiveTimeout,
-    Duration? sendTimeout,
-    ResponseType? responseType,
-    String? contentType,}
-      ){
-    _dio.options = BaseOptions(
-      method: httpMethod,
-      baseUrl: baseUrl,
-      connectTimeout: connectTimeout??_defaultTime,
-      receiveTimeout: receiveTimeout??_defaultTime,
-      sendTimeout: sendTimeout??_defaultTime,
-      responseType: responseType??ResponseType.json,
-      contentType: contentType,
-      persistentConnection: true
-    );
-    _dio.interceptors.add(ResponseInterceptor());
-  }
+  final Dio _dio = Dio(
+      BaseOptions(
+          method: "GET",
+          baseUrl: "https://devapi.qweather.com/v7/",
+          connectTimeout: defaultTime,
+          receiveTimeout: defaultTime,
+          sendTimeout: defaultTime,
+          responseType: ResponseType.json,
+          persistentConnection: true
+      )
+  );
 
   Future<Response> get({
     required String path,
@@ -240,7 +163,7 @@ class Dio_qw{
     return await _dio.get(
         path,
         queryParameters: queryParameters,
-        options: options??Options(method: "GET", receiveTimeout: _defaultTime, sendTimeout: _defaultTime),
+        options: options??Options(method: "GET", receiveTimeout: defaultTime, sendTimeout: defaultTime),
         cancelToken: cancelToken
     );
   }

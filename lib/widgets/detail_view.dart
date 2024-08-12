@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intellij_tourism_designer/constants/theme.dart';
-import 'package:intellij_tourism_designer/helpers/itinerary_builder.dart';
 import 'package:intellij_tourism_designer/helpers/weather_data.dart';
 import 'package:intellij_tourism_designer/http/Api.dart';
 import 'package:latlong2/latlong.dart';
@@ -109,8 +108,8 @@ class ItiCard extends StatelessWidget {
 }
 
 class ActCard extends StatelessWidget {
-  final Activity curAct;
-  const ActCard({required this.curAct,super.key});
+
+  const ActCard({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -123,7 +122,7 @@ class ActCard extends StatelessWidget {
               Row(
                 children:[
                   const Icon(Icons.abc),
-                  Text(curAct.point.Name,style:AppText.matter),
+                  Text("poiName",style:AppText.matter),
                 ]
               ),
               const Text("时间：",style:AppText.matter)

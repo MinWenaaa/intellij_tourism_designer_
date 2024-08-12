@@ -1,10 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:intellij_tourism_designer/pages/memory_view_page.dart';
-import '../../constants/Constants.dart';
-import '../../helpers/itinerary_builder.dart';
-import '../../route_utils.dart';
 import '../../widgets/detail_view.dart';
-import '../iti_edit_page.dart';
 
 /*
 用户的出行记录列表
@@ -26,7 +21,7 @@ class _MemoryListPageState extends State<MemoryListPage> {
     return Scaffold(
       body:  ListView.builder(
           itemBuilder: (context, index){
-            return _Item(sampleIti);
+            return _Item();
           },
           itemCount: 10,
         ),
@@ -34,7 +29,7 @@ class _MemoryListPageState extends State<MemoryListPage> {
     );
   }
 
-  Widget _Item(Itinerary iti){
+  Widget _Item(){
     return GestureDetector(
       onTap: () => widget.changeNavigate.call(),
       child: ItiCard(),

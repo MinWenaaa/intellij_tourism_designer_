@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:intellij_tourism_designer/constants/theme.dart';
-import 'package:intellij_tourism_designer/models/data_model.dart';
-import 'package:intellij_tourism_designer/widgets/detail_view.dart';
 import 'package:intellij_tourism_designer/helpers/POI_builder.dart';
 
 //这是一个路径查询的界面，计划是比较自由的，可以任意选途径点和一些个性选项
@@ -129,9 +126,8 @@ class _PathQueryWidgetState extends State<PathQueryWidget> {
   }
 
   Widget infrestructureList(BuildContext context) {
-    final model = Provider.of<ShareDataPage>(context);
     return ListView.builder(
-      itemCount: model.poiList.length,
+      itemCount: 0,
       itemBuilder: (BuildContext context, int index) {
         return Padding(
           padding: const EdgeInsets.symmetric(

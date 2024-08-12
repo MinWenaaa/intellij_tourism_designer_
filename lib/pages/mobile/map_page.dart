@@ -1,18 +1,20 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:intellij_tourism_designer/constants/constants.dart';
 import 'package:intellij_tourism_designer/constants/theme.dart';
 import 'package:intellij_tourism_designer/models/global_model.dart';
-import 'package:intellij_tourism_designer/widgets/detail_view.dart';
+import 'package:intellij_tourism_designer/pages/poi_detail_page.dart';
 import 'package:intellij_tourism_designer/widgets/tools_button.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
-import '../../constants/Constants.dart';
 import '../../helpers/tile_providers.dart';
 import '../../widgets/searching_bar.dart';
 
 /*
   地图查看模块
  */
+
 
 class MapPage extends StatefulWidget {
   const MapPage({super.key});
@@ -23,17 +25,40 @@ class MapPage extends StatefulWidget {
 
 class _MapPageState extends State<MapPage> with TickerProviderStateMixin{
 
+
+  Timer? _timer;
   late final MapController _mapController;
+
+
 
   @override
   void initState() {
     super.initState();
     _mapController = MapController();
+    _startTimer(context);
   }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+
+  void _startTimer(BuildContext context) {
+
+    final vm = Provider.of<GlobalModel>(context,listen: false);
+    _timer = Timer.periodic(defaultTime, (timer) {
+      LatLng newCenter = _mapController.camera.center;
+      print("check center move: ${newCenter}");
+      vm.refreshMarker(newCenter);
+    });
+  }
+
 
   MapOptions initMapOption() {
     return MapOptions(
-      initialCenter: LatLng(30.56,114.32),
+      initialCenter: LatLng(30.5,114.4),
       initialZoom: 16.5,
       maxZoom: MAXZOOM,
       minZoom: MINZOOM,
@@ -60,6 +85,10 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin{
                       selector: (context, provider) => provider.baseProvider,
                       builder: (context, data, child) => baseTileLayer(data),
                     ),
+                    Selector<GlobalModel, List<Marker>>(
+                      selector: (context, provider) => provider.markers[0],
+                      builder: (context, data, child) => MarkerLayer(markers: data),
+                    )
                   ],
                 ),
                 Align(
@@ -74,6 +103,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin{
                 ),
                 ToolsButton(),
                 SearchingBar(),
+                _PoiDetailFab(context)
                 /*Positioned(
                   top: 80, right: 10,
                   child: WeatherCard(
@@ -84,6 +114,24 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin{
               ],
             )
         )
+    );
+  }
+
+
+  Widget _PoiDetailFab(BuildContext context){
+    final vm = Provider.of<GlobalModel>(context,listen: false);
+    return Selector<GlobalModel, mapState>(
+      selector: (context, provider) => provider.state,
+      builder: (context, data, child) => (data==mapState.detail) ?
+          Stack(children: [
+              Poidetailpage(id: vm.currentPOI),
+              Positioned(
+                top: 10, left: 10,
+                child: GestureDetector(
+                    onTap: () => vm.changeState(mapState.map),
+                    child: Icon(Icons.arrow_back_ios, color: AppColors.matter,)),
+              )],
+          ) : SizedBox()
     );
   }
 

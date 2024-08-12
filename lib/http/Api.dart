@@ -1,8 +1,10 @@
 import 'package:dio/dio.dart';
+import 'package:intellij_tourism_designer/constants/constants.dart';
 import 'package:intellij_tourism_designer/helpers/comment_list.dart';
 import 'package:intellij_tourism_designer/helpers/navigation_data.dart';
 import 'package:intellij_tourism_designer/helpers/poi_detail_data.dart';
 import 'package:intellij_tourism_designer/helpers/poi_list_view_data.dart';
+import 'package:intellij_tourism_designer/helpers/poi_marker_data.dart';
 import 'package:intellij_tourism_designer/helpers/search_result_data.dart';
 import 'package:latlong2/latlong.dart';
 import '../helpers/User.dart';
@@ -72,10 +74,11 @@ class Api {
     print("require navigation: origin${origin.longitude},${origin.latitude}, ${target.longitude},${target.latitude}");
 
     Response response = await Dio_database.instance().get(
-      path: "designer/navigation",
+      path: "direction/walking",
       queryParameters: {
         "origin": "${origin.longitude},${origin.latitude}",
         "destination": "${target.longitude},${target.latitude}",
+        "key": "3a1ca59e1a7cde051a8875cc0aa9e2a6"
       },
     );
     print("navigation request success");
@@ -121,4 +124,25 @@ class Api {
     return weatherData;
   }
 
+
+  //poi_marker刷新
+  Future<List<POIMarkerData>?> getMarkers(double min_x, double min_y, double max_x, double max_y, {required int type}) async{
+
+    Response response = await Dio_enterprise.instance().get(
+      path: "geoserver/Esri_c657/wfs",
+      queryParameters: {
+        "request": "GetFeature",
+        "typename": ConstantString.poi_layer[type],
+        "outputFormat": "json",
+        "bbox": "${min_x},${min_y},${max_x},${max_y},EPSG:4326",
+        "count": 100,
+      },
+    );
+
+    print("request marker refresh: ${min_x},${min_y},${max_x},${max_y}");
+    PoiMarkerListData poiMarkerData = PoiMarkerListData.fromJson(response.data);
+
+    return poiMarkerData.getPoiList();
+
+  }
 }
