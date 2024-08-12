@@ -178,7 +178,7 @@ class _WeatherCardState extends State<WeatherCard> {
           if (snapshot.hasData) {
             return _weather(snapshot.data!);
           } else {
-            return CircularProgressIndicator();
+            return const CircularProgressIndicator(color: AppColors.primary,);
           }
         },
       ),
@@ -187,10 +187,14 @@ class _WeatherCardState extends State<WeatherCard> {
 
   Widget _weather(WeatherData weather){
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Row(
+          mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            Icon(Icons.cloud, color: Colors.white,),
+            const Icon(Icons.cloud, color: Colors.white,size: 28,),
+            const SizedBox(width: 10,),
             Text(weather.now?.text??"", style: AppText.matter,),
           ],
         ),

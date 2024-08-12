@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intellij_tourism_designer/helpers/search_result_data.dart';
 import 'package:intellij_tourism_designer/models/search_model.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:material_floating_search_bar_2/material_floating_search_bar_2.dart';
 import 'package:provider/provider.dart';
 
@@ -10,13 +11,16 @@ import 'package:provider/provider.dart';
  */
 
 class SearchingBar extends StatefulWidget {
-  const SearchingBar({super.key});
+  
+  Function(LatLng, double) callBack;
+  SearchingBar({required this.callBack, super.key});
 
   @override
   State<SearchingBar> createState() => _SearchingBarState();
 }
 
 class _SearchingBarState extends State<SearchingBar> {
+  
   SearchModel searchModel = SearchModel();
   final FloatingSearchBarController controller = FloatingSearchBarController();
 
@@ -71,11 +75,8 @@ class _SearchingBarState extends State<SearchingBar> {
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: List.generate(model.itemList.length,
-              (index)=>Builder(builder: (context)=>
-                Container(
-                  width: 240, height: 100,
-                  child: _searchItem(context, model.itemList[index]!, model.itemList.length-1==index),
-                )
+              (index)=>Builder(builder: (context) => _searchItem(context, model.itemList[index]!, model.itemList.length-1==index),
+                
               )
             )
           )
@@ -89,6 +90,7 @@ class _SearchingBarState extends State<SearchingBar> {
       children: [
         InkWell(
           onTap: (){
+            widget.callBack.call(LatLng(item.y??30.5, item.x??114.2), 16.5);
             FloatingSearchBar.of(context)?.close();
           },
           child: Row(

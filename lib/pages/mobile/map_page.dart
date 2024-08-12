@@ -9,6 +9,7 @@ import 'package:intellij_tourism_designer/widgets/tools_button.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 import '../../helpers/tile_providers.dart';
+import '../../widgets/detail_view.dart';
 import '../../widgets/searching_bar.dart';
 
 /*
@@ -50,7 +51,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin{
     final vm = Provider.of<GlobalModel>(context,listen: false);
     _timer = Timer.periodic(defaultTime, (timer) {
       LatLng newCenter = _mapController.camera.center;
-      print("check center move: ${newCenter}");
+      //print("check center move: ${newCenter}");
       vm.refreshMarker(newCenter);
     });
   }
@@ -77,19 +78,13 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin{
         body: SafeArea(
           child: Stack(
               children: [
-                FlutterMap(
-                  mapController: _mapController,
-                  options: initMapOption(),
-                  children: [
-                    Selector<GlobalModel, int>(
-                      selector: (context, provider) => provider.baseProvider,
-                      builder: (context, data, child) => baseTileLayer(data),
-                    ),
-                    Selector<GlobalModel, List<Marker>>(
-                      selector: (context, provider) => provider.markers[0],
-                      builder: (context, data, child) => MarkerLayer(markers: data),
+                _mapLayers(),
+                Positioned(
+                    top: 80, right: 10,
+                    child: WeatherCard(
+                        height: 180, width: 280,
+                        location: LatLng(30.56,114.32)
                     )
-                  ],
                 ),
                 Align(
                   alignment: Alignment.bottomCenter,
@@ -102,21 +97,30 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin{
                   )
                 ),
                 ToolsButton(),
-                SearchingBar(),
-                _PoiDetailFab(context)
-                /*Positioned(
-                  top: 80, right: 10,
-                  child: WeatherCard(
-                    height: 80, width: 80,
-                    location: LatLng(30.56,114.32)
-                  ),
-                )*/
+                SearchingBar(callBack: _animatedMapMove),
+                _PoiDetailFab(context),
               ],
             )
         )
     );
   }
 
+  Widget _mapLayers(){
+    return FlutterMap(
+      mapController: _mapController,
+      options: initMapOption(),
+      children: [
+        Selector<GlobalModel, int>(
+          selector: (context, provider) => provider.baseProvider,
+          builder: (context, data, child) => baseTileLayer(data),
+        ),
+        Selector<GlobalModel, List<Marker>>(
+          selector: (context, provider) => provider.markers[0],
+          builder: (context, data, child) => MarkerLayer(markers: data),
+        )
+      ],
+    );
+  }
 
   Widget _PoiDetailFab(BuildContext context){
     final vm = Provider.of<GlobalModel>(context,listen: false);

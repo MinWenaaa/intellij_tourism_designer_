@@ -72,7 +72,7 @@ class Dio_gaode{
   final Dio _dio = Dio(
       BaseOptions(
           method: "GET",
-          baseUrl: "http://182.92.251.24:5000/",
+          baseUrl: "https://restapi.amap.com/v3/",
           connectTimeout: defaultTime,
           receiveTimeout: defaultTime,
           sendTimeout: defaultTime,

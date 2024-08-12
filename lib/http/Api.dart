@@ -18,8 +18,7 @@ class Api {
 
 
   //登录
-  Future<User?> UserLogin(
-      {required String name, required String password}) async{
+  Future<User?> UserLogin({required String name, required String password}) async{
     Response response = await Dio_database.instance().get(
         path: "user/login",
         queryParameters: {"name": name, "password": password}
@@ -73,7 +72,7 @@ class Api {
 
     print("require navigation: origin${origin.longitude},${origin.latitude}, ${target.longitude},${target.latitude}");
 
-    Response response = await Dio_database.instance().get(
+    Response response = await Dio_gaode.instance().get(
       path: "direction/walking",
       queryParameters: {
         "origin": "${origin.longitude},${origin.latitude}",
