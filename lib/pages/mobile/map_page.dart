@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:intellij_tourism_designer/constants/Markers.dart';
 import 'package:intellij_tourism_designer/constants/constants.dart';
 import 'package:intellij_tourism_designer/constants/theme.dart';
 import 'package:intellij_tourism_designer/http/Api.dart';
@@ -109,6 +110,17 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin{
           selector: (context, provider) => provider.markers[0],
           builder: (context, data, child) => MarkerLayer(markers: data),
         ),
+        Selector<GlobalModel,mapState>(
+          selector: (context, provider) => provider.state,
+          builder: (context, data, child) => (data==mapState.view_record)?
+            Selector<GlobalModel,List<LatLng>>(
+            selector: (context, provider) => provider.currentRecords,
+            builder: (context, data, child) {
+              _animatedMapMove(data[0], 16.5);
+              return PolylineLayer(polylines: [planPolyline(data)]);
+            }
+          ) : const SizedBox()
+        )
         //WMS_ours(layerName: "Attraction_Heatmap")
       ],
     );

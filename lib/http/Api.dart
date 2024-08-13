@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:intellij_tourism_designer/helpers/record_list_data.dart';
 import 'package:intl/intl.dart';
 import 'package:intellij_tourism_designer/constants/constants.dart';
 import 'package:intellij_tourism_designer/helpers/comment_list.dart';
@@ -90,6 +91,15 @@ class Api {
   //根据用户id获取规划列表
 
   //根据用户id获取回忆列表
+  Future<List<RecordListViewData>?> getRecordList(num uid) async {
+    Response response = await Dio_database.instance().get(
+      path: "user/records",
+      queryParameters: {"id": uid}
+    );
+    print("get user: $uid 's records");
+    RecordListData recordListData = RecordListData.fromJson(response.data);
+    return recordListData.recordList;
+  }
 
   //获取规划详细信息
 

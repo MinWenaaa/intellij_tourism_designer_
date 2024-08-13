@@ -157,7 +157,6 @@ class _WeatherCardState extends State<WeatherCard> {
   late Future<WeatherData> weatherData;
 
   Future<WeatherData> fetchWeather() async {
-    // 这里模拟网络请求
     WeatherData weatherData = await Api.instance.getWeather(location: widget.location)??WeatherData();
     return weatherData;
   }

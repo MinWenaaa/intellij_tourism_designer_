@@ -51,6 +51,8 @@ class GlobalModel with ChangeNotifier{
   List<bool> isShowPOI = [false, false, false, false];
   List<List<Marker>> markers = [[],[],[],[]];
 
+  List<LatLng> currentRecords = [];
+
   void changeBaseLayer(int provider){
     baseProvider = provider;
     notifyListeners();
@@ -135,6 +137,11 @@ class GlobalModel with ChangeNotifier{
         }
       }
     }
+    notifyListeners();
+  }
+
+  void setCurrentRecords(List<LatLng> list){
+    currentRecords = list;
     notifyListeners();
   }
 
