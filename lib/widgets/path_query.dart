@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intellij_tourism_designer/constants/theme.dart';
-import 'package:intellij_tourism_designer/helpers/POI_builder.dart';
 
 //这是一个路径查询的界面，计划是比较自由的，可以任意选途径点和一些个性选项
 
@@ -12,7 +11,7 @@ class PathQueryWidget extends StatefulWidget {
 }
 
 class _PathQueryWidgetState extends State<PathQueryWidget> {
-  List<POI> wayPoint=[POI(),POI()];
+  List wayPoint=[];
   int transport=0;
   int strategy=0;
 
@@ -41,7 +40,7 @@ class _PathQueryWidgetState extends State<PathQueryWidget> {
             onReorder:(int oldIndex,int newIndex){
               setState((){
                 if(oldIndex<newIndex){newIndex-=1;}
-                final POI item =wayPoint.removeAt(oldIndex);
+                final item =wayPoint.removeAt(oldIndex);
                 wayPoint.insert(newIndex,item);
               });
             }
@@ -51,7 +50,7 @@ class _PathQueryWidgetState extends State<PathQueryWidget> {
         SizedBox(
           width:150,
           child: TextButton(
-            onPressed:(){setState((){wayPoint.add(POI());});},
+            onPressed:(){setState((){});},
             style:AppButton.button1,
             child:const Text("添加途径点"),
           ),

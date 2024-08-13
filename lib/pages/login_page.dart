@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:intellij_tourism_designer/constants/theme.dart';
-import 'package:intellij_tourism_designer/http/Api.dart';
 import 'package:intellij_tourism_designer/pages/desktop/desktop_page.dart';
-import 'package:intellij_tourism_designer/pages/mobile/mobile_page.dart';
 import 'package:intellij_tourism_designer/pages/register_page.dart';
 import 'package:intellij_tourism_designer/route_utils.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
 
 import '../models/global_model.dart';
+import 'mobile/mobile_page.dart';
 
 //登录界面
 

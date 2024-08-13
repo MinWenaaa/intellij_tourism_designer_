@@ -43,6 +43,7 @@ class GlobalModel with ChangeNotifier{
   int baseProvider = 0;
   mapState state = mapState.map;
   int currentPOI = 0;
+  num rid = 0;
 
   List<bool> thematicMap = [false];
 
@@ -55,8 +56,13 @@ class GlobalModel with ChangeNotifier{
     notifyListeners();
   }
 
-  void changeState(mapState newState){
+  Future<void> changeState(mapState newState) async {
     state = newState;
+    if(state==mapState.record){
+      dynamic id = await Api.instance.startRecord(user.uid??200, center);
+      rid = id;
+      print("record ${id} start!");
+    }
     notifyListeners();
   }
 

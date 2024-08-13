@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
               useMaterial3: true,
             ),
             localizationsDelegates: GlobalMaterialLocalizations.delegates,
-            home: MobilePage()//const LoginPage(),
+            home: const LoginPage(),//MobilePage()
               ),
         ));
   }

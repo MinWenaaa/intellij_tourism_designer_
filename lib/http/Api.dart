@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:intl/intl.dart';
 import 'package:intellij_tourism_designer/constants/constants.dart';
 import 'package:intellij_tourism_designer/helpers/comment_list.dart';
 import 'package:intellij_tourism_designer/helpers/navigation_data.dart';
@@ -96,6 +97,8 @@ class Api {
 
   //获取天气数据
   Future<WeatherData?> getWeather({required LatLng location}) async {
+    DateTime currentTime = DateTime.now();
+
     Response response1 = await Dio_qw.instance().get(
         path: "weather/now",
         queryParameters: {
@@ -103,17 +106,18 @@ class Api {
           "key": "5d778ca0412d4b599fd38ff17c043786",
         }
     );
-    print("weather data get: ${response1}");
+    //print("weather data get: ${response1}");
 
+    print("${currentTime.year}${currentTime.month}${currentTime.day}");
     Response response2 = await Dio_qw.instance().get(
         path: "astronomy/sun",
         queryParameters: {
           "location": "${location.longitude},${location.latitude}",
-          "date": "20240815",
+          "date": "${currentTime.year}0${currentTime.month}${currentTime.day}",
           "key": "5d778ca0412d4b599fd38ff17c043786",
         }
     );
-    print("sun data get: ${response2}");
+    //print("sun data get: ${response2}");
 
     WeatherData weatherData = WeatherData.fromJson(response1.data);
     Sun sun = Sun.fromJson(response2.data);
@@ -144,4 +148,32 @@ class Api {
     return poiMarkerData.getPoiList();
 
   }
+
+  //新建记录
+  Future<num?> startRecord(num uid, LatLng start) async {
+    DateTime currentTime = DateTime.now();
+    var formatter = DateFormat('yyyy-MM-dd HH:mm:ss');
+    Response response = await Dio_database.instance().post(
+      path: "designer/create_record",
+      data: {
+        "id": uid,
+        "start": "${start.longitude},${start.latitude}",
+        "name": formatter.format(currentTime)
+      }
+    );
+    print("record name: ${formatter.format(currentTime)}");
+    return response.data['id'];
+  }
+  //刷新点
+  Future<void> pushPoint(num rid, LatLng point) async {
+    Response response = await Dio_database.instance().post(
+      path: "designer/push_point",
+      data: {
+        "id": rid,
+        "point": "${point.longitude},${point.latitude}"
+      }
+    );
+  }
+
+
 }

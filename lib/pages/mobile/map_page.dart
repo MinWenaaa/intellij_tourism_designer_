@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:intellij_tourism_designer/constants/constants.dart';
 import 'package:intellij_tourism_designer/constants/theme.dart';
+import 'package:intellij_tourism_designer/http/Api.dart';
 import 'package:intellij_tourism_designer/models/global_model.dart';
 import 'package:intellij_tourism_designer/pages/poi_detail_page.dart';
 import 'package:intellij_tourism_designer/widgets/tools_button.dart';
@@ -49,17 +50,21 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin{
   void _startTimer(BuildContext context) {
 
     final vm = Provider.of<GlobalModel>(context,listen: false);
+
     _timer = Timer.periodic(defaultTime, (timer) {
       LatLng newCenter = _mapController.camera.center;
-      //print("check center move: ${newCenter}");
+      print("check center move: ${newCenter}");
       vm.refreshMarker(newCenter);
+      if(vm.state==mapState.record){
+        Api.instance.pushPoint(vm.rid, newCenter);
+      }
     });
   }
 
 
   MapOptions initMapOption() {
     return MapOptions(
-      initialCenter: LatLng(30.5,114.4),
+      initialCenter: const LatLng(30.5,114.4),
       initialZoom: 16.5,
       maxZoom: MAXZOOM,
       minZoom: MINZOOM,
@@ -79,25 +84,11 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin{
           child: Stack(
               children: [
                 _mapLayers(),
-                Positioned(
-                    top: 80, right: 10,
-                    child: WeatherCard(
-                        height: 180, width: 280,
-                        location: LatLng(30.56,114.32)
-                    )
-                ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Padding(
-                    padding: const EdgeInsets.all(24),
-                    child: primaryInkWell(
-                      callback: () {},
-                      text: "开始记录",
-                    ),
-                  )
-                ),
-                ToolsButton(),
-                SearchingBar(callBack: _animatedMapMove),
+                _weatherCard(),
+                _toolsButton(context),
+                _searchBar(context),
+                _recordButton(),
+                _stopRecord(),
                 _PoiDetailFab(context),
               ],
             )
@@ -117,8 +108,72 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin{
         Selector<GlobalModel, List<Marker>>(
           selector: (context, provider) => provider.markers[0],
           builder: (context, data, child) => MarkerLayer(markers: data),
-        )
+        ),
+        //WMS_ours(layerName: "Attraction_Heatmap")
       ],
+    );
+  }
+
+  Widget _weatherCard(){
+    return Selector<GlobalModel, mapState>(
+      selector: (context, model) => model.state,
+      builder: (context, state, child) => Positioned(
+          top: state==mapState.map ? 80 : 10, right: 10,
+          child: const WeatherCard(
+              height: 180, width: 280,
+              location: LatLng(30.56,114.32)
+          )
+      ),
+    );
+  }
+
+  Widget _toolsButton(BuildContext context){
+    return Selector<GlobalModel, mapState>(
+      selector: (context, model) => model.state,
+      builder: (context, state, child) => state==mapState.map ?
+        const ToolsButton() : const SizedBox()
+    );
+  }
+
+  Widget _searchBar(BuildContext context){
+    return Selector<GlobalModel, mapState>(
+        selector: (context, model) => model.state,
+        builder: (context, state, child) => state==mapState.map ?
+        SearchingBar(callBack: _animatedMapMove) : const SizedBox()
+    );
+  }
+
+  Widget _recordButton(){
+    final vm = Provider.of<GlobalModel>(context,listen: false);
+    return Selector<GlobalModel, mapState>(
+      selector: (context, model) => model.state,
+      builder: (context, state, child) => state==mapState.map ? Align(
+          alignment: Alignment.bottomCenter,
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: primaryInkWell(
+              callback: () => vm.changeState(mapState.record),
+              text: "开始记录",
+            ),
+          )
+      ) : const SizedBox()
+    );
+  }
+
+  Widget _stopRecord(){
+    final vm = Provider.of<GlobalModel>(context,listen: false);
+    return Selector<GlobalModel, mapState>(
+        selector: (context, model) => model.state,
+        builder: (context, state, child) => state==mapState.record ? Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: const EdgeInsets.all(24),
+              child: primaryInkWell(
+                callback: () => vm.changeState(mapState.map),
+                text: "结束",
+              ),
+            )
+        ) : const SizedBox()
     );
   }
 
@@ -133,9 +188,9 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin{
                 top: 10, left: 10,
                 child: GestureDetector(
                     onTap: () => vm.changeState(mapState.map),
-                    child: Icon(Icons.arrow_back_ios, color: AppColors.matter,)),
+                    child: const Icon(Icons.arrow_back_ios, color: AppColors.matter,)),
               )],
-          ) : SizedBox()
+          ) : const SizedBox()
     );
   }
 

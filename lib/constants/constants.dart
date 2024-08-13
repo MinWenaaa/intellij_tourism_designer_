@@ -26,4 +26,4 @@ class ConstantString{
 
 }
 
-const Duration defaultTime = const Duration(seconds: 5);
+const Duration defaultTime = const Duration(seconds: 10);
