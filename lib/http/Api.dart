@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:intellij_tourism_designer/helpers/record_list_data.dart';
 import 'package:intl/intl.dart';
 import 'package:intellij_tourism_designer/constants/constants.dart';
@@ -9,6 +10,7 @@ import 'package:intellij_tourism_designer/helpers/poi_list_view_data.dart';
 import 'package:intellij_tourism_designer/helpers/poi_marker_data.dart';
 import 'package:intellij_tourism_designer/helpers/search_result_data.dart';
 import 'package:latlong2/latlong.dart';
+import '../helpers/Iti_data.dart';
 import '../helpers/User.dart';
 import '../helpers/weather_data.dart';
 import 'dio_instance.dart';
@@ -106,8 +108,7 @@ class Api {
   //获取回忆详细信息
 
   //获取天气数据
-  Future<WeatherData?> getWeather({required LatLng location}) async {
-    DateTime currentTime = DateTime.now();
+  Future<WeatherData?> getWeather({required LatLng location, required DateTime date}) async {
 
     Response response1 = await Dio_qw.instance().get(
         path: "weather/now",
@@ -118,12 +119,12 @@ class Api {
     );
     //print("weather data get: ${response1}");
 
-    print("${currentTime.year}${currentTime.month}${currentTime.day}");
+    //print("${currentTime.year}${currentTime.month}${currentTime.day}");
     Response response2 = await Dio_qw.instance().get(
         path: "astronomy/sun",
         queryParameters: {
           "location": "${location.longitude},${location.latitude}",
-          "date": "${currentTime.year}0${currentTime.month}${currentTime.day}",
+          "date": "${date.year}0${date.month}${date.day}",
           "key": "5d778ca0412d4b599fd38ff17c043786",
         }
     );
@@ -185,5 +186,17 @@ class Api {
     );
   }
 
+
+  //获取模型规划
+  Future<List<List<ItiData>>?> design_LLM({required num poinNum, required String requirement}) async {
+    Response response = await Dio_database.instance().post(
+      path: "designer/designer",
+      data: {"num": poinNum, "requirement": requirement}
+    );
+    print("api got result");
+    ItiListData planData = ItiListData.fromJson(response.data);
+    print("result turned into: ${planData}");
+    return planData.itiList;
+  }
 
 }

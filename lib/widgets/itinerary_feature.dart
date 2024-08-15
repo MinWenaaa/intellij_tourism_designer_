@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:easy_date_timeline/easy_date_timeline.dart';
 import 'package:intellij_tourism_designer/constants/theme.dart';
-//import 'package:intellij_tourism_designer/helpers/POI_builder.dart';
 
-//自动规划行程的页面，主要时一些个性设置
 
 class ItiFeature extends StatefulWidget {
   const ItiFeature({super.key});

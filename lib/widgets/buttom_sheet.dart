@@ -152,3 +152,75 @@ class _ToolsSettingDemoState extends State<ToolsSettingDemo> {
 
 
 
+class HoverInputExample extends StatefulWidget {
+  @override
+  _HoverInputExampleState createState() => _HoverInputExampleState();
+}
+
+class _HoverInputExampleState extends State<HoverInputExample> {
+  bool _showTextField = true;
+  FocusNode _focusNode = FocusNode();
+  TextEditingController _textEditingController = TextEditingController();
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    _textEditingController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) {
+        setState(() {
+          _showTextField = true;
+          _focusNode.requestFocus();
+        });
+      },
+      onExit: (_) {
+        setState(() {
+          _showTextField = false;
+        });
+      },
+      child: Stack(
+        children: [
+          InkWell(
+              onTap: () {
+                if (_textEditingController.text.isNotEmpty) {
+                  // 处理输入的内容
+                  print('Input: ${_textEditingController.text}');
+                }
+              },
+              child: Container(
+                width: 280, height:140,
+                padding: EdgeInsets.all(16),
+                color: Colors.blue,
+                alignment: Alignment.center,
+                child: Text(
+                  'Hover over me',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ),
+          Visibility(
+            visible: _showTextField,
+            child: Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: TextField(
+                focusNode: _focusNode,
+                controller: _textEditingController,
+                decoration: InputDecoration(
+                  labelText: 'Type here',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

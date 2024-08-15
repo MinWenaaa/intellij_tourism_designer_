@@ -131,7 +131,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin{
       selector: (context, model) => model.state,
       builder: (context, state, child) => Positioned(
           top: state==mapState.map ? 80 : 10, right: 10,
-          child: const WeatherCard(
+          child: const WeatherText(
               height: 180, width: 280,
               location: LatLng(30.56,114.32)
           )

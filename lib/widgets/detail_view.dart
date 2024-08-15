@@ -1,5 +1,10 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:intellij_tourism_designer/constants/constants.dart';
 import 'package:intellij_tourism_designer/constants/theme.dart';
+import 'package:intellij_tourism_designer/helpers/Iti_data.dart';
+import 'package:intellij_tourism_designer/helpers/record_list_data.dart';
 import 'package:intellij_tourism_designer/helpers/weather_data.dart';
 import 'package:intellij_tourism_designer/http/Api.dart';
 import 'package:latlong2/latlong.dart';
@@ -107,25 +112,72 @@ class ItiCard extends StatelessWidget {
   }
 }
 
+class RecordCard extends StatelessWidget {
+
+  final RecordListViewData data;
+  const RecordCard({super.key, required this.data});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity, height: 120,
+      margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(8)),
+          color: AppColors.secondary
+      ),
+      clipBehavior: Clip.hardEdge,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Flexible(
+            flex: 3,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(data.name??"", style: AppText.Head2,
+                    overflow: TextOverflow.clip, // 裁剪超出部分
+                    maxLines: 2,),
+                ],
+              ),
+            ),
+          ),
+          Flexible(
+              flex: 2,
+              child: Image.network(
+                "https://gd-hbimg.huaban.com/feeb8703425ac44d7260017be9b67e08483199c06699-i8Tdqo_fw1200webp",
+                fit: BoxFit.cover,
+                width: double.infinity, height: double.infinity,
+              )
+          )
+        ],
+      ),
+    );
+  }
+}
+
 class ActCard extends StatelessWidget {
 
-  const ActCard({super.key});
+  const ActCard({super.key, required this.itiData});
+  final ItiData itiData;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children:[
-        Flexible(
+        const Flexible(
           flex:3,
           child:Column(
             children:[
               Row(
                 children:[
-                  const Icon(Icons.abc),
+                  Icon(Icons.abc),
                   Text("poiName",style:AppText.matter),
                 ]
               ),
-              const Text("时间：",style:AppText.matter)
+              Text("时间：",style:AppText.matter)
             ]
           )
         ),
@@ -140,24 +192,24 @@ class ActCard extends StatelessWidget {
 
 
 
-class WeatherCard extends StatefulWidget {
+class WeatherText extends StatefulWidget {
 
   final LatLng location;
   final double width;
   final double height;
 
-  const WeatherCard({super.key, required this.location, required this.width, required this.height});
+  const WeatherText({super.key, required this.location, required this.width, required this.height});
 
   @override
-  State<WeatherCard> createState() => _WeatherCardState();
+  State<WeatherText> createState() => _WeatherTextState();
 }
 
-class _WeatherCardState extends State<WeatherCard> {
+class _WeatherTextState extends State<WeatherText> {
 
   late Future<WeatherData> weatherData;
 
   Future<WeatherData> fetchWeather() async {
-    WeatherData weatherData = await Api.instance.getWeather(location: widget.location)??WeatherData();
+    WeatherData weatherData = await Api.instance.getWeather(location: widget.location, date: DateTime.now())??WeatherData();
     return weatherData;
   }
 
@@ -208,3 +260,90 @@ class _WeatherCardState extends State<WeatherCard> {
 
 }
 
+
+
+class WeatherCard extends StatefulWidget {
+
+  final DateTime date;
+
+  const WeatherCard({super.key, required this.date});
+
+  @override
+  _WeatherCardState createState() => _WeatherCardState();
+}
+
+class _WeatherCardState extends State<WeatherCard> {
+
+  late Future<WeatherData> weatherData;
+
+  Future<WeatherData> fetchWeather() async {
+    WeatherData weatherData = await Api.instance.getWeather(location: const LatLng(30.5,114.3), date: widget.date)??WeatherData();
+    return weatherData;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    weatherData = fetchWeather();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: FutureBuilder<WeatherData>(
+        future: weatherData,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return _weather(snapshot.data!);
+          } else {
+            return const CircularProgressIndicator(color: AppColors.primary,);
+          }
+        },
+      ),
+    );
+  }
+
+  Widget _weather(WeatherData weather){
+    Random random = Random();
+    int randomNumber = random.nextInt(4);
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(" ${widget.date.year}.${widget.date.month}.${widget.date.day}, ${ConstantString.weekDay[widget.date.weekday-1]}",
+                style: const TextStyle(fontSize: 26, color: AppColors.detail),),
+              const SizedBox(height: 6,),
+              Container(
+                width: 240, height: 36,
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(18),
+                  color: AppColors.primary
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    const Text("天气：", style: TextStyle(fontSize: 14, color: Colors.white),),
+                    const Icon(Icons.cloud, color: Colors.white,),
+                    const SizedBox(width: 14),
+                    Text("温度：  ${weather.now?.temp} ", style: const TextStyle(fontSize: 16, color: Colors.white),),
+
+                  ],
+                ),
+              ),
+            ],
+          ),
+          Image.network(ConstantString.weather_icon[randomNumber],
+              fit: BoxFit.contain, width: 140, height: 140,),
+        ],
+      ),
+    );
+
+  }
+
+
+}

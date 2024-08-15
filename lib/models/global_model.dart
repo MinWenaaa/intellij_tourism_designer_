@@ -60,8 +60,9 @@ class GlobalModel with ChangeNotifier{
 
   Future<void> changeState(mapState newState) async {
     state = newState;
+    //发送新建记录请求
     if(state==mapState.record){
-      dynamic id = await Api.instance.startRecord(user.uid??200, center);
+      dynamic id = await Api.instance.startRecord(user.uid??200, lastRefreshCenter);
       rid = id;
       print("record ${id} start!");
     }
@@ -122,8 +123,8 @@ class GlobalModel with ChangeNotifier{
           markers[i]=[];
           List<POIMarkerData>? list = await
             Api.instance.getMarkers(newCenter.longitude-0.05, newCenter.latitude-0.05, newCenter.longitude+0.05, newCenter.longitude+0.05, type: i);
-          print("got ${list!.length} point: ${list?[0].longitude}");
-          list?.forEach((data) => markers[i].add(Marker(
+          print("got ${list!.length} point: ${list[0].longitude}");
+          list.forEach((data) => markers[i].add(Marker(
               point: LatLng(data.latitude??0, data.longitude??0),
               child: GestureDetector(
                 child: Image.network(ConstantString.poi_icon_url[i]),
@@ -145,15 +146,6 @@ class GlobalModel with ChangeNotifier{
     notifyListeners();
   }
 
-
-
-
-  LatLng center = const LatLng(30.6,114.3);
-
-  void changeCenter(LatLng newCenter){
-    center = newCenter;
-    notifyListeners();
-  }
 
 
 

@@ -1,4 +1,5 @@
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
+import 'package:easy_date_timeline/easy_date_timeline.dart';
 import 'package:flutter/material.dart';
 
 import '../constants/theme.dart';
@@ -111,4 +112,38 @@ String _getValueText(
 
   return valueText;
 }
+}
+
+class timeSelector extends StatefulWidget {
+  final Function(dynamic)? callBack;
+  const timeSelector({super.key, required this.callBack});
+
+  @override
+  State<timeSelector> createState() => _timeSelectorState();
+}
+
+class _timeSelectorState extends State<timeSelector> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        margin: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+
+        child: EasyDateTimeLine(
+          initialDate: DateTime.now(),
+          onDateChange: widget.callBack,
+          headerProps: const EasyHeaderProps(
+            monthPickerType: MonthPickerType.dropDown,
+            dateFormatter: DateFormatter.fullDateDMY(),
+          ),
+          activeColor: AppColors.primary,
+          dayProps: const EasyDayProps(
+            landScapeMode: true,
+            activeDayStyle: DayStyle(
+              borderRadius: 48.0,
+            ),
+            dayStructure: DayStructure.dayStrDayNum,
+          ),
+        ),
+      );
+  }
 }
