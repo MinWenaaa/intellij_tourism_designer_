@@ -149,7 +149,7 @@ class Api {
         "typename": ConstantString.poi_layer[type],
         "outputFormat": "json",
         "bbox": "${min_x},${min_y},${max_x},${max_y},EPSG:4326",
-        "count": 100,
+        "count": 200,
       },
     );
 

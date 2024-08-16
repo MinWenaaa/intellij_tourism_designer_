@@ -10,12 +10,21 @@ class ConstantString{
   static const String hotel = "酒店住宿";
   static const String camera = "机位信息";
 
+  static const List<String> poi = [
+    attraction, dining, hotel, camera
+  ];
+
   static const List<String> poi_layer = [
     "wuhan_attraction_poi",
+    "wuhan_restaurant_poi",
     "wuhan_hotel_poi",
-    "wuhan_",
-    "wuhan_"
+    "wuhan_photo_poi",
   ];
+
+  static List<String> sunsetLayer = ['241120', '241020', '240920', '240820', '240720', '240620', '240720', '240820', '240920', '241020', '241120', '241221'];
+  static List<String> heatMap = ['Attraction_Heatmap', 'Restaurant_Heatmap', 'Hotel_Heatmap', 'Photo_Heatmap'];
+  static List<String> featureLayer = ['History_Heatmap', 'Nature_Heatmap', 'Scenery_Heatmap', 'Recreation_Heatmap', 'Religion_Heatmap', 'Scenery_Heatmap'];
+
 
   static const List<String> poi_icon_url = [
     "https://gd-hbimg.huaban.com/33a7b811d0e36b0605deaeb7d93b583d18efb05d1a7d-oWSGNy_fw1200webp",
@@ -35,6 +44,16 @@ class ConstantString{
     "Mon", "Tue", "Wen", "Tur", "Fri", "Sat", "Sun"
   ];
 
+  static const List<String> month = [
+    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+  ];
+
+  static const List<String> baseServerURL = ['https://webrd02.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}',
+    'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    'https://webst01.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}',
+    'https://wayback.maptiles.arcgis.com/arcgis/rest/services/world_imagery/wmts/1.0.0/default028mm/mapserver/tile/45441/{z}/{y}/{x}'];
+
+  static String c657_wms = "http://182.92.251.24:8080/geoserver/Esri_c657/wms?";
 
 }
 

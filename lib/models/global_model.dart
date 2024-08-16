@@ -50,6 +50,9 @@ class GlobalModel with ChangeNotifier{
   LatLng lastRefreshCenter = const LatLng(30.5,114.4);
   List<bool> isShowPOI = [false, false, false, false];
   List<List<Marker>> markers = [[],[],[],[]];
+  int showSunset = -1;
+  List<bool> showHeatMap = [false, false, false, false];
+  List<bool> showFeatureMap = [false, false, false, false, false];
 
   List<LatLng> currentRecords = [];
 
@@ -80,12 +83,12 @@ class GlobalModel with ChangeNotifier{
           continue;
         } else {
           markers[i] = [];
-          print("marker list ${index} refresh");
+          print("marker list ${i} refresh");
           List<POIMarkerData>? list = await
           Api.instance.getMarkers(
-              lastRefreshCenter.longitude - 0.05, lastRefreshCenter.latitude - 0.05,
-              lastRefreshCenter.longitude + 0.05, lastRefreshCenter.longitude + 0.05, type: i);
-          print("got point: ${list?[0]}");
+              lastRefreshCenter.longitude - 0.025, lastRefreshCenter.latitude - 0.025,
+              lastRefreshCenter.longitude + 0.025, lastRefreshCenter.latitude + 0.025, type: i);
+          print("got point: ${list!.length}");
           list?.forEach((data) =>
               markers[i].add(Marker(
                   point: LatLng(data.latitude ?? 0, data.longitude ?? 0),
@@ -108,8 +111,8 @@ class GlobalModel with ChangeNotifier{
 
   Future<void> refreshMarker(LatLng newCenter) async {
 
-    if( (lastRefreshCenter.latitude - newCenter.latitude).abs() < 0.05 &&
-        (lastRefreshCenter.longitude - newCenter.longitude).abs() <0.05 ) {
+    if( (lastRefreshCenter.latitude - newCenter.latitude).abs() < 0.025 &&
+        (lastRefreshCenter.longitude - newCenter.longitude).abs() <0.025 ) {
       print("distance is not far enough to trigger refreshment");
       return;
     } else {
@@ -122,9 +125,9 @@ class GlobalModel with ChangeNotifier{
         } else {
           markers[i]=[];
           List<POIMarkerData>? list = await
-            Api.instance.getMarkers(newCenter.longitude-0.05, newCenter.latitude-0.05, newCenter.longitude+0.05, newCenter.longitude+0.05, type: i);
-          print("got ${list!.length} point: ${list[0].longitude}");
-          list.forEach((data) => markers[i].add(Marker(
+            Api.instance.getMarkers(newCenter.longitude-0.025, newCenter.latitude-0.025, newCenter.longitude+0.025, newCenter.longitude+0.025, type: i);
+          //print("got ${list!.length} point: ${list[0].longitude}");
+          list?.forEach((data) => markers[i].add(Marker(
               point: LatLng(data.latitude??0, data.longitude??0),
               child: GestureDetector(
                 child: Image.network(ConstantString.poi_icon_url[i]),
@@ -146,7 +149,18 @@ class GlobalModel with ChangeNotifier{
     notifyListeners();
   }
 
-
+  void changeSunset(int i){
+    showSunset = i;
+    notifyListeners();
+  }
+  void changeHeatMap(int index, bool value){
+    showHeatMap[index] = value;
+    notifyListeners();
+  }
+  void changeFeature(int index, bool value){
+    showFeatureMap[index] = value;
+    notifyListeners();
+  }
 
 
 }

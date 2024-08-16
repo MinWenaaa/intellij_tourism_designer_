@@ -106,10 +106,15 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin{
           selector: (context, provider) => provider.baseProvider,
           builder: (context, data, child) => baseTileLayer(data),
         ),
-        Selector<GlobalModel, List<Marker>>(
-          selector: (context, provider) => provider.markers[0],
-          builder: (context, data, child) => MarkerLayer(markers: data),
+        Selector<GlobalModel, int>(
+          selector: (context, provider) => provider.showSunset,
+          builder: (context, data, child) =>
+            data!=-1 ? WMS_ours(layerName: ConstantString.sunsetLayer[data]) : const SizedBox(),
         ),
+        ..._HeatMap(),
+        ..._Feature(),
+        ..._markerLayer(),
+        //Slector
         Selector<GlobalModel,mapState>(
           selector: (context, provider) => provider.state,
           builder: (context, data, child) => (data==mapState.view_record)?
@@ -120,10 +125,31 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin{
               return PolylineLayer(polylines: [planPolyline(data)]);
             }
           ) : const SizedBox()
-        )
+        ),
         //WMS_ours(layerName: "Attraction_Heatmap")
       ],
     );
+  }
+
+  List<Widget> _markerLayer(){
+    return List.generate(4, (index)=>Selector<GlobalModel, List<Marker>>(
+      selector: (context, provider) => provider.markers[index],
+      builder: (context, data, child) => MarkerLayer(markers: data),
+    ),);
+  }
+
+  List<Widget> _HeatMap(){
+    return List.generate(4, (index)=>Selector<GlobalModel, bool>(
+      selector: (context, provider) => provider.showHeatMap[index],
+      builder: (context, data, child) => data ? WMS_ours(layerName: ConstantString.heatMap[index]) : const SizedBox(),
+    ),);
+  }
+
+  List<Widget> _Feature(){
+    return List.generate(5, (index) => Selector<GlobalModel, bool>(
+      selector: (context, provider) => provider.showFeatureMap[index],
+      builder: (context, data, child) => data ? WMS_ours(layerName: ConstantString.featureLayer[index]) : const SizedBox(),
+    ),);
   }
 
   Widget _weatherCard(){

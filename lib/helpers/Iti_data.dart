@@ -91,7 +91,8 @@ class ItiData {
       this.pname, 
       this.pphoto, 
       this.x, 
-      this.y,});
+      this.y,
+      this.time});
 
   ItiData.fromJson(dynamic json) {
     paddress = json['paddress'];
@@ -101,6 +102,7 @@ class ItiData {
     pphoto = json['pphoto'];
     x = json['x'];
     y = json['y'];
+    time = json['time'];
   }
   String? paddress;
   num? pid;
@@ -120,6 +122,7 @@ class ItiData {
     map['pphoto'] = pphoto;
     map['x'] = x;
     map['y'] = y;
+    map['time'] = time;
     return map;
   }
 

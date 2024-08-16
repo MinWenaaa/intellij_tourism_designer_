@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intellij_tourism_designer/constants/theme.dart';
 import 'package:intellij_tourism_designer/helpers/Iti_data.dart';
+import 'package:intellij_tourism_designer/models/plan_edit_model.dart';
 import 'package:intellij_tourism_designer/pages/desktop/map_page.dart';
 import 'package:intellij_tourism_designer/widgets/calendar.dart';
 import 'package:intellij_tourism_designer/widgets/detail_view.dart';
@@ -35,20 +36,20 @@ class _ItineraryPageState extends State<ItineraryPage> {
   @override
   Widget build(BuildContext context) {
     //print(state);
-    return Row(children: [
-      state == 0 ? _createFab() : const SizedBox(),
-      state == 1 ? Flexible(
-        flex: 3,
-        child: ItiEditWidget(
-          callback: callBack, startDay: start,
-          days: end.difference(start).inDays+1,
-          requirement: _textController.text,
-        )
-      ) : const SizedBox(),
-      Flexible(
-        flex: 5,
-          child: MapPage()),
-    ]);
+    return ChangeNotifierProvider<PlanEditModel>(
+      create: (context) => PlanEditModel(),
+      child: Row(children: [
+        state == 0 ? _createFab() : const SizedBox(),
+        state == 1 ? Flexible(
+          flex: 3,
+          child: ItiEditWidget(callback: callBack
+          )
+        ) : const SizedBox(),
+        Flexible(
+          flex: 5,
+            child: MapPage()),
+      ]),
+    );
   }
 
   Widget _createFab(){
@@ -77,7 +78,9 @@ class _ItineraryPageState extends State<ItineraryPage> {
                   primaryInkWell(
                     width: 200,
                     callback: () => setState(() {
-                      state = 1;}),
+                      state = 1;
+
+                    }),
                     text: "立即创建"),
                   secondaryInkWell(
                     width: 200,

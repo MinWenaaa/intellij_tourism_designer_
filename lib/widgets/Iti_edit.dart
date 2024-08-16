@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intellij_tourism_designer/constants/theme.dart';
 import 'package:intellij_tourism_designer/http/Api.dart';
+import 'package:intellij_tourism_designer/models/plan_edit_model.dart';
 import 'package:intellij_tourism_designer/widgets/detail_view.dart';
 import 'package:provider/provider.dart';
 import '../helpers/Iti_data.dart';
@@ -10,11 +11,8 @@ import '../models/global_model.dart';
 
 class ItiEditWidget extends StatefulWidget {
 
-  final DateTime startDay;
-  final int days;
   final void Function()? callback;
-  final String? requirement;
-  const ItiEditWidget({required this.callback, required this.startDay, required this.days, this.requirement, super.key});
+  const ItiEditWidget({required this.callback, super.key});
 
   @override
   State<ItiEditWidget> createState() => _ItiEditWidgetState();
@@ -24,27 +22,12 @@ class _ItiEditWidgetState extends State<ItiEditWidget> {
 
   int curDay=0;
 
-  late Future<PlanData> planData;
-
-  Future<PlanData> fetchPlan() async {
-    final vm = Provider.of<GlobalModel>(context,listen: false);
-    PlanData plan = PlanData.createWithDays(num: widget.days, uid: vm.user.uid??0);
-    if(widget.requirement == ""){
-      print("create with num");
-      return plan;
-    }else{
-      print("create with llm : ${widget.requirement}");
-      List<List<ItiData>> list = await Api.instance.design_LLM(poinNum: widget.days*3, requirement: widget.requirement??"")??[[]];
-      plan.itidata = list;
-      print("widget data: ${plan}");
-      return plan;
-    }
-  }
 
   @override
   void initState() {
+    final vm = Provider.of<PlanEditModel>(context,listen: false);
     super.initState();
-    planData = fetchPlan();
+    vm.init();
   }
 
 
@@ -55,19 +38,20 @@ class _ItiEditWidgetState extends State<ItiEditWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final vm = Provider.of<PlanEditModel>(context,listen: false);
     return Row(
         children:[
-          Flexible(flex:1, child: _days(),),
+          Flexible(flex:1, child: _days(context),),
           Flexible(
-            flex:5,
+            flex:6,
             child: Column(
               crossAxisAlignment:CrossAxisAlignment.center,
               children:[
                 const SizedBox(height:5),
-                WeatherCard(date: widget.startDay.add(Duration(days: curDay))),
+                WeatherCard(date: vm.start.add(Duration(days: curDay))),
                 const SizedBox(height:5),
                 FutureBuilder<PlanData>(
-                  future: planData,
+                  future: vm.planData,
                   builder: (context, snapshot) {
                     if (!snapshot.hasData) {
                       return Center(
@@ -92,7 +76,7 @@ class _ItiEditWidgetState extends State<ItiEditWidget> {
                   }
                 ),
                 FutureBuilder<PlanData>(
-                  future: planData,
+                  future: vm.planData,
                   builder: (context, snapshot) => snapshot.hasData ?
                     TextButton(
                       onPressed: () => setState((){
@@ -109,7 +93,8 @@ class _ItiEditWidgetState extends State<ItiEditWidget> {
     );
   }
 
-  Widget _days(){
+  Widget _days(BuildContext context){
+    final vm = Provider.of<PlanEditModel>(context,listen: false);
     return Container(
         child:Column(
           children: [
@@ -125,7 +110,7 @@ class _ItiEditWidgetState extends State<ItiEditWidget> {
               child: _navigation()
             ),
             FutureBuilder<PlanData>(
-              future: planData,
+              future: vm.planData,
               builder: (context, snapshot) => snapshot.hasData ?
                 TextButton(
                   onPressed:() => setState(() {
@@ -141,8 +126,9 @@ class _ItiEditWidgetState extends State<ItiEditWidget> {
   }
 
   Widget _navigation(){
+    final vm = Provider.of<PlanEditModel>(context,listen: false);
     return FutureBuilder<PlanData>(
-      future: planData,
+      future: vm.planData,
       builder: (context, snapshot) => snapshot.hasData ?
         NavigationRail(
           destinations: List.generate(snapshot.data!.itidata!.length, (index)=>NavigationRailDestination(

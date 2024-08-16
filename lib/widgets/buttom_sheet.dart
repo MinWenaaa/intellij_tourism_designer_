@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:intellij_tourism_designer/constants/constants.dart';
+import 'package:intellij_tourism_designer/constants/theme.dart';
 import 'package:intellij_tourism_designer/helpers/tile_providers.dart';
 import 'package:intellij_tourism_designer/models/global_model.dart';
 import 'package:intellij_tourism_designer/pages/mobile/path_planing_page.dart';
@@ -18,22 +20,31 @@ class _LayerSettingDemoState extends State<LayerSettingDemo> {
     "高德", "谷歌", "ArcGIS", "ArcGIS2",
   ];
   final providerEnum = BaseLayerProvider.values;
+  bool? _showSelect = false;
 
   @override
   Widget build(BuildContext context) {
     final vm = Provider.of<GlobalModel>(context,listen: false);
 
     return Container(
-      height: 400,
+      height: 450,
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 24),
-      child: Column(
+      child: ListView(
         children: [
 
+          Center(child: Text("图层设置", style: AppText.Head1,)),
+          const SizedBox(height: 20,),
           Text("底图切换"),
           _baseLayerSetting(vm),
           const SizedBox(height: 20,),
           Text("显示标记"),
           _markersSetting(vm),
+          const SizedBox(height: 20,),
+          _sunsetButton(),
+          const SizedBox(height: 20,),
+          _HeatMapButtons(),
+          const SizedBox(height: 20,),
+          _FeatureButtons(),
 
         ],
       ),
@@ -65,7 +76,7 @@ class _LayerSettingDemoState extends State<LayerSettingDemo> {
         onTap: () => model.changeBaseLayer(index),
         child: Container(
           width: 120, height: 40,
-          color: provider==index ? Colors.amberAccent:Colors.lightBlueAccent,
+          color: provider==index ? AppColors.primary : null,
           alignment: Alignment.center,
           child: Text(text[index]),
         ),
@@ -76,8 +87,8 @@ class _LayerSettingDemoState extends State<LayerSettingDemo> {
 
   Widget _markersSetting(vm){
     return Container(
-      width: double.infinity, height: 120,
-      padding: EdgeInsets.symmetric(horizontal: 10),
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(horizontal: 20),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -96,7 +107,114 @@ class _LayerSettingDemoState extends State<LayerSettingDemo> {
       builder: (context, flag, child) => Row(
         children: [
           Checkbox(value: flag, onChanged: (value) => model.changePoiMarkerShowState(index, value!)),
-          Text("CheckBox")
+          Text(ConstantString.poi[index])
+        ],
+      ),
+    );
+  }
+
+  Widget _sunsetButton(){
+    final vm = Provider.of<GlobalModel>(context,listen: false);
+    return Selector<GlobalModel, int>(
+        selector: (context, vm) => vm.showSunset,
+        builder: (context, v, child) => Row(
+          children: [
+            Text("落日质量预告"),
+            Checkbox(
+              value: _showSelect,
+              onChanged: (value) {setState(() {
+                _showSelect = value;
+                if(!value!){
+                  vm.changeSunset(-1);
+                }
+              });}
+            ),
+            Expanded(child: const SizedBox()),
+            Visibility(
+              maintainSize: true, maintainAnimation: true, maintainState: true,
+              visible: _showSelect??false,
+              child: DropdownMenu<int>(
+                menuHeight: 200,
+                dropdownMenuEntries: _buildSunsetList(),
+                onSelected: (value) => vm.changeSunset(value??0),
+              ),
+            )
+          ],
+        )
+    );
+  }
+
+  List<DropdownMenuEntry<int>> _buildSunsetList() {
+    return List.generate(12,
+      (index) =>DropdownMenuEntry<int>(
+          value: index, label: ConstantString.month[index],
+        labelWidget: Text(ConstantString.month[index])
+      )
+    );
+  }
+
+
+  Widget _HeatMapButtons(){
+    final vm = Provider.of<GlobalModel>(context,listen: false);
+    return Column(
+      children: [
+        Text("热力图"),
+        Container(
+          width: double.infinity,
+          padding: EdgeInsets.symmetric(horizontal: 20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                children: [_HeatMapButton(index: 0, model: vm),_HeatMapButton(index: 1, model: vm)],),
+              Column(
+                children: [_HeatMapButton(index: 2, model: vm),_HeatMapButton(index: 3, model: vm)],)
+            ],
+          )
+        )
+      ],
+    );
+  }
+
+  Widget _HeatMapButton({required int index, required model}){
+    return Selector<GlobalModel, bool>(
+      selector: (context, vm) => vm.showHeatMap[index],
+      builder: (context, flag, child) => Row(
+        children: [
+          Checkbox(value: flag, onChanged: (value) => model.changeHeatMap(index, value!)),
+          Text(ConstantString.poi[index])
+        ],
+      ),
+    );
+  }
+
+
+  Widget _FeatureButtons(){
+    final vm = Provider.of<GlobalModel>(context,listen: false);
+    return Column(
+      children: [
+        Text("属性分布"),
+        Container(
+            width: double.infinity,
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: List.generate(5, (index) =>
+                  _FeatureButton(index: index, model: vm)
+              )
+            )
+        )
+      ],
+    );
+  }
+
+  Widget _FeatureButton({required int index, required model}){
+    return Selector<GlobalModel, bool>(
+      selector: (context, vm) => vm.showFeatureMap[index],
+      builder: (context, flag, child) => Row(
+        children: [
+          Checkbox(value: flag, onChanged: (value) => model.changeFeature(index, value!)),
+          Text(ConstantString.featureLayer[index])
         ],
       ),
     );
@@ -119,9 +237,8 @@ class _ToolsSettingDemoState extends State<ToolsSettingDemo> {
 
     final vm = Provider.of<GlobalModel>(context,listen: false);
 
-    return  Container(
+    return SizedBox(
         height: 200,
-        color: Colors.amber,
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
