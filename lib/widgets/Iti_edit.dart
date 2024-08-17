@@ -11,8 +11,8 @@ import '../models/global_model.dart';
 
 class ItiEditWidget extends StatefulWidget {
 
-  final void Function()? callback;
-  const ItiEditWidget({required this.callback, super.key});
+  final bool isCreate;
+  const ItiEditWidget({super.key, required this.isCreate});
 
   @override
   State<ItiEditWidget> createState() => _ItiEditWidgetState();
@@ -26,7 +26,9 @@ class _ItiEditWidgetState extends State<ItiEditWidget> {
   @override
   void initState() {
     final vm = Provider.of<PlanEditModel>(context,listen: false);
-    vm.init();
+    if(widget.isCreate){
+      vm.init();
+    }
     super.initState();
   }
 
@@ -100,7 +102,7 @@ class _ItiEditWidgetState extends State<ItiEditWidget> {
           children: [
             const SizedBox(height: 10,),
             GestureDetector(
-              onTap: widget.callback,
+              onTap: () => vm.changeState(0),
               child: Container(
                 child: Icon(Icons.arrow_back_ios),
               ),
@@ -112,11 +114,19 @@ class _ItiEditWidgetState extends State<ItiEditWidget> {
             FutureBuilder<PlanData>(
               future: vm.planData,
               builder: (context, snapshot) => snapshot.hasData ?
-                TextButton(
-                  onPressed:() => setState(() {
-                    snapshot.data!.itidata!.add([]);
-                    curDay=snapshot.data!.itidata!.length-1;}),
-                  child:const Text("Add"),
+                Column(
+                  children: [
+                    TextButton(
+                      onPressed:() => setState(() {
+                        snapshot.data!.itidata!.add([]);
+                        curDay=snapshot.data!.itidata!.length-1;}),
+                      child:const Text("Add"),
+                    ),
+                    TextButton(
+                      onPressed:() => Api.instance.push_plan(planData: snapshot.data!),
+                      child:const Text("保存"),
+                    ),
+                  ],
                 ): const SizedBox(),
             ),
             const SizedBox(height: 10,),

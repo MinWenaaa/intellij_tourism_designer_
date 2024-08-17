@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intellij_tourism_designer/constants/theme.dart';
 import 'package:intellij_tourism_designer/pages/mobile/map_page.dart';
-import 'package:intellij_tourism_designer/pages/mobile/iti_list_page.dart';
-import 'package:intellij_tourism_designer/pages/mobile/memory_list_page.dart';
+import 'package:intellij_tourism_designer/pages/iti_list_page.dart';
+import 'package:intellij_tourism_designer/pages/memory_list_page.dart';
 import 'package:intellij_tourism_designer/pages/mobile/user_page.dart';
-import '../../widgets/calendar.dart';
+import 'package:provider/provider.dart';
+import '../../models/global_model.dart';
 import 'home_page.dart';
 
 class MobilePage extends StatefulWidget {
@@ -25,6 +26,7 @@ class _MobilePageState extends State<MobilePage> {
 
   @override
   Widget build(BuildContext context) {
+    final vm = Provider.of<GlobalModel>(context,listen: false);
     return Scaffold(
         bottomNavigationBar: Theme(
           data: Theme.of(context).copyWith(
@@ -45,9 +47,16 @@ class _MobilePageState extends State<MobilePage> {
               index: currentIndex,
               children: [
                 HomePage(),
-                ItiListPage(changeNavigate: ()=>onTabTapped(2)),
+                ItiListPage(callBack: (data) {
+                  vm.getPoint(data.id);
+                  onTabTapped(2);
+                }),
                 MapPage(),
-                MemoryListPage(changeNavigate: ()=>onTabTapped(2)),
+                MemoryListPage(callBack: (data) {
+                  vm.setCurrentRecords(data.getPointList());
+                  vm.changeState(mapState.view_record);
+                  onTabTapped(2);
+                },),
                 UserPage()],
             )
         )

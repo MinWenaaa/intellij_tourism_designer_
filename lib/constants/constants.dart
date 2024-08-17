@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 
 const double MINZOOM = 5.0;
 const double MAXZOOM = 18.0;
@@ -58,3 +59,6 @@ class ConstantString{
 }
 
 const Duration defaultTime = const Duration(seconds: 10);
+
+DateFormat formatter = DateFormat('yyyy-MM-dd HH:mm');
+

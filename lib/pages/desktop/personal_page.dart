@@ -1,38 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:intellij_tourism_designer/models/global_model.dart';
 import 'package:intellij_tourism_designer/pages/login_page.dart';
 import 'package:intellij_tourism_designer/route_utils.dart';
-import 'package:intellij_tourism_designer/widgets/detail_view.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 import '../../constants/Markers.dart';
 import '../../constants/constants.dart';
 import '../../constants/theme.dart';
-import '../../helpers/record_list_data.dart';
 import '../../helpers/tile_providers.dart';
-import '../../http/Api.dart';
-import '../../models/global_model.dart';
-import '../../widgets/calendar.dart';
+import '../../models/plan_edit_model.dart';
+import '../iti_list_page.dart';
+import '../memory_list_page.dart';
 
 /*
   个人主页
 */
 
 class PersonalPage extends StatefulWidget {
-  const PersonalPage({super.key});
+  const PersonalPage({super.key, required this.callBack});
+
+  final Function callBack;
 
   @override
   State<PersonalPage> createState() => _PersonalPageState();
 }
 
 class _PersonalPageState extends State<PersonalPage> {
-
-  late Future<List<RecordListViewData>> recordData;
-  Future<List<RecordListViewData>> fetch(BuildContext context) async {
-    final vm = Provider.of<GlobalModel>(context,listen: false);
-    List<RecordListViewData> data = await Api.instance.getRecordList(vm.user.uid??0)??[];
-    return data;
-  }
 
   int state = 0;
   List<LatLng> currentRecord = [];
@@ -41,23 +35,32 @@ class _PersonalPageState extends State<PersonalPage> {
   @override
   void initState() {
     super.initState();
-    recordData = fetch(context);
+    //recordData = fetch(context);
     _mapController = MapController();
   }
 
   @override
   Widget build(BuildContext context) {
+    final vm = Provider.of<PlanEditModel>(context,listen: false);
+    //final gm = Provider.of<GlobalModel>(context,listen: false);
     return Stack(
       children: [
         Row(
           children: [
             Flexible(
               flex: 5,
-              child: _ItiList()
+              child: ItiListPage(callBack: (data){
+                widget.callBack.call(2);
+                vm.loadPlan(data.id);
+              },),
             ),
             Flexible(
               flex: 5,
-              child: _MemoryList()
+              child: MemoryListPage(callBack: (data){
+                currentRecord = data.getPointList();
+                state = 1;
+                setState((){});
+              },)
             ),
             Flexible(
               fit: FlexFit.tight,
@@ -106,60 +109,7 @@ class _PersonalPageState extends State<PersonalPage> {
     )
     );
   }
-
-
-  Widget _ItiList(){
-    return Column(
-        children: [
-          const SizedBox(height: 18,),
-          Container(
-            width: double.infinity,
-            margin: EdgeInsets.symmetric(horizontal: 8, vertical: 10),
-            child: Calendar(),
-          ),
-          const Divider(),
-          const SizedBox(height: 18,),
-          Expanded(
-            child: ListView.builder(
-              itemBuilder: (context, index){
-                return GestureDetector(
-                  onTap: () {},
-                  child: ItiCard(),
-                );;
-              },
-              itemCount: 10,
-            ),
-          )
-        ]
-    );
-  }
-
-
-  Widget _MemoryList(){
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: FutureBuilder<List<RecordListViewData>>(
-        future: recordData,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return ListView.builder(
-              itemBuilder: (context, index) => GestureDetector(
-                child: RecordCard(data: snapshot.data?[index]??RecordListViewData()),
-                onTap: (){
-                  currentRecord = snapshot.data![index].getPointList();
-                  state = 1;
-                  setState((){});
-                },
-              ),
-              itemCount: snapshot.data?.length??0,
-            );
-          } else {
-            return const CircularProgressIndicator(color: AppColors.primary,);
-          }
-        },
-      ),
-    );
-  }
+  
 
   Widget _mapView(){
     MapOptions options = MapOptions(

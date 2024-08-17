@@ -6,6 +6,7 @@ import 'package:intellij_tourism_designer/helpers/User.dart';
 import 'package:intellij_tourism_designer/helpers/poi_marker_data.dart';
 import 'package:intellij_tourism_designer/http/Api.dart';
 import 'package:latlong2/latlong.dart';
+import '../helpers/Iti_data.dart';
 
 
 enum mapState{
@@ -156,6 +157,47 @@ class GlobalModel with ChangeNotifier{
   }
 
 
+  List<ItiData> itiList = [];
+  List<LatLng> planPoints = [];
 
+  Future<void> getPoint(id) async {
+
+    PlanData plan = await Api.instance.readPlanData(id: id);
+    plan.itidata?.forEach((itis)=> itiList.addAll(itis));
+
+    print("GlobalModel.getpoint: getPoint");
+    planPoints = [];
+
+    LatLng origin = LatLng(itiList.first.y??30, itiList.first.x??114);
+
+    final futures = <Future<void>>[];
+
+    itiList.forEach((iti) {
+      if (iti != itiList.last) {
+        futures.add(
+          _fetchNavigationData(origin, LatLng(iti.y??30, iti.x??114)),
+        );
+        origin = LatLng(iti.y??30, iti.x??114);
+      }
+    });
+
+    await Future.wait(futures);
+
+    if (this.hasListeners) {
+      print("GlobalModel.getpoint : notifyListener");
+      changeState(mapState.view_iti);
+    }
+
+  }
+
+  Future<void> _fetchNavigationData(LatLng origin, LatLng target) async {
+    List<LatLng>? list = await Api.instance.navigationRequire(origin: origin, target: target);
+    if (list != null) {
+      planPoints.addAll(list);
+      print("PlanEditModel._fetchNavigationData: Get answer of navigation: ${list.last}");
+    } else {
+      print("PlanEditModel._fetchNavigationData: Navigation response was null.");
+    }
+  }
 
 }

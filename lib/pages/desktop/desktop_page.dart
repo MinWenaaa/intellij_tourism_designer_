@@ -56,21 +56,21 @@ class _DeskTopPageState extends State<DeskTopPage> {
             selectedIndex: _selectedIndex,
             onDestinationSelected: _onItemTapped,
           ),
-          Expanded(
-            child: IndexedStack(
-              index: _selectedIndex,
-              children: [
-                PersonalPage(),
-                MapPage(),
-                ChangeNotifierProvider<PlanEditModel>(
-                  create: (context) => PlanEditModel(),
-                  child: ItineraryPage(),
-                ),
-                CityStatsPage(),
-                CityStatsPage(),
-                CityStatsPage(),
-              ],
-            ),
+          ChangeNotifierProvider<PlanEditModel>(
+            create: (context) => PlanEditModel(),
+            child: Expanded(
+              child: IndexedStack(
+                index: _selectedIndex,
+                children: [
+                  PersonalPage(callBack: _onItemTapped,),
+                  MapPage(),
+                  ItineraryPage(),
+                  CityStatsPage(),
+                  CityStatsPage(),
+                  CityStatsPage(),
+                ],
+              ),
+            )
           )
         ]
       )

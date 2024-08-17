@@ -26,12 +26,12 @@ class ItineraryPage extends StatefulWidget {
 
 class _ItineraryPageState extends State<ItineraryPage> with TickerProviderStateMixin{
 
-  int state = 0;
-  // 0-创建；1-编辑；
   bool setting = false;
   DateTime start = DateTime.now();
   DateTime end = DateTime.now();
   int curDay = 0;
+
+  bool isCreate = false;
 
   bool _showTextField = false;
   final TextEditingController _textController = TextEditingController();
@@ -59,32 +59,34 @@ class _ItineraryPageState extends State<ItineraryPage> with TickerProviderStateM
   }
 
   Widget _operator(){
-    return Flexible(
-      flex: 3,
-      child: Stack(
-       children:[
-         Visibility(
-            visible: state==0 && !setting,
-            child: _createFab()
-        ),
-         Visibility(
+    return Selector<PlanEditModel, int>(
+      selector: (context, provider) => provider.state,
+      builder: (context, state, child) => Flexible(
+        flex: 3,
+        child: Stack(
+         children:[
+           Visibility(
+              visible: state==0 && !setting,
+              child: _createFab()
+          ),
+           Visibility(
              visible: state==1 && !setting,
-             child: ItiEditWidget(callback: callBack
-             )
-         ),
-         Visibility(
-             visible: setting,
-             child: LayerSettingDemo(height: double.infinity,)
-         ),
-          Visibility(
-              visible: setting,
-              child: Align(
-                alignment: Alignment.topLeft, child: GestureDetector(
-                child: Icon(Icons.arrow_back_ios), onTap: () => setState(() {
-                setting = false;
-                }),),)),
-       ]
-      )
+             child: ItiEditWidget(isCreate: isCreate)
+           ),
+           Visibility(
+               visible: setting,
+               child: LayerSettingDemo(height: double.infinity,)
+           ),
+            Visibility(
+                visible: setting,
+                child: Align(
+                  alignment: Alignment.topLeft, child: GestureDetector(
+                  child: Icon(Icons.arrow_back_ios), onTap: () => setState(() {
+                  setting = false;
+                  }),),)),
+         ]
+        )
+      ),
     );
   }
 
@@ -178,11 +180,6 @@ class _ItineraryPageState extends State<ItineraryPage> with TickerProviderStateM
     );
   }
 
-
-  void callBack(){
-    state = 0;
-    setState(() {});
-  }
 
 
   MapOptions initMapOption() {
@@ -321,9 +318,8 @@ class _ItineraryPageState extends State<ItineraryPage> with TickerProviderStateM
       //print(" num < 2 : ${num}");
       OKToast( child: Text("选择更多天数"),);
     } else {
+      isCreate = true;
       vm.setData(start: start, num: num, require: requirement, uid: gm.user.uid??0, );
-      print(" set state : 1");
-      state = 1;
     }
     setState(() {});
   }

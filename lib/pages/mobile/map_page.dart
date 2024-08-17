@@ -130,7 +130,19 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin{
             }
           ) : const SizedBox()
         ),
-        //WMS_ours(layerName: "Attraction_Heatmap")
+        Selector<GlobalModel,mapState>(
+          selector: (context, provider) => provider.state,
+          builder: (context, data, child) => Visibility(
+            visible: data==mapState.view_iti,
+            child: Selector<GlobalModel,List<LatLng>>(
+              selector: (context, provider) => provider.planPoints,
+              builder: (context, data, child) {
+                _animatedMapMove(data[0], 16.5);
+                return PolylineLayer(polylines: [planPolyline(data)]);
+              }
+            )
+          )
+        ),
       ],
     );
   }

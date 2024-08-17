@@ -66,13 +66,14 @@ class POIListItem extends StatelessWidget {
 
 class ItiCard extends StatelessWidget {
 
-  const ItiCard({super.key});
+  final PlanListViewData data;
+  const ItiCard({super.key, required this.data});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity, height: 120,
-      margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+      margin: EdgeInsets.symmetric(vertical: 10, horizontal: 8),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(8)),
         color: AppColors.secondary
@@ -88,8 +89,8 @@ class ItiCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("新建行程", style: AppText.Head2,),
-                  Text("2024-8-11 0:00:00.0000",
+                  Text(data.name??"新建行程", style: AppText.Head2,),
+                  Text(data.edittime??"2024-8-11 0:00:00.0000",
                     overflow: TextOverflow.clip, // 裁剪超出部分
                     maxLines: 2,
                     style: AppText.detail,
@@ -101,7 +102,7 @@ class ItiCard extends StatelessWidget {
           Flexible(
             flex: 2,
             child: Image.network(
-              "https://gd-hbimg.huaban.com/feeb8703425ac44d7260017be9b67e08483199c06699-i8Tdqo_fw1200webp",
+              data.pic??"https://gd-hbimg.huaban.com/feeb8703425ac44d7260017be9b67e08483199c06699-i8Tdqo_fw1200webp",
               fit: BoxFit.cover,
               width: double.infinity, height: double.infinity,
             )
@@ -121,7 +122,7 @@ class RecordCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity, height: 120,
-      margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+      margin: EdgeInsets.symmetric(vertical: 10, horizontal: 8),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(8)),
           color: AppColors.secondary

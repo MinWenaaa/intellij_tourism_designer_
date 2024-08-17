@@ -74,7 +74,7 @@ class Api {
   //获取导航信息
   Future<List<LatLng>?> navigationRequire({required LatLng origin, required LatLng target}) async{
 
-    print("require navigation: origin${origin.longitude},${origin.latitude}, ${target.longitude},${target.latitude}");
+    print("Api.navigationRequire: require navigation: origin${origin.longitude},${origin.latitude}, ${target.longitude},${target.latitude}");
 
     Response response = await Dio_gaode.instance().get(
       path: "direction/walking",
@@ -84,13 +84,12 @@ class Api {
         "key": "3a1ca59e1a7cde051a8875cc0aa9e2a6"
       },
     );
-    print("navigation request success");
+    print("Api.navigationRequire: navigation request success");
     NavigationData navigationData = NavigationData.fromJson(response.data);
     return navigationData.getPointList();
 
   }
 
-  //根据用户id获取规划列表
 
   //根据用户id获取回忆列表
   Future<List<RecordListViewData>?> getRecordList(num uid) async {
@@ -98,7 +97,7 @@ class Api {
       path: "user/records",
       queryParameters: {"id": uid}
     );
-    print("get user: $uid 's records");
+    print("Api.getRecordList: get user $uid 's records");
     RecordListData recordListData = RecordListData.fromJson(response.data);
     return recordListData.recordList;
   }
@@ -165,7 +164,7 @@ class Api {
     DateTime currentTime = DateTime.now();
     var formatter = DateFormat('yyyy-MM-dd HH:mm:ss');
     Response response = await Dio_database.instance().post(
-      path: "designer/create_record",
+      path: "user/create_record",
       data: {
         "id": uid,
         "start": "${start.longitude},${start.latitude}",
@@ -178,7 +177,7 @@ class Api {
   //刷新点
   Future<void> pushPoint(num rid, LatLng point) async {
     Response response = await Dio_database.instance().post(
-      path: "designer/push_point",
+      path: "user/push_point",
       data: {
         "id": rid,
         "point": "${point.longitude},${point.latitude}"
@@ -199,4 +198,36 @@ class Api {
     return planData.itiList;
   }
 
+  //提交保存模型规划
+  Future<int> push_plan({required PlanData planData}) async {
+    planData.edittime = formatter.format(DateTime.now());
+    Response response = await Dio_database.instance().post(
+      path: "designer/push_plan",
+      data: planData.toMap()
+    );
+    return response.data['id'];
+  }
+
+
+  //获取规划列表
+  Future<List<PlanListViewData>?> getPlanList(num uid) async {
+    Response response = await Dio_database.instance().get(
+        path: "designer/plans",
+        queryParameters: {"id": uid}
+    );
+    print("Api.getPlanList: get user $uid 's plans");
+    PlanList planList = PlanList.fromJson(response.data);
+    return planList.planList;
+  }
+
+  //读取规划
+  Future<PlanData> readPlanData({required num id}) async {
+    Response response = await Dio_database.instance().get(
+      path: "designer/read_plan",
+      queryParameters: {'id': id}
+    );
+    print("Api.readPlanData: get plan $id");
+    PlanData planData = PlanData.fromJson(response.data);
+    return planData;
+  }
 }

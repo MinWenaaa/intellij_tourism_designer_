@@ -1,3 +1,5 @@
+import 'package:intellij_tourism_designer/constants/constants.dart';
+
 /// paddress : "湖北省武汉市武昌区武珞路特1号"
 /// pid : 69
 /// pintroduce_short : "辛亥革命的纪念地，集历史纪念、文化展示与市民休闲于一体"
@@ -11,13 +13,13 @@ class PlanData {
     this.uid,
     this.name,
     this.id,
-    this.editTime,
+    this.edittime,
     this.pic,
     this.itidata,
 });
 
   List<List<ItiData>>? itidata = [];
-  String? editTime = "";
+  String? edittime = "";
   String? pic = "https://gd-hbimg.huaban.com/feeb8703425ac44d7260017be9b67e08483199c06699-i8Tdqo_fw1200webp";
   String? name = "新建行程";
   num? id = 0;
@@ -27,7 +29,7 @@ class PlanData {
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['itidata'] = itidata?.map((list) => list.map((item) => item.toJson()).toList()).toList();
-    data['editTime'] = editTime;
+    data['editTime'] = edittime;
     data['pic'] = pic;
     data['name'] = name;
     data['id'] = id;
@@ -35,15 +37,21 @@ class PlanData {
     return data;
   }
 
-  PlanData.fromJson(Map<String, dynamic> json) {
-    itidata = json['itidata']?.map(
-          (listJson) => listJson.map((itemJson) => ItiData.fromJson(itemJson)).toList(),
-    ).toList()??[];
-    editTime = json['editTime'] as String;
-    pic = json['pic'] as String;
-    name = json['name'] as String;
-    id = json['id'] as num;
-    uid = json['uid'] as num;
+  PlanData.fromJson(dynamic json) {
+    edittime = json['edittime'];
+    id = json['id'];
+    if (json['itidata'] != null) {
+      itidata = [];
+      json['itidata'].forEach((v) {
+        //print(v);
+        List<ItiData> temp = [];
+        v.forEach((item)=>temp.add(ItiData.fromJson(item)));
+        itidata?.add(temp);
+      });
+    }
+    name = json['name'];
+    pic = json['pic'];
+    uid = json['uid'];
   }
 
   factory PlanData.createWithDays({required int num, required num uid}){
@@ -53,12 +61,59 @@ class PlanData {
       print("itidata add [], now ${planData.itidata}");
     }
     planData.uid = uid;
+    planData.name = "新建行程${formatter.format(DateTime.now())}";
     return planData;
   }
 
 
 }
 
+
+
+class PlanList{
+
+  List<PlanListViewData>? planList;
+
+  PlanList.fromJson(dynamic json){
+    planList = [];
+    if(json is List){
+      for(var element in json){
+        planList?.add(PlanListViewData.fromJson(element));
+      }
+    }
+  }
+
+}
+
+
+class PlanListViewData {
+  PlanListViewData({
+    this.edittime,
+    this.id,
+    this.name,
+    this.pic,});
+
+  PlanListViewData.fromJson(dynamic json) {
+    edittime = json['edittime'];
+    id = json['id'];
+    name = json['name'];
+    pic = json['pic'];
+  }
+  String? edittime;
+  num? id;
+  String? name;
+  String? pic;
+
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{};
+    map['edittime'] = edittime;
+    map['id'] = id;
+    map['name'] = name;
+    map['pic'] = pic;
+    return map;
+  }
+
+}
 
 class ItiListData{
 
