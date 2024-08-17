@@ -5,6 +5,7 @@ import 'package:intellij_tourism_designer/pages/desktop/map_page.dart';
 import 'package:intellij_tourism_designer/pages/desktop/personal_page.dart';
 import 'package:provider/provider.dart';
 
+import '../../models/global_model.dart';
 import '../../models/plan_edit_model.dart';
 
 
@@ -17,6 +18,8 @@ class _DeskTopPageState extends State<DeskTopPage> {
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
+    final vm = Provider.of<GlobalModel>(context,listen: false);
+    vm.changeMapIndex(index==1 ? true : false);
     _selectedIndex = index;
     setState(() {});
   }
@@ -76,4 +79,5 @@ class _DeskTopPageState extends State<DeskTopPage> {
       )
     );
   }
+
 }

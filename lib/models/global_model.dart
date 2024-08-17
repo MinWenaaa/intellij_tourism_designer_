@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:intellij_tourism_designer/constants/constants.dart';
 import 'package:intellij_tourism_designer/helpers/User.dart';
+import 'package:intellij_tourism_designer/helpers/poi_list_view_data.dart';
 import 'package:intellij_tourism_designer/helpers/poi_marker_data.dart';
 import 'package:intellij_tourism_designer/http/Api.dart';
 import 'package:latlong2/latlong.dart';
@@ -87,12 +88,12 @@ class GlobalModel with ChangeNotifier{
 
   Future<void> changePoiLayer(int index, bool flag) async {
 
-    print("poi layer ${index} changes state");
+    print("Global.changePoiLayer: poi layer ${index} changes state");
     showPOI[index] = flag;
     markers[index] = [];
 
     if(flag) {
-      print("marker list ${index} refresh");
+      print("Global.changePoiLayer: marker list ${index} refresh");
       List<POIMarkerData>? list = await
         Api.instance.getMarkers(
           lastRefreshCenter.longitude - 0.025, lastRefreshCenter.latitude - 0.025,
@@ -103,10 +104,7 @@ class GlobalModel with ChangeNotifier{
           point: LatLng(data.latitude ?? 0, data.longitude ?? 0),
           child: GestureDetector(
             child: Image.network(ConstantString.poi_icon_url[index], width: 32, height: 32,),
-            onTap: (){
-              currentPOI = data.pid??0;
-              changeState(mapState.detail);
-            },
+            onTap: () => markerCallBack(data.pid??0)
           )
         ))
       );
@@ -118,7 +116,7 @@ class GlobalModel with ChangeNotifier{
 
   Future<void> refreshMarker(LatLng newCenter) async {
 
-    print("refresh center moved, triggerd refreshment");
+    print("Global.refreshMarker: refresh center moved, triggerd refreshment: $newCenter");
     lastRefreshCenter = newCenter;
     for (int i = 0; i < 4; i++) {
       if(!showPOI[i]){
@@ -126,22 +124,27 @@ class GlobalModel with ChangeNotifier{
       } else {
         markers[i]=[];
         List<POIMarkerData>? list = await
-          Api.instance.getMarkers(newCenter.longitude-0.025, newCenter.latitude-0.025, newCenter.longitude+0.025, newCenter.longitude+0.025, type: i);
+          Api.instance.getMarkers(newCenter.longitude-0.025, newCenter.latitude-0.025, newCenter.longitude+0.025, newCenter.latitude+0.025, type: i);
           //print("got ${list!.length} point: ${list[0].longitude}");
         list?.forEach((data) => markers[i].add(Marker(
           point: LatLng(data.latitude??0, data.longitude??0),
           child: GestureDetector(
             child: Image.network(ConstantString.poi_icon_url[i]),
-            onTap: (){
-              currentPOI = data.pid??0;
-              changeState(mapState.detail);
-            },
+            onTap: () => markerCallBack(data.pid??0)
           )
         )));
       }
     }
     notifyListeners();
 
+  }
+
+  Future<void> markerCallBack(int pid) async {
+    print("Global: currentPoi changed ${pid}");
+    currentPOI = pid;
+    changeState(mapState.detail);
+    itiMapCardData = await await Api.instance.getMapPOICard(id: pid);
+    notifyListeners();
   }
 
 
@@ -199,5 +202,15 @@ class GlobalModel with ChangeNotifier{
       print("PlanEditModel._fetchNavigationData: Navigation response was null.");
     }
   }
+
+
+  bool mapIndex = true;
+  void changeMapIndex(bool value){
+    mapIndex = value;
+    notifyListeners();
+  }
+
+  PoiListViewData? itiMapCardData;
+
 
 }

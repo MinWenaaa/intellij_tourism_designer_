@@ -7,6 +7,7 @@ import 'package:intellij_tourism_designer/constants/theme.dart';
 import 'package:intellij_tourism_designer/http/Api.dart';
 import 'package:intellij_tourism_designer/models/global_model.dart';
 import 'package:intellij_tourism_designer/pages/poi_detail_page.dart';
+import 'package:intellij_tourism_designer/widgets/buttom_sheet.dart';
 import 'package:intellij_tourism_designer/widgets/tools_button.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
@@ -33,31 +34,31 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin{
   late final MapController _mapController;
 
 
-
   @override
   void initState() {
     super.initState();
     _mapController = MapController();
-    _startTimer(context);
+    _startTimer();
   }
 
   @override
   void dispose() {
+    print("MapPage.timer Canceled");
     _timer?.cancel();
     super.dispose();
   }
 
 
-  void _startTimer(BuildContext context) {
+  void _startTimer() {
 
     final vm = Provider.of<GlobalModel>(context,listen: false);
 
     _timer = Timer.periodic(defaultTime, (timer) {
       LatLng newCenter = _mapController.camera.center;
-      print("check center move: ${newCenter}");
-      vm.refreshMarker(newCenter);
-      if(vm.state==mapState.record){
-        Api.instance.pushPoint(vm.rid, newCenter);
+      print("Map Map check center move: ${newCenter}  ${vm.mapIndex}");
+      if( vm.mapIndex &&((vm.lastRefreshCenter.latitude - newCenter.latitude).abs() > 0.025 ||
+          (vm.lastRefreshCenter.longitude - newCenter.longitude).abs() > 0.025) ) {
+        vm.refreshMarker(newCenter);
       }
     });
   }
@@ -80,17 +81,68 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin{
 
   @override
   Widget build(BuildContext context) {
+
+    final vm = Provider.of<GlobalModel>(context,listen: false);
+
     return Scaffold(
         body: SafeArea(
-            child: Stack(
+            child: Row(
               children: [
-                _mapLayers(),
-                //_weatherCard(),
-                //_toolsButton(context),
-                //_searchBar(context),
-                //_recordButton(),
-                //_stopRecord(),
-                //_PoiDetailFab(context),
+                Selector<GlobalModel, mapState>(
+                  selector: (context, provider) => provider.state,
+                  builder: (context, state, child) => state!=mapState.map ? Flexible(
+                    flex: 3,
+                    child: Selector<GlobalModel, int>(
+                        selector: (context, provider) => provider.currentPOI,
+                        builder: (context, id, child) => Stack(
+                          children: [
+                            Visibility(
+                              visible: state==mapState.detail,
+                              child: Poidetailpage(id: id),
+                            ),
+                            Visibility(
+                              visible: state==mapState.detail,
+                              child: Positioned(
+                                top: 12, left: 12,
+                                child: GestureDetector(
+                                  child: Icon(Icons.arrow_back_ios),
+                                  onTap: () => vm.changeState(mapState.map),
+                                ),
+                              ),
+                            ),
+                            Visibility(
+                              visible: state==mapState.record,
+                              child: LayerSettingDemo(height:600)
+                            ),
+                            Visibility(
+                              visible: state==mapState.record,
+                              child: Positioned(
+                                top: 12, left: 12,
+                                child: GestureDetector(
+                                  child: Icon(Icons.arrow_back_ios),
+                                  onTap: () => vm.changeState(mapState.map)
+                                 ),
+                              ),)
+                          ],
+                        ),
+                      )
+                  ): const SizedBox()
+                ),
+                Flexible(
+                  flex: 5,
+                  child: Stack(
+                    children: [
+                      _mapLayers(),
+
+                      //_weatherCard(),
+                      //_toolsButton(context),
+                      //_searchBar(context),
+                      //_recordButton(),
+                      //_stopRecord(),
+                      //_PoiDetailFab(context),
+                    ],
+                  ),
+                ),
               ],
             )
         )
@@ -98,6 +150,9 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin{
   }
 
   Widget _mapLayers(){
+
+    final vm = Provider.of<GlobalModel>(context,listen: false);
+
     return FlutterMap(
       mapController: _mapController,
       options: initMapOption(),
@@ -120,8 +175,23 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin{
                   return PolylineLayer(polylines: [planPolyline(data)]);
                 }
             ) : const SizedBox()
+        ),
+        Align(
+            alignment: Alignment.topRight,
+            child: SizedBox(
+                width: 480,
+                child: SearchingBar(callBack: _animatedMapMove,))
+        ),
+        Align(
+            alignment: Alignment.topLeft,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: GestureDetector(
+                child: Icon(Icons.settings, size: 36, color: AppColors.primary,),
+                onTap: () => vm.changeState(mapState.record)
+              ),
+            )
         )
-        //WMS_ours(layerName: "Attraction_Heatmap")
       ],
     );
   }

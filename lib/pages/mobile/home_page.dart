@@ -138,7 +138,7 @@ class _HomePageState extends State<HomePage> {
               currentID = vm.listData?[index].pid??1;
               setState(() {});
             },
-            child: POIListItem(poi: vm.listData![index],)
+            child: POIListItem(poi: vm.listData![index],height: 120,)
           );
         });
     });

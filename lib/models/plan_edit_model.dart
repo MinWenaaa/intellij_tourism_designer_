@@ -13,9 +13,15 @@ class PlanEditModel with ChangeNotifier{
   num uid = 0;
   late Future<PlanData> planData;
   int state = 0;
+  int curday = 0;
 
   void changeState(int s){
     state = s;
+    notifyListeners();
+  }
+
+  void changeCurDay(int value){
+    curday = value;
     notifyListeners();
   }
 

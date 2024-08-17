@@ -20,7 +20,6 @@ class ItiEditWidget extends StatefulWidget {
 
 class _ItiEditWidgetState extends State<ItiEditWidget> {
 
-  int curDay=0;
 
 
   @override
@@ -32,11 +31,6 @@ class _ItiEditWidgetState extends State<ItiEditWidget> {
     super.initState();
   }
 
-
-  void _onItemTapped(int index) {
-    curDay = index;
-    setState(() {});
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +44,9 @@ class _ItiEditWidgetState extends State<ItiEditWidget> {
               crossAxisAlignment:CrossAxisAlignment.center,
               children:[
                 const SizedBox(height:5),
-                WeatherCard(date: vm.start.add(Duration(days: curDay))),
+                Selector<PlanEditModel, int>(
+                  selector: (context, provider) => provider.curday,
+                  builder: (context, data, child) => WeatherCard(date: vm.start.add(Duration(days: data)))),
                 const SizedBox(height:5),
                 FutureBuilder<PlanData>(
                   future: vm.planData,
@@ -64,30 +60,22 @@ class _ItiEditWidgetState extends State<ItiEditWidget> {
                     } else {
                       return SizedBox(
                         height: 500,
-                        child: ListView(
-                            children: List.generate(
-                                snapshot.data!.itidata![curDay].length,
-                                (index){
-                                  //print("${curDay}, ${snapshot.data!.itidata![curDay].length}, ${index}");
-                                  //print("${snapshot.data!.itidata}");
-                                    return _ItiCard(snapshot.data!.itidata![curDay][index]);
-                             })
+                        child: Selector<PlanEditModel, int>(
+                          selector: (context, provider) => provider.curday,
+                          builder: (context, curDay, child) => ListView(
+                              children: List.generate(
+                                  snapshot.data!.itidata![curDay].length,
+                                  (index){
+                                    //print("${curDay}, ${snapshot.data!.itidata![curDay].length}, ${index}");
+                                    //print("${snapshot.data!.itidata}");
+                                      return _ItiCard(snapshot.data!.itidata![curDay][index]);
+                               })
+                          ),
                         ),
                       );
                     }
                   }
                 ),
-                FutureBuilder<PlanData>(
-                  future: vm.planData,
-                  builder: (context, snapshot) => snapshot.hasData ?
-                    TextButton(
-                      onPressed: () => setState((){
-                          snapshot.data!.itidata![curDay].add(ItiData());
-                      }),
-                      style:AppButton.button1,
-                      child:const Icon(Icons.add),
-                    ) : const SizedBox(),
-                )
               ]
             )
           )
@@ -119,7 +107,7 @@ class _ItiEditWidgetState extends State<ItiEditWidget> {
                     TextButton(
                       onPressed:() => setState(() {
                         snapshot.data!.itidata!.add([]);
-                        curDay=snapshot.data!.itidata!.length-1;}),
+                        vm.changeCurDay(snapshot.data!.itidata!.length-1);}),
                       child:const Text("Add"),
                     ),
                     TextButton(
@@ -140,14 +128,17 @@ class _ItiEditWidgetState extends State<ItiEditWidget> {
     return FutureBuilder<PlanData>(
       future: vm.planData,
       builder: (context, snapshot) => snapshot.hasData ?
-        NavigationRail(
-          destinations: List.generate(snapshot.data!.itidata!.length, (index)=>NavigationRailDestination(
-            icon: Text("Day${index+1}"),
-            label: Text("Day${index+1}"),
-          )),
-          selectedIndex: curDay,
-          onDestinationSelected: _onItemTapped,
-      ): const SizedBox(),
+      Selector<PlanEditModel, int>(
+        selector: (context, provider) => provider.curday,
+        builder: (context, curDay, child) => NavigationRail(
+            destinations: List.generate(snapshot.data!.itidata!.length, (index)=>NavigationRailDestination(
+              icon: Text("Day${index+1}"),
+              label: Text("Day${index+1}"),
+            )),
+            selectedIndex: curDay,
+            onDestinationSelected: vm.changeCurDay,
+                ),
+        ): const SizedBox(),
     );
   }
 

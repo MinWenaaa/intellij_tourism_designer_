@@ -1,5 +1,5 @@
+import 'dart:async';
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:intellij_tourism_designer/constants/constants.dart';
 import 'package:intellij_tourism_designer/constants/theme.dart';
@@ -8,17 +8,21 @@ import 'package:intellij_tourism_designer/helpers/record_list_data.dart';
 import 'package:intellij_tourism_designer/helpers/weather_data.dart';
 import 'package:intellij_tourism_designer/http/Api.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:provider/provider.dart';
 import '../helpers/poi_list_view_data.dart';
+import '../models/global_model.dart';
+
 
 class POIListItem extends StatelessWidget {
 
-  const POIListItem({super.key, required this.poi});
+  const POIListItem({super.key, required this.poi, required this.height});
   final PoiListViewData poi;
+  final double height;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        width: double.infinity, height: 120,
+        width: double.infinity, height: height,
         margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
         decoration: BoxDecoration(
           border: Border.all(color: AppColors.detail, width:0.5),
@@ -40,6 +44,7 @@ class POIListItem extends StatelessWidget {
                       overflow: TextOverflow.clip, // 裁剪超出部分
                       maxLines: 2,
                       style: AppText.matter,),
+                    const Expanded(child: SizedBox()),
                     Text(poi.paddress ?? "",
                       overflow: TextOverflow.clip, // 裁剪超出部分
                       maxLines: 1,
@@ -62,6 +67,43 @@ class POIListItem extends StatelessWidget {
     );
   }
 }
+
+// class ItiMapCard extends StatefulWidget {
+//   final int id;
+//   const ItiMapCard({super.key, required this.id});
+//
+//   @override
+//   State<ItiMapCard> createState() => _ItiMapCardState();
+// }
+//
+// class _ItiMapCardState extends State<ItiMapCard> {
+//
+//   late Future<PoiListViewData> data;
+//
+//   Future<PoiListViewData> fetch() async {
+//     PoiListViewData data = await Api.instance.getMapPOICard(id: widget.id);
+//     return data;
+//   }
+//
+//   @override
+//   void initState() {
+//     super.initState();
+//     data = fetch();
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       width: 580,
+//       child: FutureBuilder<PoiListViewData>(
+//         future: data,
+//         builder: (context, snapshot) =>
+//           snapshot.hasData ? POIListItem(poi: snapshot.data??PoiListViewData(), height: 180,) :
+//           const CircularProgressIndicator(color: AppColors.primary,)
+//       ),
+//     );
+//   }
+// }
 
 
 class ItiCard extends StatelessWidget {

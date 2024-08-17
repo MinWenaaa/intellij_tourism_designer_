@@ -152,7 +152,7 @@ class Api {
       },
     );
 
-    print("request marker refresh: ${min_x},${min_y},${max_x},${max_y}");
+    print("Api.getMarkers: request marker refresh: ${min_x},${min_y},${max_x},${max_y}");
     PoiMarkerListData poiMarkerData = PoiMarkerListData.fromJson(response.data);
 
     return poiMarkerData.getPoiList();
@@ -229,5 +229,15 @@ class Api {
     print("Api.readPlanData: get plan $id");
     PlanData planData = PlanData.fromJson(response.data);
     return planData;
+  }
+
+  //获取地图小卡片信息
+  Future<PoiListViewData> getMapPOICard({required int id}) async {
+    Response response = await Dio_database.instance().get(
+      path: "feature/mapview",
+      queryParameters: {'id':id}
+    );
+    PoiListViewData poiListViewData = PoiListViewData.fromJson(response.data);
+    return poiListViewData;
   }
 }

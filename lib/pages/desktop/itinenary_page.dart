@@ -1,6 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:intellij_tourism_designer/constants/theme.dart';
+import 'package:intellij_tourism_designer/helpers/poi_list_view_data.dart';
+import 'package:intellij_tourism_designer/http/Api.dart';
 import 'package:intellij_tourism_designer/models/plan_edit_model.dart';
 import 'package:intellij_tourism_designer/widgets/buttom_sheet.dart';
 import 'package:intellij_tourism_designer/widgets/calendar.dart';
@@ -12,6 +16,7 @@ import '../../constants/constants.dart';
 import '../../helpers/tile_providers.dart';
 import '../../models/global_model.dart';
 import '../../widgets/Iti_edit.dart';
+import '../../widgets/detail_view.dart';
 import '../../widgets/searching_bar.dart';
 import '../desktop/map_page.dart';
 
@@ -25,6 +30,8 @@ class ItineraryPage extends StatefulWidget {
 }
 
 class _ItineraryPageState extends State<ItineraryPage> with TickerProviderStateMixin{
+
+  Timer? _timer;
 
   bool setting = false;
   DateTime start = DateTime.now();
@@ -43,6 +50,21 @@ class _ItineraryPageState extends State<ItineraryPage> with TickerProviderStateM
   void initState() {
     super.initState();
     _mapController = MapController();
+    _startTimer();
+  }
+
+  void _startTimer() {
+
+    final vm = Provider.of<GlobalModel>(context,listen: false);
+
+    _timer = Timer.periodic(Duration(seconds: 5), (timer) {
+      LatLng newCenter = _mapController.camera.center;
+      print("MapItinerary: check center move: ${newCenter}  ${!vm.mapIndex}");
+      if( !vm.mapIndex &&((vm.lastRefreshCenter.latitude - newCenter.latitude).abs() > 0.025 ||
+          (vm.lastRefreshCenter.longitude - newCenter.longitude).abs() > 0.025) ) {
+        vm.refreshMarker(newCenter);
+      }
+    });
   }
 
 
@@ -250,7 +272,8 @@ class _ItineraryPageState extends State<ItineraryPage> with TickerProviderStateM
                 }),
               ),
             )
-        )
+        ),
+        _poiCard()
       ],
     );
   }
@@ -323,5 +346,27 @@ class _ItineraryPageState extends State<ItineraryPage> with TickerProviderStateM
     }
     setState(() {});
   }
+
+  Widget _poiCard() {
+    return Align(
+      alignment: Alignment.bottomRight,
+      child: Selector<GlobalModel, mapState>(
+        selector: (context, provider) => provider.state,
+        builder: (context, state, child) => Visibility(
+          visible: state==mapState.detail,
+          child: Selector<GlobalModel, PoiListViewData?>(
+              selector: (context, provider) => provider.itiMapCardData,
+              builder: (context, data, child) => data==null ? const SizedBox(): Container(
+                    width: 580, color: Colors.white,
+                    child: POIListItem(poi: data, height: 160,)
+                  ),
+              ),
+        ),
+      ),
+    );
+  }
+
+  
+
 
 }
