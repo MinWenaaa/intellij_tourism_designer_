@@ -3,6 +3,9 @@ import 'package:intellij_tourism_designer/pages/desktop/city_stats.dart';
 import 'package:intellij_tourism_designer/pages/desktop/itinenary_page.dart';
 import 'package:intellij_tourism_designer/pages/desktop/map_page.dart';
 import 'package:intellij_tourism_designer/pages/desktop/personal_page.dart';
+import 'package:provider/provider.dart';
+
+import '../../models/plan_edit_model.dart';
 
 
 class DeskTopPage extends StatefulWidget {
@@ -59,7 +62,10 @@ class _DeskTopPageState extends State<DeskTopPage> {
               children: [
                 PersonalPage(),
                 MapPage(),
-                ItineraryPage(),
+                ChangeNotifierProvider<PlanEditModel>(
+                  create: (context) => PlanEditModel(),
+                  child: ItineraryPage(),
+                ),
                 CityStatsPage(),
                 CityStatsPage(),
                 CityStatsPage(),

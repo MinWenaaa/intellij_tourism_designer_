@@ -42,19 +42,6 @@ class GlobalModel with ChangeNotifier{
 
   int baseProvider = 0;
   mapState state = mapState.map;
-  int currentPOI = 0;
-  num rid = 0;
-
-  List<bool> thematicMap = [false];
-
-  LatLng lastRefreshCenter = const LatLng(30.5,114.4);
-  List<bool> isShowPOI = [false, false, false, false];
-  List<List<Marker>> markers = [[],[],[],[]];
-  int showSunset = -1;
-  List<bool> showHeatMap = [false, false, false, false];
-  List<bool> showFeatureMap = [false, false, false, false, false];
-
-  List<LatLng> currentRecords = [];
 
   void changeBaseLayer(int provider){
     baseProvider = provider;
@@ -72,82 +59,17 @@ class GlobalModel with ChangeNotifier{
     notifyListeners();
   }
 
-  Future<void> changePoiMarkerShowState(int index, bool flag) async {
 
-    print("poi layer ${index} changes state");
-    isShowPOI[index] = flag;
 
-    if(flag) {
-      for (int i = 0; i < 4; i++) {
-        if (!isShowPOI[i]) {
-          continue;
-        } else {
-          markers[i] = [];
-          print("marker list ${i} refresh");
-          List<POIMarkerData>? list = await
-          Api.instance.getMarkers(
-              lastRefreshCenter.longitude - 0.025, lastRefreshCenter.latitude - 0.025,
-              lastRefreshCenter.longitude + 0.025, lastRefreshCenter.latitude + 0.025, type: i);
-          print("got point: ${list!.length}");
-          list?.forEach((data) =>
-              markers[i].add(Marker(
-                  point: LatLng(data.latitude ?? 0, data.longitude ?? 0),
-                  child: GestureDetector(
-                    child: Image.network(ConstantString.poi_icon_url[i], width: 32, height: 32,),
-                    onTap: (){
-                      currentPOI = data.pid??0;
-                      changeState(mapState.detail);
-                    },
-                  )
-              )
-           ));
-        }
-      }
-    }else{
-      markers[index] = [];
-    }
-    notifyListeners();
-  }
 
-  Future<void> refreshMarker(LatLng newCenter) async {
+  int showSunset = -1;
+  List<bool> showPOI = [false, false, false, false];
+  List<bool> showHeatMap = [false, false, false, false];
+  List<bool> showFeatureMap = [false, false, false, false, false];
 
-    if( (lastRefreshCenter.latitude - newCenter.latitude).abs() < 0.025 &&
-        (lastRefreshCenter.longitude - newCenter.longitude).abs() <0.025 ) {
-      print("distance is not far enough to trigger refreshment");
-      return;
-    } else {
-
-      print("refresh center moved, triggerd refreshment");
-      lastRefreshCenter = newCenter;
-      for (int i = 0; i < 4; i++) {
-        if(!isShowPOI[i]){
-          continue;
-        } else {
-          markers[i]=[];
-          List<POIMarkerData>? list = await
-            Api.instance.getMarkers(newCenter.longitude-0.025, newCenter.latitude-0.025, newCenter.longitude+0.025, newCenter.longitude+0.025, type: i);
-          //print("got ${list!.length} point: ${list[0].longitude}");
-          list?.forEach((data) => markers[i].add(Marker(
-              point: LatLng(data.latitude??0, data.longitude??0),
-              child: GestureDetector(
-                child: Image.network(ConstantString.poi_icon_url[i]),
-                onTap: (){
-                  currentPOI = data.pid??0;
-                  changeState(mapState.detail);
-                },
-              )
-            )
-          ));
-        }
-      }
-    }
-    notifyListeners();
-  }
-
-  void setCurrentRecords(List<LatLng> list){
-    currentRecords = list;
-    notifyListeners();
-  }
+  LatLng lastRefreshCenter = const LatLng(30.5,114.4);
+  List<List<Marker>> markers = [[],[],[],[]];
+  int currentPOI = -1;
 
   void changeSunset(int i){
     showSunset = i;
@@ -161,6 +83,79 @@ class GlobalModel with ChangeNotifier{
     showFeatureMap[index] = value;
     notifyListeners();
   }
+
+  Future<void> changePoiLayer(int index, bool flag) async {
+
+    print("poi layer ${index} changes state");
+    showPOI[index] = flag;
+    markers[index] = [];
+
+    if(flag) {
+      print("marker list ${index} refresh");
+      List<POIMarkerData>? list = await
+        Api.instance.getMarkers(
+          lastRefreshCenter.longitude - 0.025, lastRefreshCenter.latitude - 0.025,
+          lastRefreshCenter.longitude + 0.025, lastRefreshCenter.latitude + 0.025, type: index);
+          //print("got point: ${list!.length}");
+      list?.forEach((data) =>
+        markers[index].add(Marker(
+          point: LatLng(data.latitude ?? 0, data.longitude ?? 0),
+          child: GestureDetector(
+            child: Image.network(ConstantString.poi_icon_url[index], width: 32, height: 32,),
+            onTap: (){
+              currentPOI = data.pid??0;
+              changeState(mapState.detail);
+            },
+          )
+        ))
+      );
+
+    }
+    notifyListeners();
+
+  }
+
+  Future<void> refreshMarker(LatLng newCenter) async {
+
+    print("refresh center moved, triggerd refreshment");
+    lastRefreshCenter = newCenter;
+    for (int i = 0; i < 4; i++) {
+      if(!showPOI[i]){
+        continue;
+      } else {
+        markers[i]=[];
+        List<POIMarkerData>? list = await
+          Api.instance.getMarkers(newCenter.longitude-0.025, newCenter.latitude-0.025, newCenter.longitude+0.025, newCenter.longitude+0.025, type: i);
+          //print("got ${list!.length} point: ${list[0].longitude}");
+        list?.forEach((data) => markers[i].add(Marker(
+          point: LatLng(data.latitude??0, data.longitude??0),
+          child: GestureDetector(
+            child: Image.network(ConstantString.poi_icon_url[i]),
+            onTap: (){
+              currentPOI = data.pid??0;
+              changeState(mapState.detail);
+            },
+          )
+        )));
+      }
+    }
+    notifyListeners();
+
+  }
+
+
+
+
+  num rid = 0;
+  List<LatLng> currentRecords = [];
+
+
+  void setCurrentRecords(List<LatLng> list){
+    currentRecords = list;
+    notifyListeners();
+  }
+
+
 
 
 }

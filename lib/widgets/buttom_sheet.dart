@@ -8,8 +8,9 @@ import 'package:intellij_tourism_designer/route_utils.dart';
 import 'package:provider/provider.dart';
 
 class LayerSettingDemo extends StatefulWidget {
-  const LayerSettingDemo({super.key});
+  const LayerSettingDemo({super.key, required this.height});
 
+  final double height;
   @override
   State<LayerSettingDemo> createState() => _LayerSettingDemoState();
 }
@@ -27,7 +28,7 @@ class _LayerSettingDemoState extends State<LayerSettingDemo> {
     final vm = Provider.of<GlobalModel>(context,listen: false);
 
     return Container(
-      height: 450,
+      height: widget.height,
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 24),
       child: ListView(
         children: [
@@ -103,10 +104,10 @@ class _LayerSettingDemoState extends State<LayerSettingDemo> {
 
   Widget _makersButton({required int index, required GlobalModel model}){
     return Selector<GlobalModel, bool>(
-      selector: (context, vm) => vm.isShowPOI[index],
+      selector: (context, vm) => vm.showPOI[index],
       builder: (context, flag, child) => Row(
         children: [
-          Checkbox(value: flag, onChanged: (value) => model.changePoiMarkerShowState(index, value!)),
+          Checkbox(value: flag, onChanged: (value) => model.changePoiLayer(index, value!)),
           Text(ConstantString.poi[index])
         ],
       ),

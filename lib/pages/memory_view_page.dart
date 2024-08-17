@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:intellij_tourism_designer/helpers/weather_data.dart';
 import 'package:intellij_tourism_designer/route_utils.dart';
 import 'package:intellij_tourism_designer/pages/mobile/path_planing_page.dart';
-import 'package:intellij_tourism_designer/constants/constants.dart';
-import 'package:intellij_tourism_designer/widgets/detail_view.dart';
 
 
 class MemoryView extends StatefulWidget {

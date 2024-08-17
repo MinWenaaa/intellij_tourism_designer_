@@ -8,15 +8,15 @@
 
 class PlanData {
   PlanData({
-    this.itidata,
     this.uid,
     this.name,
     this.id,
     this.editTime,
-    this.pic
+    this.pic,
+    this.itidata,
 });
 
-  List<List<ItiData>>? itidata;
+  List<List<ItiData>>? itidata = [];
   String? editTime = "";
   String? pic = "https://gd-hbimg.huaban.com/feeb8703425ac44d7260017be9b67e08483199c06699-i8Tdqo_fw1200webp";
   String? name = "新建行程";
@@ -38,7 +38,7 @@ class PlanData {
   PlanData.fromJson(Map<String, dynamic> json) {
     itidata = json['itidata']?.map(
           (listJson) => listJson.map((itemJson) => ItiData.fromJson(itemJson)).toList(),
-    ).toList()??[[]];
+    ).toList()??[];
     editTime = json['editTime'] as String;
     pic = json['pic'] as String;
     name = json['name'] as String;
@@ -47,7 +47,7 @@ class PlanData {
   }
 
   factory PlanData.createWithDays({required int num, required num uid}){
-    final PlanData planData  = PlanData();
+    final PlanData planData  = PlanData(itidata: []);
     for(int i =0; i<num; i++){
       planData.itidata?.add([]);
       print("itidata add [], now ${planData.itidata}");
@@ -109,8 +109,8 @@ class ItiData {
   String? pintroduceShort;
   String? pname;
   String? pphoto;
-  num? x;
-  num? y;
+  double? x;
+  double? y;
   String? time;
 
   Map<String, dynamic> toJson() {

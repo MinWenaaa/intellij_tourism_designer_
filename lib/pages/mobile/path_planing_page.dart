@@ -10,7 +10,6 @@ import 'package:intellij_tourism_designer/helpers/tile_providers.dart';
 import 'package:provider/provider.dart';
 
 import '../../constants/theme.dart';
-import '../../models/home_view_model.dart';
 
 /*
 路径规划页面

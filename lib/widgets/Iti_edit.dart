@@ -26,8 +26,8 @@ class _ItiEditWidgetState extends State<ItiEditWidget> {
   @override
   void initState() {
     final vm = Provider.of<PlanEditModel>(context,listen: false);
-    super.initState();
     vm.init();
+    super.initState();
   }
 
 

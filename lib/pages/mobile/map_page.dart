@@ -55,7 +55,10 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin{
     _timer = Timer.periodic(defaultTime, (timer) {
       LatLng newCenter = _mapController.camera.center;
       print("check center move: ${newCenter}");
-      vm.refreshMarker(newCenter);
+      if( (vm.lastRefreshCenter.latitude - newCenter.latitude).abs() > 0.025 &&
+          (vm.lastRefreshCenter.longitude - newCenter.longitude).abs() > 0.025 ) {
+        vm.refreshMarker(newCenter);
+      }
       if(vm.state==mapState.record){
         Api.instance.pushPoint(vm.rid, newCenter);
       }
@@ -91,6 +94,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin{
                 _recordButton(),
                 _stopRecord(),
                 _PoiDetailFab(context),
+                _backButton()
               ],
             )
         )
@@ -229,6 +233,22 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin{
                     child: const Icon(Icons.arrow_back_ios, color: AppColors.matter,)),
               )],
           ) : const SizedBox()
+    );
+  }
+
+  Widget _backButton(){
+    final vm = Provider.of<GlobalModel>(context,listen: false);
+    return Selector<GlobalModel, mapState>(
+      selector: (context, provider) => provider.state,
+      builder: (context, data, child) => Visibility(
+        visible: data == mapState.view_record || data == mapState.view_iti,
+        child: Positioned(
+          top: 12, left: 12,
+          child: GestureDetector(
+            child: Icon(Icons.arrow_back_ios, size: 36,),
+            onTap: () => vm.changeState(mapState.map),
+        )),
+      ),
     );
   }
 

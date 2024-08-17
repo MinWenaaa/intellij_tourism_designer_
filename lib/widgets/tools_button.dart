@@ -108,7 +108,7 @@ class ToolsButton extends StatelessWidget {
               child: Text("图层"),
               onTap: () => showModalBottomSheet<void>(
                 context: context,
-                builder: (context)=>LayerSettingDemo()),
+                builder: (context)=>LayerSettingDemo(height: 450,)),
             )
           ],
         ),

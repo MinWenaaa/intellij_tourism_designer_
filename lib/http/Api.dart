@@ -193,9 +193,9 @@ class Api {
       path: "designer/designer",
       data: {"num": poinNum, "requirement": requirement}
     );
-    print("api got result");
+    //print("api got result");
     ItiListData planData = ItiListData.fromJson(response.data);
-    print("result turned into: ${planData}");
+    //print("result turned into: ${planData}");
     return planData.itiList;
   }
 
