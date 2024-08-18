@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -36,9 +37,7 @@ class _ItineraryPageState extends State<ItineraryPage> with TickerProviderStateM
   bool setting = false;
   DateTime start = DateTime.now();
   DateTime end = DateTime.now();
-  int curDay = 0;
 
-  bool isCreate = false;
 
   bool _showTextField = false;
   final TextEditingController _textController = TextEditingController();
@@ -62,7 +61,7 @@ class _ItineraryPageState extends State<ItineraryPage> with TickerProviderStateM
       print("MapItinerary: check center move: ${newCenter}  ${!vm.mapIndex}");
       if( !vm.mapIndex &&((vm.lastRefreshCenter.latitude - newCenter.latitude).abs() > 0.025 ||
           (vm.lastRefreshCenter.longitude - newCenter.longitude).abs() > 0.025) ) {
-        vm.refreshMarker(newCenter);
+        vm.refreshMarker(newCenter, radius: 0.05);
       }
     });
   }
@@ -74,30 +73,33 @@ class _ItineraryPageState extends State<ItineraryPage> with TickerProviderStateM
     return Row(children: [
         _operator(),
         Flexible(
-          flex: 5,
+          flex: 3,
             child: MapPage()),
       ]
     );
   }
 
   Widget _operator(){
-    return Selector<PlanEditModel, int>(
-      selector: (context, provider) => provider.state,
-      builder: (context, state, child) => Flexible(
-        flex: 3,
+    return Selector<PlanEditModel, bool>(
+      selector: (context, provider) => provider.isEditing,
+      builder: (context, isEditing, child) => Flexible(
+        flex: 2,
         child: Stack(
          children:[
            Visibility(
-              visible: state==0 && !setting,
+              visible: !isEditing && !setting,
               child: _createFab()
           ),
            Visibility(
-             visible: state==1 && !setting,
-             child: ItiEditWidget(isCreate: isCreate)
+             visible: isEditing && !setting,
+             child: ItiEditWidget()
            ),
            Visibility(
                visible: setting,
-               child: LayerSettingDemo(height: double.infinity,)
+               child: const Padding(
+                 padding: EdgeInsets.symmetric(horizontal: 16),
+                 child: LayerSettingDemo(height: double.infinity,),
+               )
            ),
             Visibility(
                 visible: setting,
@@ -137,7 +139,10 @@ class _ItineraryPageState extends State<ItineraryPage> with TickerProviderStateM
                 children: [
                   primaryInkWell(
                     width: 200,
-                    callback: create,
+                    callback: (){
+                      requirement = "";
+                      create();
+                    },
                     text: "立即创建"),
                   secondaryInkWell(
                     width: 200,
@@ -246,12 +251,11 @@ class _ItineraryPageState extends State<ItineraryPage> with TickerProviderStateM
           selector: (context, provider) => provider.showFeatureMap[index],
           builder: (context, data, child) => data ? WMS_ours(layerName: ConstantString.featureLayer[index]) : const SizedBox(),
         ),),
-        Selector<PlanEditModel, List<List<LatLng>>>(
+        Selector<PlanEditModel, List<Polyline>>(
           selector: (context, provider) => provider.route,
           builder: (context, data, child) {
-            print("route rebuild: ${data.length}");
-            return PolylineLayer(polylines: List.generate(data.length, (index) =>
-                planPolyline(data[index])));
+            print("ItiPage Map: rebuild ${data.length} routes");
+            return PolylineLayer(polylines: data);
 
           }
         ),
@@ -266,14 +270,14 @@ class _ItineraryPageState extends State<ItineraryPage> with TickerProviderStateM
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: GestureDetector(
-                child: Icon(Icons.settings, size: 36, color: AppColors.primary,),
+                child: const Icon(Icons.settings, size: 36, color: AppColors.primary,),
                 onTap: () => setState(() {
                   setting = true;
                 }),
               ),
             )
         ),
-        _poiCard()
+        _poiCard(),
       ],
     );
   }
@@ -341,32 +345,120 @@ class _ItineraryPageState extends State<ItineraryPage> with TickerProviderStateM
       //print(" num < 2 : ${num}");
       OKToast( child: Text("选择更多天数"),);
     } else {
-      isCreate = true;
-      vm.setData(start: start, num: num, require: requirement, uid: gm.user.uid??0, );
+      vm.setData(start: start, num: num, require: requirement, userid: gm.user.uid??0, );
+      vm.createPlan();
+      vm.changeEditState(true);
     }
-    setState(() {});
   }
 
   Widget _poiCard() {
     return Align(
-      alignment: Alignment.bottomRight,
+      alignment: Alignment.bottomCenter,
       child: Selector<GlobalModel, mapState>(
         selector: (context, provider) => provider.state,
         builder: (context, state, child) => Visibility(
           visible: state==mapState.detail,
           child: Selector<GlobalModel, PoiListViewData?>(
               selector: (context, provider) => provider.itiMapCardData,
-              builder: (context, data, child) => data==null ? const SizedBox(): Container(
-                    width: 580, color: Colors.white,
-                    child: POIListItem(poi: data, height: 160,)
-                  ),
+              builder: (context, data, child) => data==null ? const SizedBox(): _pushPosition(data)
               ),
         ),
       ),
     );
   }
 
-  
+  Widget _pushPosition(PoiListViewData poi) {
+    Random random = Random();
+    int randomNumber = random.nextInt(3);
+    final vm = Provider.of<PlanEditModel>(context,listen: false);
+    return Container(
+      width: 720, height: 230,
+      decoration: const BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(36)),
+        color: Color(0xfffaf8ff),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black26,
+            spreadRadius: 3,
+            blurRadius: 10,
+            offset: Offset(0, 5), // changes position of shadow
+          ),
+        ],
+      ),
+      margin: EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+      padding: EdgeInsets.only(top: 16, bottom: 16, right: 48, left: 32),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Flexible(
+            flex: 7,
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 6,),
+                  Row(
+                    children: [
+                      Image.network(ConstantString.poiHeadIcon[poi.ptype]![randomNumber], width: 36, height: 36, fit: BoxFit.contain,),
+                      const SizedBox(width: 12,),
+                      Column(crossAxisAlignment: CrossAxisAlignment.start,
+                          children:[Text("【${poi.ptype}】", style: AppText.detail,),
+                        Text(poi.pname ?? "", style: AppText.Head1,overflow: TextOverflow.clip, maxLines: 2,),
+                      ]),
+                      const Expanded(child: SizedBox()),
+                      Selector<GlobalModel, int>(
+                        selector: (context, provider) => provider.currentPOI,
+                        builder: (context, data, child) => TextButton(
+                          onPressed: () => vm.pushLocation(id: data),
+                          child: Icon(Icons.add, color: AppColors.primary, size: 32,),
+                        )
+                      ),
+                      const SizedBox(width: 12,),
+                    ],
+                  ),
+                  const SizedBox(height: 6,),
+                  Text(poi.pintroduceShort ?? "",
+                    overflow: TextOverflow.clip,
+                    maxLines: 2,
+                    style: AppText.matter,),
+                  const Expanded(child: SizedBox()),
+                  Text(poi.paddress ?? "",
+                    overflow: TextOverflow.clip,
+                    maxLines: 1,
+                    style: AppText.detail,
+                  )
+                ],
+              ),
+          ),
+          Flexible(
+              flex: 5,
+              child: Image.network(poi.pphoto ??
+                  "https://gd-hbimg.huaban.com/feeb8703425ac44d7260017be9b67e08483199c06699-i8Tdqo_fw1200webp",
+                fit: BoxFit.cover,
+                width: double.infinity, height: double.infinity,
+              )
+          )
+        ],
+      ),
+    );
+      // Align(
+      // alignment: Alignment.bottomRight,
+      // child: Selector<GlobalModel, mapState>(
+      //   selector: (context, provider) => provider.state,
+      //   builder: (context, state, child) => Visibility(
+      //     visible: state==mapState.detail,
+      //     child: Selector<GlobalModel, int>(
+      //       selector: (context, provider) => provider.currentPOI,
+      //       builder: (context, data, child) => GestureDetector(
+      //         onTap: () => vm.pushLocation(id: data),
+      //         child: Icon(Icons.add, color: AppColors.primary,),
+      //       )
+      //       ),
+      //     ),
+      //   ),
+      //);
+  }
+
+
 
 
 }

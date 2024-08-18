@@ -49,6 +49,7 @@ class PoiListViewData {
     pprice = json['pprice'];
     prank = json['prank'];
     precommendedDuration = json['precommended_duration'];
+    ptype = json['ptype'];
   }
   String? paddress;
   String? pclass;
@@ -63,6 +64,7 @@ class PoiListViewData {
   String? pprice;
   String? prank;
   String? precommendedDuration;
+  String? ptype;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -79,6 +81,7 @@ class PoiListViewData {
     map['pprice'] = pprice;
     map['prank'] = prank;
     map['precommended_duration'] = precommendedDuration;
+    map['ptype'] = ptype;
     return map;
   }
 

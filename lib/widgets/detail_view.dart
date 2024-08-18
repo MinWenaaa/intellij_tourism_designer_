@@ -68,43 +68,6 @@ class POIListItem extends StatelessWidget {
   }
 }
 
-// class ItiMapCard extends StatefulWidget {
-//   final int id;
-//   const ItiMapCard({super.key, required this.id});
-//
-//   @override
-//   State<ItiMapCard> createState() => _ItiMapCardState();
-// }
-//
-// class _ItiMapCardState extends State<ItiMapCard> {
-//
-//   late Future<PoiListViewData> data;
-//
-//   Future<PoiListViewData> fetch() async {
-//     PoiListViewData data = await Api.instance.getMapPOICard(id: widget.id);
-//     return data;
-//   }
-//
-//   @override
-//   void initState() {
-//     super.initState();
-//     data = fetch();
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       width: 580,
-//       child: FutureBuilder<PoiListViewData>(
-//         future: data,
-//         builder: (context, snapshot) =>
-//           snapshot.hasData ? POIListItem(poi: snapshot.data??PoiListViewData(), height: 180,) :
-//           const CircularProgressIndicator(color: AppColors.primary,)
-//       ),
-//     );
-//   }
-// }
-
 
 class ItiCard extends StatelessWidget {
 
@@ -208,27 +171,36 @@ class ActCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children:[
-        const Flexible(
-          flex:3,
-          child:Column(
-            children:[
-              Row(
-                children:[
-                  Icon(Icons.abc),
-                  Text("poiName",style:AppText.matter),
-                ]
-              ),
-              Text("时间：",style:AppText.matter)
-            ]
+    return Container(
+      width: 320, height: 120,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          color: AppColors.secondary
+      ),
+      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      clipBehavior: Clip.hardEdge,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Flexible(
+            flex: 3,
+            child: Column(
+              children: [
+                Text(itiData.pname??"未知点"),
+                Text(itiData.pintroduceShort??"")
+              ],
+            ),
+          ),
+          Flexible(
+              flex: 2,
+              child: Image.network(itiData.pphoto ??
+                  "https://gd-hbimg.huaban.com/feeb8703425ac44d7260017be9b67e08483199c06699-i8Tdqo_fw1200webp",
+                fit: BoxFit.cover,
+                width: double.infinity, height: double.infinity,
+              )
           )
-        ),
-        Flexible(
-          flex:2,
-          child:Image.network("https://gd-hbimg.huaban.com/b0053b05eb42accdcd2a832f26f043d19a5a3809b12-lJacpy_fw1200webp")
-        ),
-      ]
+        ],
+      ),
     );
   }
 }

@@ -86,7 +86,7 @@ class GlobalModel with ChangeNotifier{
     notifyListeners();
   }
 
-  Future<void> changePoiLayer(int index, bool flag) async {
+  Future<void> changePoiLayer(int index, bool flag,  {num? radius}) async {
 
     print("Global.changePoiLayer: poi layer ${index} changes state");
     showPOI[index] = flag;
@@ -96,14 +96,14 @@ class GlobalModel with ChangeNotifier{
       print("Global.changePoiLayer: marker list ${index} refresh");
       List<POIMarkerData>? list = await
         Api.instance.getMarkers(
-          lastRefreshCenter.longitude - 0.025, lastRefreshCenter.latitude - 0.025,
-          lastRefreshCenter.longitude + 0.025, lastRefreshCenter.latitude + 0.025, type: index);
+          lastRefreshCenter.longitude - (radius??0.025), lastRefreshCenter.latitude - (radius??0.025),
+          lastRefreshCenter.longitude + (radius??0.025), lastRefreshCenter.latitude + (radius??0.025), type: index);
           //print("got point: ${list!.length}");
       list?.forEach((data) =>
         markers[index].add(Marker(
           point: LatLng(data.latitude ?? 0, data.longitude ?? 0),
           child: GestureDetector(
-            child: Image.network(ConstantString.poi_icon_url[index], width: 32, height: 32,),
+            child: Image.network(ConstantString.poi_icon_url[index], width: 36, height: 36,),
             onTap: () => markerCallBack(data.pid??0)
           )
         ))
@@ -114,7 +114,7 @@ class GlobalModel with ChangeNotifier{
 
   }
 
-  Future<void> refreshMarker(LatLng newCenter) async {
+  Future<void> refreshMarker(LatLng newCenter, {num? radius}) async {
 
     print("Global.refreshMarker: refresh center moved, triggerd refreshment: $newCenter");
     lastRefreshCenter = newCenter;
@@ -124,12 +124,12 @@ class GlobalModel with ChangeNotifier{
       } else {
         markers[i]=[];
         List<POIMarkerData>? list = await
-          Api.instance.getMarkers(newCenter.longitude-0.025, newCenter.latitude-0.025, newCenter.longitude+0.025, newCenter.latitude+0.025, type: i);
+          Api.instance.getMarkers(newCenter.longitude-(radius??0.025), newCenter.latitude-(radius??0.025), newCenter.longitude+(radius??0.025), newCenter.latitude+(radius??0.025), type: i);
           //print("got ${list!.length} point: ${list[0].longitude}");
         list?.forEach((data) => markers[i].add(Marker(
           point: LatLng(data.latitude??0, data.longitude??0),
           child: GestureDetector(
-            child: Image.network(ConstantString.poi_icon_url[i]),
+            child: Image.network(ConstantString.poi_icon_url[i], width: 36, height: 36,),
             onTap: () => markerCallBack(data.pid??0)
           )
         )));

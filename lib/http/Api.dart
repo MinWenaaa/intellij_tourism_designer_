@@ -74,7 +74,7 @@ class Api {
   //获取导航信息
   Future<List<LatLng>?> navigationRequire({required LatLng origin, required LatLng target}) async{
 
-    print("Api.navigationRequire: require navigation: origin${origin.longitude},${origin.latitude}, ${target.longitude},${target.latitude}");
+    //print("Api.navigationRequire: require navigation: origin${origin.longitude},${origin.latitude}, ${target.longitude},${target.latitude}");
 
     Response response = await Dio_gaode.instance().get(
       path: "direction/walking",
@@ -239,5 +239,16 @@ class Api {
     );
     PoiListViewData poiListViewData = PoiListViewData.fromJson(response.data);
     return poiListViewData;
+  }
+
+  //获取单个行程信息
+  Future<ItiData> getSingleItiData({required int id}) async {
+    Response response = await Dio_database.instance().get(
+      path: "designer/getItiData",
+      queryParameters: {'id': id}
+    );
+    ItiData itiData = ItiData.fromJson(response.data);
+    print("Api.getSingleItiData completed");
+    return itiData;
   }
 }

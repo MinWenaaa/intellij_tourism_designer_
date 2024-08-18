@@ -58,7 +58,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin{
       print("Map Map check center move: ${newCenter}  ${vm.mapIndex}");
       if( vm.mapIndex &&((vm.lastRefreshCenter.latitude - newCenter.latitude).abs() > 0.025 ||
           (vm.lastRefreshCenter.longitude - newCenter.longitude).abs() > 0.025) ) {
-        vm.refreshMarker(newCenter);
+        vm.refreshMarker(newCenter,radius: 0.05);
       }
     });
   }
@@ -112,7 +112,10 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin{
                             ),
                             Visibility(
                               visible: state==mapState.record,
-                              child: LayerSettingDemo(height:600)
+                              child: const Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 16),
+                                child: LayerSettingDemo(height: double.infinity,),
+                              )
                             ),
                             Visibility(
                               visible: state==mapState.record,

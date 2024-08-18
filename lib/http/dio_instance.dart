@@ -16,7 +16,7 @@ class Dio_database{
           method: "GET",
           baseUrl: "http://121.41.170.185:5000/",
           connectTimeout: defaultTime,
-          receiveTimeout: defaultTime,
+          receiveTimeout: Duration(seconds: 60),
           sendTimeout: defaultTime,
           responseType: ResponseType.json,
           persistentConnection: true
@@ -53,7 +53,7 @@ class Dio_database{
         queryParameters: queryParameters,
         options: options??Options(
             method: "POST",
-            receiveTimeout: defaultTime,
+            receiveTimeout: Duration(seconds: 60),
             sendTimeout: defaultTime),
         cancelToken: cancelToken
     );

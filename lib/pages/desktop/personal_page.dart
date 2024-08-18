@@ -51,7 +51,8 @@ class _PersonalPageState extends State<PersonalPage> {
               flex: 5,
               child: ItiListPage(callBack: (data){
                 widget.callBack.call(2);
-                vm.loadPlan(data.id);
+                vm.changeEditState(true);
+                vm.readPlan(data.id);
               },),
             ),
             Flexible(
