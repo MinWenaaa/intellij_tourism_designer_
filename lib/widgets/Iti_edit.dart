@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:intellij_tourism_designer/constants/constants.dart';
 import 'package:intellij_tourism_designer/constants/theme.dart';
-import 'package:intellij_tourism_designer/http/Api.dart';
 import 'package:intellij_tourism_designer/models/plan_edit_model.dart';
+import 'package:intellij_tourism_designer/widgets/LLM_chat_room.dart';
 import 'package:intellij_tourism_designer/widgets/detail_view.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 import '../helpers/Iti_data.dart';
-import '../models/global_model.dart';
 
 //编辑行程
 
 class ItiEditWidget extends StatefulWidget {
+  final Function(LatLng, double) callBack;
 
-  const ItiEditWidget({super.key});
+  const ItiEditWidget({super.key, required this.callBack});
 
   @override
   State<ItiEditWidget> createState() => _ItiEditWidgetState();
@@ -19,9 +21,29 @@ class ItiEditWidget extends StatefulWidget {
 
 class _ItiEditWidgetState extends State<ItiEditWidget> {
 
+  bool isLLM = false;
+
 
   @override
   Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        _EditWidget(),
+        Visibility(
+          visible: isLLM,
+          child: LLMChatRoom(
+            move: widget.callBack,
+            back: ()=> setState(() {
+              isLLM = false;
+            }),)
+        ),
+      ],
+    );
+  }
+
+
+
+  Widget _EditWidget() {
     final vm = Provider.of<PlanEditModel>(context,listen: false);
     return Row(
       children:[
@@ -39,12 +61,17 @@ class _ItiEditWidgetState extends State<ItiEditWidget> {
                 selector: (context, provider) => provider.hasData,
                 builder: (context, dataState, child) => dataState ? SizedBox(
                   height: 500,
-                  child: Selector<PlanEditModel, List<Widget>>(
-                    selector: (context, provider) => provider.widgets,
-                    builder: (context, widgets, child) {
+                  child: Selector<PlanEditModel, List<ItiData>>(
+                    selector: (context, provider) => provider.curData,
+                    builder: (context, curData, child) {
+                      List<Widget> widgets = [];
+                      curData.forEach((iti) => widgets.add(ActCard(itiData: iti)));
                       print("provider.planData.itidata![provider.curday] changed");
                       return ListView(
-                        children: widgets,
+                        children: List.generate(widgets.length, (index) => GestureDetector(
+                          onTap: () => widget.callBack.call(LatLng(curData[index].y??30, curData[index].x??114), 16.5),
+                          child: widgets[index],
+                        ))
                       );
                     }
                   )
@@ -83,6 +110,12 @@ class _ItiEditWidgetState extends State<ItiEditWidget> {
               builder: (context, dataState, child) => dataState ?
                 Column(
                   children: [
+                    TextButton(
+                      onPressed: () => setState(() {
+                        isLLM = true;
+                      }),
+                      child: Image.network(ConstantString.robot, width: 42, height: 64,)
+                    ),
                     TextButton(
                       onPressed:() {
                         print("ItiEdit presses: Add");

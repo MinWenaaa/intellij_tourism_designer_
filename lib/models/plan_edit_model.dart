@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:intellij_tourism_designer/helpers/Iti_data.dart';
-import 'package:intellij_tourism_designer/widgets/detail_view.dart';
 import 'package:latlong2/latlong.dart';
 import '../constants/Markers.dart';
 import '../http/Api.dart';
@@ -19,7 +18,7 @@ class PlanEditModel with ChangeNotifier{
   bool hasData = false;
   PlanData planData = PlanData();
   int curday = 0;
-  List<Widget> widgets = [];
+  List<ItiData> curData = [];
 
 
   void changeEditState(bool v){
@@ -35,8 +34,8 @@ class PlanEditModel with ChangeNotifier{
 
   void changeCurDay(int value){
     curday = value;
-    widgets = [];
-    planData.itidata![curday].forEach((iti) => widgets.add(ActCard(itiData: iti)));
+    curData = [];
+    planData.itidata![curday].forEach((iti) => curData.add(iti));
     notifyListeners();
   }
 
@@ -73,8 +72,8 @@ class PlanEditModel with ChangeNotifier{
     }
 
     planData = plan;
-    widgets = [];
-    planData.itidata![curday].forEach((iti) => widgets.add(ActCard(itiData: iti)));
+    curData = [];
+    planData.itidata![curday].forEach((iti) => curData.add(iti));
     changeDataState(true);
 
   }
@@ -88,8 +87,8 @@ class PlanEditModel with ChangeNotifier{
     getRoute();
     planData = plan;
     //curData = plan.itidata![0];
-    widgets = [];
-    planData.itidata![curday].forEach((iti) => widgets.add(ActCard(itiData: iti)));
+    curData = [];
+    planData.itidata![curday].forEach((iti) => curData.add(iti));
     changeDataState(true);
   }
 
@@ -102,8 +101,8 @@ class PlanEditModel with ChangeNotifier{
     planData.itidata![curday].add(itiData);
     // curData.add(itiData);
     // curDataLength = curData.length;
-    widgets = [];
-    planData.itidata![curday].forEach((iti) => widgets.add(ActCard(itiData: iti)));
+    curData = [];
+    planData.itidata![curday].forEach((iti) => curData.add(iti));
     print("PlanEditModel.pushLocation: pushed $itiData");
     notifyListeners();
     points = [];

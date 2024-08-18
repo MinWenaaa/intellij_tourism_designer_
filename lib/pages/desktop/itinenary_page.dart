@@ -92,7 +92,7 @@ class _ItineraryPageState extends State<ItineraryPage> with TickerProviderStateM
           ),
            Visibility(
              visible: isEditing && !setting,
-             child: ItiEditWidget()
+             child: ItiEditWidget(callBack: _animatedMapMove)
            ),
            Visibility(
                visible: setting,
@@ -107,7 +107,7 @@ class _ItineraryPageState extends State<ItineraryPage> with TickerProviderStateM
                   alignment: Alignment.topLeft, child: GestureDetector(
                   child: Icon(Icons.arrow_back_ios), onTap: () => setState(() {
                   setting = false;
-                  }),),)),
+           }),),)),
          ]
         )
       ),
@@ -361,7 +361,7 @@ class _ItineraryPageState extends State<ItineraryPage> with TickerProviderStateM
           child: Selector<GlobalModel, PoiListViewData?>(
               selector: (context, provider) => provider.itiMapCardData,
               builder: (context, data, child) => data==null ? const SizedBox(): _pushPosition(data)
-              ),
+          ),
         ),
       ),
     );

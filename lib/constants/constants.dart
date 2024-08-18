@@ -79,6 +79,10 @@ class ConstantString{
     ]
   };
 
+  static const String robot = "https://gd-hbimg.huaban.com/a8a3cd024027e23a0e38c133ea6115549868b1172572-MScJSv_fw1200webp";
+  static const String send = "https://gd-hbimg.huaban.com/afda5f1edb2e51ed1ad5fd32761e473666299cfa17f5-rvW2Mu_fw1200webp";
+  static const String user = "https://gd-hbimg.huaban.com/0012232547458c7ce4599d0896c6ad5fc2cd8e4f368b7-bK8xeo_fw480webp";
+
 }
 
 const Duration defaultTime = const Duration(seconds: 10);

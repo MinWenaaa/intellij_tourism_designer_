@@ -8,9 +8,7 @@ import 'package:intellij_tourism_designer/helpers/record_list_data.dart';
 import 'package:intellij_tourism_designer/helpers/weather_data.dart';
 import 'package:intellij_tourism_designer/http/Api.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:provider/provider.dart';
 import '../helpers/poi_list_view_data.dart';
-import '../models/global_model.dart';
 
 
 class POIListItem extends StatelessWidget {
@@ -177,7 +175,7 @@ class ActCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
           color: AppColors.secondary
       ),
-      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      margin: EdgeInsets.only(left: 28, right: 42, top: 20, bottom: 12),
       clipBehavior: Clip.hardEdge,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -311,7 +309,10 @@ class _WeatherCardState extends State<WeatherCard> {
           if (snapshot.hasData) {
             return _weather(snapshot.data!);
           } else {
-            return const CircularProgressIndicator(color: AppColors.primary,);
+            return Center(
+                child: SizedBox(
+                  width: 36, height: 36,
+                    child: const CircularProgressIndicator(color: AppColors.primary,)));
           }
         },
       ),

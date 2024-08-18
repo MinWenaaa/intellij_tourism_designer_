@@ -251,4 +251,16 @@ class Api {
     print("Api.getSingleItiData completed");
     return itiData;
   }
+
+  //获取推荐数据
+  Future<List<ItiData>> getChatLLM({required String requirement}) async {
+    Response response = await Dio_database.instance().get(
+      path: "designer/chat",
+      queryParameters: {'requirement': requirement}
+    );
+    List<ItiData> itiList = [];
+    response.data.forEach((data) => itiList.add(ItiData.fromJson(data)));
+    print("Api.getChatLLM: get result $itiList");
+    return itiList;
+  }
 }
