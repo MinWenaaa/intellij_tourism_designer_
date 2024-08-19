@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intellij_tourism_designer/constants/constants.dart';
 import 'package:intellij_tourism_designer/constants/theme.dart';
 import 'package:intellij_tourism_designer/models/global_model.dart';
 import 'package:provider/provider.dart';
@@ -52,7 +53,7 @@ class _UserPageState extends State<UserPage> {
                 GestureDetector(
                   onTap: onTap,
                   child: ClipOval(
-                    child: Image.network(user.upic??"https://gd-hbimg.huaban.com/0012232547458c7ce4599d0896c6ad5fc2cd8e4f368b7-bK8xeo_fw480webp",
+                    child: Image.network(user.upic??ConstantString.user,
                         width:80,height:80,
                         fit:BoxFit.cover
                     ),

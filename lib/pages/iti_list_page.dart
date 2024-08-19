@@ -3,7 +3,6 @@ import 'package:intellij_tourism_designer/widgets/calendar.dart';
 import 'package:intellij_tourism_designer/widgets/detail_view.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import '../constants/theme.dart';
 import '../helpers/Iti_data.dart';
 import '../http/Api.dart';
 import '../models/global_model.dart';

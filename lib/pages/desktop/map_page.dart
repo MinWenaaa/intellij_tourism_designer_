@@ -172,7 +172,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin{
             selector: (context, provider) => provider.state,
             builder: (context, data, child) => (data==mapState.view_record)?
             Selector<GlobalModel,List<LatLng>>(
-                selector: (context, provider) => provider.currentRecords,
+                selector: (context, provider) => provider.recordLine,
                 builder: (context, data, child) {
                   _animatedMapMove(data[0], 16.5);
                   return PolylineLayer(polylines: [planPolyline(data)]);

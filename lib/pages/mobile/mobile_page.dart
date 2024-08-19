@@ -48,12 +48,13 @@ class _MobilePageState extends State<MobilePage> {
               children: [
                 HomePage(),
                 ItiListPage(callBack: (data) {
-                  vm.getPoint(data.id);
+                  vm.getPlan(id: data.id);
                   onTabTapped(2);
                 }),
                 MapPage(),
                 MemoryListPage(callBack: (data) {
-                  vm.setCurrentRecords(data.getPointList());
+                  vm.changeRid(data.id);
+                  vm.getRecordDetail();
                   vm.changeState(mapState.view_record);
                   onTabTapped(2);
                 },),

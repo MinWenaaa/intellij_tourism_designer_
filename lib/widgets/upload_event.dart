@@ -1,12 +1,16 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:get/get_connect/http/src/multipart/form_data.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intellij_tourism_designer/constants/constants.dart';
 import 'package:intellij_tourism_designer/constants/theme.dart';
 import 'package:intellij_tourism_designer/http/Api.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:provider/provider.dart';
+
+import '../models/global_model.dart';
 
 class upLoadEvent extends StatefulWidget {
   final void Function() back;
@@ -36,18 +40,19 @@ class _upLoadEventState extends State<upLoadEvent> {
     }
   }
 
-  Future<void> _uploadImage() async {
-    if (_image == null) return;
+  Future<num> _uploadImage() async {
+    if (_image == null) return 0;
 
     setState(() {
       _isLoading = true;
     });
 
-    await Api.instance.pushEvent(point: widget.point, rid: widget.rid, image: _image!, text: _text);
+    var event_id = await Api.instance.pushEvent(point: widget.point, rid: widget.rid, image: _image!, text: _text);
 
     setState(() {
       _isLoading = false;
     });
+    return event_id;
   }
 
   @override
@@ -68,6 +73,7 @@ class _upLoadEventState extends State<upLoadEvent> {
   }
 
   AppBar _appBar(){
+    final vm = Provider.of<GlobalModel>(context,listen: false);
     return AppBar(
       title: Text("旅行日记"),
       leading: IconButton(
@@ -75,7 +81,15 @@ class _upLoadEventState extends State<upLoadEvent> {
         onPressed: widget.back,
       ),
       actions: [ GestureDetector(
-          onTap: _uploadImage,
+          onTap: () async {
+            var id = await _uploadImage();
+            vm.pushRecordMarker(marker: Marker(
+              point: widget.point,
+              child: Image.network("http://121.41.170.185:5000/user/download/${id}.jpg",
+                width: 48, height: 48, fit: BoxFit.cover,
+              )),);
+            widget.back.call();
+          },
           child: Container(
             alignment: Alignment.center,
             width: 66, height: 36,

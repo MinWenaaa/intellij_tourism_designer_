@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:intellij_tourism_designer/constants/Markers.dart';
 import 'package:intellij_tourism_designer/constants/constants.dart';
 import 'package:intellij_tourism_designer/constants/theme.dart';
@@ -55,7 +56,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin{
 
     final vm = Provider.of<GlobalModel>(context,listen: false);
 
-    _timer = Timer.periodic(defaultTime, (timer) {
+    _timer = Timer.periodic(defaultTime, (timer) async {
       LatLng newCenter = _mapController.camera.center;
       print("check center move: ${newCenter}");
       if( (vm.lastRefreshCenter.latitude - newCenter.latitude).abs() > 0.025 &&
@@ -63,7 +64,10 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin{
         vm.refreshMarker(newCenter);
       }
       if(vm.state==mapState.record){
-        Api.instance.pushPoint(vm.rid, newCenter);
+        Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+        LatLng location = LatLng(position.latitude, position.longitude);
+        Api.instance.pushPoint(vm.rid, location);
+        vm.pushPoint(location);
       }
     });
   }
@@ -130,27 +134,45 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin{
         //Slector
         Selector<GlobalModel,mapState>(
           selector: (context, provider) => provider.state,
-          builder: (context, data, child) => (data==mapState.view_record)?
+          builder: (context, data, child) => (data==mapState.view_record||data==mapState.record)?
             Selector<GlobalModel,List<LatLng>>(
-            selector: (context, provider) => provider.currentRecords,
-            builder: (context, data, child) {
-              _animatedMapMove(data[0], 16.5);
-              return PolylineLayer(polylines: [planPolyline(data)]);
-            }
+            selector: (context, provider) => provider.recordLine,
+            builder: (context, line, child) =>PolylineLayer(polylines: [planPolyline(line)])
           ) : const SizedBox()
+        ),
+        Selector<GlobalModel,mapState>(
+            selector: (context, provider) => provider.state,
+            builder: (context, data, child) => (data==mapState.view_record||data==mapState.record)?
+            Selector<GlobalModel,List<Marker>>(
+                selector: (context, provider) => provider.recordMarker,
+                builder: (context, data, child) {
+                  return MarkerLayer(markers: data);
+                }
+            ) : const SizedBox()
         ),
         Selector<GlobalModel,mapState>(
           selector: (context, provider) => provider.state,
           builder: (context, data, child) => Visibility(
             visible: data==mapState.view_iti,
-            child: Selector<GlobalModel,List<LatLng>>(
+            child: Selector<GlobalModel,List<Polyline>>(
               selector: (context, provider) => provider.planPoints,
               builder: (context, data, child) {
-                _animatedMapMove(data[0], 16.5);
-                return PolylineLayer(polylines: [planPolyline(data)]);
+                return PolylineLayer(polylines: data);
               }
             )
           )
+        ),
+        Selector<GlobalModel,mapState>(
+            selector: (context, provider) => provider.state,
+            builder: (context, data, child) => Visibility(
+                visible: data==mapState.view_iti,
+                child: Selector<GlobalModel,List<Marker>>(
+                    selector: (context, provider) => provider.planMarker,
+                    builder: (context, data, child) {
+                      _animatedMapMove(data[0].point, 16.5);
+                      return MarkerLayer(markers: data);
+                    })
+            )
         ),
       ],
     );
@@ -215,7 +237,9 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin{
           child: Padding(
             padding: const EdgeInsets.all(24),
             child: primaryInkWell(
-              callback: () => vm.changeState(mapState.record),
+              callback: () {
+                vm.changeState(mapState.record);
+              },
               text: "开始记录",
             ),
           )

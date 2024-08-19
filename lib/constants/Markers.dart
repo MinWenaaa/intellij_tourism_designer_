@@ -53,7 +53,7 @@ Marker deepSecondaryMarker(LatLng point){
   );
 }
 
-Polyline planPolyline(List<LatLng> points){
+Polyline planPolyline(List<LatLng> points,){
   return Polyline(
         points: points,
         color: AppColors.secondary,

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intellij_tourism_designer/constants/theme.dart';
-import 'package:intellij_tourism_designer/pages/desktop/desktop_page.dart';
 import 'package:intellij_tourism_designer/pages/register_page.dart';
 import 'package:intellij_tourism_designer/route_utils.dart';
 import 'package:oktoast/oktoast.dart';
@@ -46,14 +45,13 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(height: 50,),
               primaryInkWell(
                 callback: () async {
-                  await vm.Login(name: _userName, password: _passWord).then((value){
-                    if(value){
-                      RouteUtils.pop(context);
-                      RouteUtils.push(context, MobilePage());//MobilePage()  DeskTopPage()
-                    }else{
-                      showToast("账号或密码错误");
-                    }
-                  });
+                  bool flag = await vm.Login(name: _userName, password: _passWord);
+                  if(flag){
+                    RouteUtils.pop(context);
+                    RouteUtils.push(context, MobilePage());//MobilePage()  DeskTopPage()
+                  }else{
+                    showToast("账号或密码错误");
+                  }
                 },
                 text: "登录",
                 width: 320, height: 52

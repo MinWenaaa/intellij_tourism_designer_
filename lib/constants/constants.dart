@@ -31,7 +31,8 @@ class ConstantString{
     "https://gd-hbimg.huaban.com/ca86b82532f91c2e68a8379a7938bd80117561e31f33-u4F76m_fw1200webp",
     "https://gd-hbimg.huaban.com/4a9eef2cf5a8b205bd2bea27cd84dcfc94d5462e20ae-E1Hlcp_fw1200webp",
     "https://gd-hbimg.huaban.com/8b01201be4b9085ab7e57dd60834ab7186c75ab01da4-J3cQpJ_fw1200webp",
-    "https://gd-hbimg.huaban.com/dc13a2c8b6fbf2a0c56d757eb6f681516b4fbe2520f5-5apI0K_fw1200webp"
+    "https://gd-hbimg.huaban.com/dc13a2c8b6fbf2a0c56d757eb6f681516b4fbe2520f5-5apI0K_fw1200webp",
+    "https://gd-hbimg.huaban.com/d1e8f2d805c155d794efd267e22eab1dcc7e0cd116a8-tnr1eo_fw1200webp"
   ];
 
   static const List<String> weather_icon = [

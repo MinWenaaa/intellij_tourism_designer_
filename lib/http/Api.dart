@@ -1,7 +1,5 @@
 import 'dart:io';
-
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:intellij_tourism_designer/helpers/record_list_data.dart';
 import 'package:intl/intl.dart';
 import 'package:intellij_tourism_designer/constants/constants.dart';
@@ -28,6 +26,16 @@ class Api {
     Response response = await Dio_database.instance().get(
         path: "user/login",
         queryParameters: {"name": name, "password": password}
+    );
+    User user = User.fromJson(response.data);
+    return user;
+  }
+
+  //注册
+  Future<User?> Signup({required String name, required String password}) async {
+    Response response = await Dio_database.instance().get(
+      path: "user/signup",
+      queryParameters: {"name": name, "password": password}
     );
     User user = User.fromJson(response.data);
     return user;
@@ -107,6 +115,14 @@ class Api {
   //获取规划详细信息
 
   //获取回忆详细信息
+  Future<RecordDetail> getRecordDetail(num id) async {
+    Response response = await Dio_database.instance().get(
+      path: "user/recordDetail",
+      queryParameters: {'id': id}
+    );
+    print("Api.getRecordDetail: get record $id");
+    return RecordDetail.fromJson(response.data);
+  }
 
   //获取天气数据
   Future<WeatherData?> getWeather({required LatLng location, required DateTime date}) async {
@@ -188,7 +204,7 @@ class Api {
   }
 
   //提交记录
-  Future<void> pushEvent({required LatLng point, required num rid, required File image, String? text, }) async {
+  Future<num> pushEvent({required LatLng point, required num rid, required File image, String? text, }) async {
     final formData = FormData.fromMap({
       'file': await MultipartFile.fromFile(image.path, filename: image.path.split('/').last),
       'id': rid,
@@ -201,6 +217,7 @@ class Api {
     );
 
     print("Api.pushEvent: ${response.data}");
+    return response.data['id'];
 
   }
 

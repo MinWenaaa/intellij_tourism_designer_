@@ -1,10 +1,14 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:intellij_tourism_designer/constants/Markers.dart';
 import 'package:intellij_tourism_designer/constants/constants.dart';
 import 'package:intellij_tourism_designer/helpers/User.dart';
 import 'package:intellij_tourism_designer/helpers/poi_list_view_data.dart';
 import 'package:intellij_tourism_designer/helpers/poi_marker_data.dart';
+import 'package:intellij_tourism_designer/helpers/record_list_data.dart';
 import 'package:intellij_tourism_designer/http/Api.dart';
 import 'package:latlong2/latlong.dart';
 import '../helpers/Iti_data.dart';
@@ -38,6 +42,15 @@ class GlobalModel with ChangeNotifier{
     }
   }
 
+  Future<bool> Signup({required String name, required String password}) async {
+    final result = await Api.instance.Signup(name: name, password: password);
+    if (result == null) {
+      return false;
+    } else {
+      user = result;
+      return true;
+    }
+  }
 
 
 
@@ -54,8 +67,11 @@ class GlobalModel with ChangeNotifier{
     state = newState;
     //发送新建记录请求
     if(state==mapState.record){
-      dynamic id = await Api.instance.startRecord(user.uid??200, lastRefreshCenter);
+      Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+      LatLng location = LatLng(position.latitude, position.longitude);
+      dynamic id = await Api.instance.startRecord(user.uid??200, location);
       rid = id;
+      recordLine.add(location);
       print("record ${id} start!");
     }
     notifyListeners();
@@ -143,7 +159,7 @@ class GlobalModel with ChangeNotifier{
     print("Global: currentPoi changed ${pid}");
     currentPOI = pid;
     changeState(mapState.detail);
-    itiMapCardData = await await Api.instance.getMapPOICard(id: pid);
+    itiMapCardData = await Api.instance.getMapPOICard(id: pid);
     notifyListeners();
   }
 
@@ -151,19 +167,45 @@ class GlobalModel with ChangeNotifier{
 
 
   num rid = 0;
-  List<LatLng> currentRecords = [];
+  List<LatLng> recordLine = [];
+  List<Marker> recordMarker =[];
 
+  void changeRid(num id){
+    rid = id;
+    notifyListeners();
+  }
 
-  void setCurrentRecords(List<LatLng> list){
-    currentRecords = list;
+  Future<void> getRecordDetail() async {
+    RecordDetail recordDetail = await Api.instance.getRecordDetail(rid);
+    recordLine = recordDetail.points??[];
+    recordDetail.events!.forEach((event)=>
+      recordMarker.add(Marker(
+        point: event.point??LatLng(30, 114),
+        child: Image.network("http://121.41.170.185:5000/user/download/${event.id}.jpg")))
+    );
+    notifyListeners();
+  }
+
+  void pushPoint(LatLng point){
+    recordLine.add(point);
+    print(recordLine);
+    notifyListeners();
+  }
+
+  void pushRecordMarker({required Marker marker}){
+    recordMarker.add(marker);
     notifyListeners();
   }
 
 
-  List<ItiData> itiList = [];
-  List<LatLng> planPoints = [];
 
-  Future<void> getPoint(id) async {
+
+
+  List<ItiData> itiList = [];
+  List<Polyline> planPoints = [];
+  List<Marker> planMarker = [];
+
+  Future<void> getPlan({required num id}) async {
 
     PlanData plan = await Api.instance.readPlanData(id: id);
     plan.itidata?.forEach((itis)=> itiList.addAll(itis));
@@ -171,16 +213,28 @@ class GlobalModel with ChangeNotifier{
     print("GlobalModel.getpoint: getPoint");
     planPoints = [];
 
-    LatLng origin = LatLng(itiList.first.y??30, itiList.first.x??114);
+    LatLng origin = LatLng(itiList.first.y??31, itiList.first.x??114);
+    print("Global.getPlan: origin $origin");
 
     final futures = <Future<void>>[];
 
     itiList.forEach((iti) {
-      if (iti != itiList.last) {
+      planMarker.add(Marker(
+        point: LatLng(iti.y??31, iti.x??114),
+        child: GestureDetector(
+          child: Image.network(ConstantString.poi_icon_url[4], width: 36, height: 36,),
+          onTap: (){
+            changeState(mapState.detail);
+            currentPOI = iti.pid!.toInt();
+          },
+        )
+      ));
+      if (iti != itiList.last && iti !=itiList.first) {
         futures.add(
-          _fetchNavigationData(origin, LatLng(iti.y??30, iti.x??114)),
+          _fetchNavigationData(origin, LatLng(iti.y??31, iti.x??114)),
         );
-        origin = LatLng(iti.y??30, iti.x??114);
+        origin = LatLng(iti.y??31, iti.x??114);
+        print("Global.getPlan: origin $origin");
       }
     });
 
@@ -196,7 +250,7 @@ class GlobalModel with ChangeNotifier{
   Future<void> _fetchNavigationData(LatLng origin, LatLng target) async {
     List<LatLng>? list = await Api.instance.navigationRequire(origin: origin, target: target);
     if (list != null) {
-      planPoints.addAll(list);
+      planPoints.add(planPolyline(list));
       print("PlanEditModel._fetchNavigationData: Get answer of navigation: ${list.last}");
     } else {
       print("PlanEditModel._fetchNavigationData: Navigation response was null.");
@@ -211,6 +265,9 @@ class GlobalModel with ChangeNotifier{
   }
 
   PoiListViewData? itiMapCardData;
+
+
+
 
 
 }

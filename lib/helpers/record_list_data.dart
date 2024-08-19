@@ -24,38 +24,90 @@ class RecordListData{
 class RecordListViewData {
   RecordListViewData({
       this.id, 
-      this.name, 
-      this.point, 
-      this.uid,});
+      this.name,});
 
   RecordListViewData.fromJson(dynamic json) {
     id = json['id'];
     name = json['name'];
-    point = json['point'] != null ? json['point'].cast<String>() : [];
-    uid = json['uid'];
   }
   num? id;
   String? name;
-  List<String>? point;
-  num? uid;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['id'] = id;
     map['name'] = name;
-    map['point'] = point;
-    map['uid'] = uid;
+    return map;
+  }
+}
+
+
+/// events : [{"id":4,"point":"114.40343904172155, 30.50276419339164","rid":28,"text":"very good"},{"id":5,"point":"114.40343904172155, 30.50276419339164","rid":28,"text":"very good\n"}]
+/// points : ["114.4,30.5","114.4,30.5","114.4,30.5","114.4,30.5","114.4,30.5","114.4,30.5","114.4,30.5","114.4,30.5","114.4,30.5","114.4,30.5","114.4,30.5","114.4,30.5","114.4,30.5","114.4,30.5","114.4,30.5","114.4,30.5","114.4,30.5","114.4,30.5","114.4,30.5","114.4,30.5","114.4,30.5","114.40343904172155,30.50276419339164","114.40343904172155,30.50276419339164","114.40343904172155,30.50276419339164","114.40343904172155,30.50276419339164","114.40343904172155,30.50276419339164","114.40343904172155,30.50276419339164","114.40343904172155,30.50276419339164","114.40343904172155,30.50276419339164","114.40343904172155,30.50276419339164"]
+
+class RecordDetail {
+  RecordDetail({
+    this.events,
+    this.points,});
+
+  RecordDetail.fromJson(dynamic json) {
+    if (json['events'] != null) {
+      events = [];
+      json['events'].forEach((v) {
+        events?.add(Events.fromJson(v));
+      });
+    }
+    List<String> temp = json['points'] != null ? json['points'].cast<String>() : [];
+    points = List.generate(temp.length, (index) {
+      var parts = temp[index].split(',');
+      return LatLng(double.parse(parts[1]), double.parse(parts[0]));
+    });
+  }
+  List<Events>? events;
+  List<LatLng>? points;
+
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{};
+    if (events != null) {
+      map['events'] = events?.map((v) => v.toJson()).toList();
+    }
+    map['points'] = List.generate(points?.length??0, (index)=>"${points![index].longitude},${points![index].latitude}");
     return map;
   }
 
-  List<LatLng> getPointList(){
-    List<LatLng> list = [];
+}
 
-    point?.forEach((p){
-      var parts = p.split(',');
-      list.add(LatLng(double.parse(parts[1]),double.parse(parts[0])));
-    });
+/// id : 4
+/// point : "114.40343904172155, 30.50276419339164"
+/// rid : 28
+/// text : "very good"
 
-    return list;
+class Events {
+  Events({
+    this.id,
+    this.point,
+    this.rid,
+    this.text,});
+
+  Events.fromJson(dynamic json) {
+    id = json['id'];
+    var pair = json['point'].split(',');
+    rid = json['rid'];
+    text = json['text'];
+    point = LatLng(double.parse(pair[1]), double.parse(pair[0]));
   }
+  num? id;
+  LatLng? point;
+  num? rid;
+  String? text;
+
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{};
+    map['id'] = id;
+    map['point'] = "${point?.latitude??30},${point?.longitude??114}";
+    map['rid'] = rid;
+    map['text'] = text;
+    return map;
+  }
+
 }
