@@ -23,8 +23,9 @@ class POIListItem extends StatelessWidget {
         width: double.infinity, height: height,
         margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
         decoration: BoxDecoration(
-          border: Border.all(color: AppColors.detail, width:0.5),
+          //border: Border.all(color: AppColors.detail, width:0.5),
           borderRadius: BorderRadius.all(Radius.circular(8)),
+          color: AppColors.highlight
         ),
         clipBehavior: Clip.hardEdge,
         child: Row(

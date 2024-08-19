@@ -5,9 +5,9 @@ import 'package:intellij_tourism_designer/constants/theme.dart';
 import 'package:intellij_tourism_designer/models/global_model.dart';
 import 'package:provider/provider.dart';
 
-import '../../helpers/User.dart';
-import '../../route_utils.dart';
-import '../login_page.dart';
+import '../helpers/User.dart';
+import '../route_utils.dart';
+import 'login_page.dart';
 
 class UserPage extends StatefulWidget {
   const UserPage({super.key});

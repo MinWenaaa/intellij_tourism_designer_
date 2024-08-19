@@ -3,7 +3,7 @@ import 'package:intellij_tourism_designer/constants/constants.dart';
 import 'package:intellij_tourism_designer/constants/theme.dart';
 import 'package:intellij_tourism_designer/helpers/tile_providers.dart';
 import 'package:intellij_tourism_designer/models/global_model.dart';
-import 'package:intellij_tourism_designer/pages/mobile/path_planing_page.dart';
+import 'package:intellij_tourism_designer/pages/path_planing_page.dart';
 import 'package:intellij_tourism_designer/route_utils.dart';
 import 'package:provider/provider.dart';
 

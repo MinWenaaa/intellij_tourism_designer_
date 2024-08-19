@@ -6,7 +6,7 @@ import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
 
 import '../models/global_model.dart';
-import 'mobile/mobile_page.dart';
+import 'mobile_page.dart';
 
 //登录界面
 

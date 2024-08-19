@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:intellij_tourism_designer/pages/mobile/mobile_page.dart';
+import 'package:intellij_tourism_designer/pages/mobile_page.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
 import '../constants/theme.dart';

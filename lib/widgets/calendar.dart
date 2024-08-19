@@ -1,6 +1,7 @@
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:easy_date_timeline/easy_date_timeline.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../constants/theme.dart';
 
@@ -38,7 +39,7 @@ class Calendar extends StatelessWidget {
       },
       weekdayLabelBuilder: ({required weekday, isScrollViewTopHeader}) {
         if (weekday == DateTime.wednesday) {
-          return const Center(
+          return Center(
             child: Text('W',
                 style: AppText.primaryHead
             ),
@@ -67,16 +68,17 @@ class Calendar extends StatelessWidget {
         return true;
       },
     );
-    return SizedBox(
+    return Container(
+      color: AppColors.highlight,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const SizedBox(height: 18,),
+          SizedBox(height: 42.h,),
           CalendarDatePicker2(
             config: config,
             value: _rangeDatePickerValueWithDefaultValue,
             ),
-          const SizedBox(height: 18),
+          SizedBox(height: 42.h),
         ],
       ),
     );
@@ -126,8 +128,8 @@ class _timeSelectorState extends State<timeSelector> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
-
+      color: AppColors.highlight,
+        margin: EdgeInsets.symmetric(vertical: 30.h, horizontal: 60.h),
         child: EasyDateTimeLine(
           initialDate: DateTime.now(),
           onDateChange: widget.callBack,

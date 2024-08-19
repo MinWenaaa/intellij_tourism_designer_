@@ -12,9 +12,9 @@ import 'package:intellij_tourism_designer/widgets/tools_button.dart';
 import 'package:intellij_tourism_designer/widgets/upload_event.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
-import '../../helpers/tile_providers.dart';
-import '../../widgets/detail_view.dart';
-import '../../widgets/searching_bar.dart';
+import '../helpers/tile_providers.dart';
+import '../widgets/detail_view.dart';
+import '../widgets/searching_bar.dart';
 
 /*
   地图查看模块

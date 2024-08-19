@@ -8,7 +8,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:intellij_tourism_designer/constants/constants.dart';
 import 'package:intellij_tourism_designer/helpers/tile_providers.dart';
 import 'package:provider/provider.dart';
-import '../../constants/theme.dart';
+import '../constants/theme.dart';
 
 /*
 路径规划页面

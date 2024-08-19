@@ -37,12 +37,12 @@ class CommentData {
   }
   String? ccontent;
   num? cgrade;
-  num? cid;
+  int? cid;
   List<String>? cphoto;
-  num? cpid;
+  int? cpid;
   String? cpname;
   String? ctime;
-  num? cuid;
+  int? cuid;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};

@@ -80,6 +80,25 @@ class ConstantString{
     ]
   };
 
+  static const Map<String, List<String>> homePageIcon ={
+    attraction: [
+      "https://gd-hbimg.huaban.com/31b69581db96559a4267e1aa4da6d7e899c8d81c190d-f2juTo_fw1200webp",
+      "https://gd-hbimg.huaban.com/b2ab025836a954b8a5775714dd0f0a3257bb080916b5-GG5nz9_fw1200webp",
+    ],
+    hotel: [
+      "https://gd-hbimg.huaban.com/6ce5ec86b6f728f307c4c39f63675c8ac6b211bd186a-XNySzB_fw1200webp",
+      "https://gd-hbimg.huaban.com/8620ee9d8f04ce4921c4984e340100e5dc1da68414ec-Z3J8xn_fw1200webp",
+    ],
+    dining: [
+      "https://gd-hbimg.huaban.com/a40a1f490e563ff87c4e5db34068114127f08aa61d4f-SdIQH1_fw1200webp",
+      "https://gd-hbimg.huaban.com/82b5ae47689e0d20dece448216956d14ceea685f1afc-rAGIiE_fw1200webp",
+    ],
+    camera: [
+      "https://gd-hbimg.huaban.com/1a6f127ef5d2a10f6dcf911d054ca54f1dad634717ae-uewcae_fw1200webp",
+      "https://gd-hbimg.huaban.com/225298d234f5cf0ce1c458d8945eaa04ac2ec44f12b7-wJqbDA_fw1200webp",
+    ]
+  };
+
   static const String robot = "https://gd-hbimg.huaban.com/a8a3cd024027e23a0e38c133ea6115549868b1172572-MScJSv_fw1200webp";
   static const String send = "https://gd-hbimg.huaban.com/afda5f1edb2e51ed1ad5fd32761e473666299cfa17f5-rvW2Mu_fw1200webp";
   static const String user = "https://gd-hbimg.huaban.com/0012232547458c7ce4599d0896c6ad5fc2cd8e4f368b7-bK8xeo_fw480webp";

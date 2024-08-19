@@ -54,7 +54,7 @@ class PoiListViewData {
   String? paddress;
   String? pclass;
   String? pgrade;
-  num? pid;
+  int? pid;
   String? pintroduceShort;
   String? plevel;
   String? pname;

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intellij_tourism_designer/widgets/calendar.dart';
 import 'package:intellij_tourism_designer/widgets/detail_view.dart';
 import 'package:provider/provider.dart';
@@ -20,7 +21,7 @@ class ItiListPage extends StatefulWidget {
 class _ItiListPageState extends State<ItiListPage> {
 
   late Future<List<PlanListViewData>> planData;
-  RefreshController refreshController = RefreshController();
+  final RefreshController refreshController = RefreshController();
 
   Future<List<PlanListViewData>> fetch(BuildContext context) async {
     final vm = Provider.of<GlobalModel>(context,listen: false);
@@ -37,34 +38,35 @@ class _ItiListPageState extends State<ItiListPage> {
   @override
   Widget build(BuildContext context) {
 
-    return Scaffold(
-        body: SmartRefresher(
-          controller: refreshController,
-          enablePullDown: true,
-          enablePullUp: true,
-          header: const ClassicHeader(),
-          onRefresh: () async{
-            planData = fetch(context);
-            setState(() {});
-            refreshController.refreshCompleted();
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: _Future()
-          )
-        ),
-
+    return Column(
+      children: [
+        Calendar(),
+        Container(
+          height: 720.h,
+          child: SmartRefresher(
+            controller: refreshController,
+            enablePullDown: true,
+            enablePullUp: true,
+            header: const ClassicHeader(),
+            onRefresh: () async{
+              planData = fetch(context);
+              setState(() {});
+              refreshController.refreshCompleted();
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: _Future()
+            )
+          ),
+        )
+      ],
     );
-
   }
 
 
   Widget _Future(){
     return SingleChildScrollView(
-      child: Column(
-        children: [
-          Calendar(),
-          FutureBuilder<List<PlanListViewData>>(
+      child: FutureBuilder<List<PlanListViewData>>(
               future: planData,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
@@ -79,8 +81,6 @@ class _ItiListPageState extends State<ItiListPage> {
                 }
               },
 
-          ),
-        ],
       ),
     );
   }
