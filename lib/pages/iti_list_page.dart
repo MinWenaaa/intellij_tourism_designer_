@@ -76,7 +76,7 @@ class _ItiListPageState extends State<ItiListPage> {
                     )),
                   );
                 } else {
-                  return const CircularProgressIndicator(color: AppColors.primary,);
+                  return const SizedBox();
                 }
               },
 

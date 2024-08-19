@@ -8,6 +8,7 @@ import 'package:intellij_tourism_designer/http/Api.dart';
 import 'package:intellij_tourism_designer/models/global_model.dart';
 import 'package:intellij_tourism_designer/pages/poi_detail_page.dart';
 import 'package:intellij_tourism_designer/widgets/tools_button.dart';
+import 'package:intellij_tourism_designer/widgets/upload_event.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 import '../../helpers/tile_providers.dart';
@@ -31,6 +32,8 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin{
 
   Timer? _timer;
   late final MapController _mapController;
+
+  bool loadEvent = false;
 
 
 
@@ -83,6 +86,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin{
 
   @override
   Widget build(BuildContext context) {
+    final vm = Provider.of<GlobalModel>(context,listen: false);
     return Scaffold(
         body: SafeArea(
           child: Stack(
@@ -94,7 +98,12 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin{
                 _recordButton(),
                 _stopRecord(),
                 _PoiDetailFab(context),
-                _backButton()
+                _backButton(),
+                loadEvent ? upLoadEvent(
+                  point: _mapController.camera.center,
+                  rid: vm.rid,
+                  back: ()=> setState((){loadEvent = false;},)
+                ): const SizedBox()
               ],
             )
         )
@@ -221,10 +230,21 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin{
         builder: (context, state, child) => state==mapState.record ? Align(
             alignment: Alignment.bottomCenter,
             child: Padding(
-              padding: const EdgeInsets.all(24),
-              child: primaryInkWell(
-                callback: () => vm.changeState(mapState.map),
-                text: "结束",
+              padding: const EdgeInsets.symmetric(vertical: 24),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  primaryInkWell(
+                    callback: () => vm.changeState(mapState.map),
+                    text: "结束",
+                  ),
+                  secondaryInkWell(
+                    callback: () => setState(() {
+                      loadEvent = true;
+                    }),
+                    text: "添加日记"
+                  )
+                ],
               ),
             )
         ) : const SizedBox()

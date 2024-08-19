@@ -1,11 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:intellij_tourism_designer/constants/constants.dart';
 import 'package:intellij_tourism_designer/helpers/Iti_data.dart';
 import 'package:intellij_tourism_designer/widgets/detail_view.dart';
 import 'package:latlong2/latlong.dart';
-
 import '../constants/theme.dart';
 import '../http/Api.dart';
 

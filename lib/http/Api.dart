@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intellij_tourism_designer/helpers/record_list_data.dart';
@@ -185,6 +187,22 @@ class Api {
     );
   }
 
+  //提交记录
+  Future<void> pushEvent({required LatLng point, required num rid, required File image, String? text, }) async {
+    final formData = FormData.fromMap({
+      'file': await MultipartFile.fromFile(image.path, filename: image.path.split('/').last),
+      'id': rid,
+      'point': "${point.longitude}, ${point.latitude}",
+      'text': text,
+    });
+    Response response = await Dio_database.instance().post(
+      path: "user/insertEvent",
+      data: formData
+    );
+
+    print("Api.pushEvent: ${response.data}");
+
+  }
 
   //获取模型规划
   Future<List<List<ItiData>>?> design_LLM({required num poinNum, required String requirement}) async {

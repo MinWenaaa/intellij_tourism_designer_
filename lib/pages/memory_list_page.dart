@@ -76,7 +76,7 @@ class _MemoryListPageState extends State<MemoryListPage> {
                 ))
               );
             } else {
-            return const CircularProgressIndicator(color: AppColors.primary,);
+            return const SizedBox();
             }
           },
 
