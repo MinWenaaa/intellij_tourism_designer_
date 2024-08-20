@@ -1,5 +1,9 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_swiper_view/flutter_swiper_view.dart';
+import 'package:intellij_tourism_designer/constants/constants.dart';
 import 'package:intellij_tourism_designer/constants/theme.dart';
 import 'package:intellij_tourism_designer/helpers/comment_list.dart';
 import 'package:intellij_tourism_designer/helpers/poi_detail_data.dart';
@@ -21,6 +25,8 @@ class _PoidetailpageState extends State<Poidetailpage> {
   late Future<PoiDetail> poi;
   CommentModel commentModel = CommentModel();
 
+  List<String> text = ["CALL", "INFO", "ROUTE"];
+
   Future<PoiDetail> getPoi() async {
     PoiDetail poi = await Api.instance.getPoiDetail(widget.id)??PoiDetail();
     return poi;
@@ -36,76 +42,25 @@ class _PoidetailpageState extends State<Poidetailpage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: SafeArea(
-          child: FutureBuilder<PoiDetail>(
-            future: poi,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _bannerView(snapshot.data?.pphoto),
-                      const SizedBox(height: 5,),
-                      Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Icon(Icons.photo, size: 50,
-                              color: AppColors.deepSecondary,),
-                          ),
-
-                          Container(
-                            width: 240,
-                            child: Text(snapshot.data?.pname ?? "加载中",
-                              style: AppText.Head2,
-                              maxLines: 2,
-                              overflow: TextOverflow.clip,
-                            ),
-                          ),
-                          SizedBox(width: 10,),
-                          Text(snapshot.data?.pclass ?? "", style: AppText.detail,)
-
-
-                        ],
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(snapshot.data?.pintroduceLong ?? "",
-                                style: AppText.matter,
-                              ),
-                              const SizedBox(height: 8,),
-                              _TextView(
-                                  Head: " 时间", content: snapshot.data?.popenTime ?? ""),
-                              _TextView(
-                                  Head: " 地址", content: snapshot.data?.paddress ?? ""),
-                              _TextView(Head: " 推荐时间",
-                                  content: snapshot.data?.precommendedDuration ?? ""),
-                              _TextView(
-                                  Head: " 等级", content: snapshot.data?.pgrade ?? ""),
-                              _TextView(
-                                  Head: " 等级", content: snapshot.data?.plevel ?? ""),
-                              _TextView(Head: " 电话",
-                                  content: snapshot.data?.pphonenumber ?? "meiyou"),
-                              _TextView(
-                                  Head: " 预算", content: snapshot.data?.pprice ?? ""),
-                              _TextView(Head: " 等级", content: snapshot.data?.prank ??
-                                  ""),
-                            ]
-                        ),
-                      ),
-                      const SizedBox(height: 30,),
-                      Divider(),
-                      _CommentList()
+      body: SafeArea(
+        child: FutureBuilder<PoiDetail>(
+          future: poi,
+          builder: (context, snapshot) {
+            return snapshot.hasData ? SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _bannerView(snapshot.data?.pphoto),
+                  _Head(snapshot.data),
+                  _Icons(),
+                  _Text(snapshot.data),
+                  const SizedBox(height: 30,),
+                  Divider(),
+                  _CommentList()
                     ],
                   ),
-                );
-              }else{
-                return const Center(child: CircularProgressIndicator());
-              }
+                ): const Center(child: CircularProgressIndicator(),
+            );
 
             }
             ),
@@ -131,6 +86,67 @@ class _PoidetailpageState extends State<Poidetailpage> {
     );
   }
 
+  Widget _Head(data){
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(vertical: 64.h, horizontal: 96.w),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(data?.pname ?? "加载中", style: AppText.Head1, maxLines: 2, overflow: TextOverflow.clip,
+          ),
+          Text(data?.paddress ?? "", style: AppText.detail,),
+        ],
+      ),
+    );
+  }
+
+  Widget _Icons(){
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 96.w, vertical: 24.h),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: List.generate(3, (index)=>
+          Column(
+            children: [
+              Image.network(ConstantString.Icon_decoration[index], height: 128.r, width: 128.r,),
+              Text(text[index], style: AppText.detail,)
+            ],
+          )),
+      ),
+    );
+  }
+
+  Widget _Text(data){
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 96.w, vertical: 48.h),
+      child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(data?.pintroduceLong ?? "",
+              style: AppText.matter,
+            ),
+            SizedBox(height: 96.h,),
+            Divider(),
+            _TextView(
+                Head: "时间", content: data?.popenTime ?? ""),
+            _TextView(Head: "推荐时间",
+                content: data?.precommendedDuration ?? ""),
+            _TextView(
+                Head: "等级", content: data?.pgrade ?? ""),
+            _TextView(
+                Head: "等级", content: data?.plevel ?? ""),
+            _TextView(Head: "电话",
+                content: data?.pphonenumber ?? "meiyou"),
+            _TextView(
+                Head: "预算", content: data?.pprice ?? ""),
+            _TextView(Head: "等级", content: data?.prank ??
+                ""),
+          ]
+      ),
+    );
+  }
+
   Widget _TextView({required String Head, required String content}){
     return RichText(text: TextSpan(
       children: [
@@ -151,14 +167,11 @@ class _PoidetailpageState extends State<Poidetailpage> {
         physics: NeverScrollableScrollPhysics(),
         itemCount: commentModel.commentList?.length ?? 0,
         itemBuilder: (context, index) {
-          return Selector<CommentModel, CommentData?>(
-            selector: (context , model) => model.commentList?[index],
-            builder: (context, value, child) => _CommentView(value)
-          );
-        }
+          print(commentModel.commentList);
+          return _CommentView(commentModel.commentList?[index]);
+          }
       )
     );
-
   }
 
   Widget _CommentView(CommentData? data){

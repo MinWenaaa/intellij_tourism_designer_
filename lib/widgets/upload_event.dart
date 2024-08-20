@@ -24,7 +24,7 @@ class upLoadEvent extends StatefulWidget {
 
 class _upLoadEventState extends State<upLoadEvent> {
 
-  File? _image;
+  File? _image = null;
   String _text = '';
   bool _isLoading = false;
   TextEditingController _textEditingController = TextEditingController();
@@ -149,7 +149,7 @@ class _upLoadEventState extends State<upLoadEvent> {
           child: Container(
             width: 108, height: 108,
             color: Color(0xfff2e6e6),
-            child: Image.network(ConstantString.blank, width: 84, height: 84,),
+            child: _image == null?Image.network(ConstantString.blank, width: 84, height: 84,):Image.file(_image!, height: 300),
           ),
       ),
     );

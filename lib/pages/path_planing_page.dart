@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intellij_tourism_designer/constants/Markers.dart';
 import 'package:intellij_tourism_designer/models/global_model.dart';
 import 'package:intellij_tourism_designer/models/path_plan_model.dart';
@@ -63,35 +64,6 @@ class _WelcomeState extends State<PathPlanningPage> with TickerProviderStateMixi
                       selector: (context, provider) => provider.baseProvider,
                       builder: (context, data, child) => baseTileLayer(data),
                     ),
-                    Align(
-                      alignment: Alignment.center,
-                      child: Icon(Icons.location_on_sharp, size: 40, color: AppColors.primary,),
-                    ),
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Padding(
-                        padding: const EdgeInsets.only(bottom: 24),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-
-                            secondaryInkWell(
-                              callback: (){
-                                LatLng temp = _mapController.camera.center;
-                                pathPlanModel.addPoint(temp);
-                              },
-                              text:"添加",
-                              width: 180, height: 52,
-                            ),
-                            primaryInkWell(
-                              callback: () => RouteUtils.pop(context),
-                              text: "完成",
-                              width: 180, height: 52,
-                            )
-                          ]
-                        ),
-                      )
-                    ),
                     Selector<PathPlanModel, List<LatLng>>(
                       selector: (context, provider) => provider.Route,
                       builder: (context, data, child) {
@@ -107,12 +79,42 @@ class _WelcomeState extends State<PathPlanningPage> with TickerProviderStateMixi
                           );
                         }
                     ),
+                    _Buttons(),
+                    Align(
+                      alignment: Alignment.center,
+                      child: Image.network(ConstantString.poi_icon_url[4], width: 144.r, height: 144.r,)
+                    ),
                   ],
                 ),
               ]
             ),
           )
         ),
+    );
+  }
+
+
+  Widget _Buttons(){
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: Padding(
+        padding: EdgeInsets.only(bottom: 64.h),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            secondaryInkWell(
+              callback: () => pathPlanModel.addPoint(_mapController.camera.center),
+              text:"添加",
+              width: 420.w, height: 134.h,
+            ),
+            primaryInkWell(
+               callback: () => RouteUtils.pop(context),
+               text: "完成",
+               width: 420.w, height: 134.h,
+            )
+          ]
+        ),
+      )
     );
   }
 

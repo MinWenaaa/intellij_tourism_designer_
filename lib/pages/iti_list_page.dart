@@ -54,7 +54,7 @@ class _ItiListPageState extends State<ItiListPage> {
               refreshController.refreshCompleted();
             },
             child: Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: EdgeInsets.symmetric(vertical: 22.h),
               child: _Future()
             )
           ),

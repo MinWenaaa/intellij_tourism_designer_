@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:intellij_tourism_designer/constants/Markers.dart';
 import 'package:intellij_tourism_designer/constants/constants.dart';
@@ -15,7 +15,7 @@ import '../helpers/Iti_data.dart';
 
 
 enum mapState{
-  map(0), detail(1), record(2), view_record(3), view_iti(4);
+  map(0), detail(1), record(2), view_record(3), view_iti(4), view_event(5);
 
   final int intValue;
 
@@ -119,7 +119,7 @@ class GlobalModel with ChangeNotifier{
         markers[index].add(Marker(
           point: LatLng(data.latitude ?? 0, data.longitude ?? 0),
           child: GestureDetector(
-            child: Image.network(ConstantString.poi_icon_url[index], width: 36, height: 36,),
+            child: Image.network(ConstantString.poi_icon_url[index], width: 108.r, height: 108.r,),
             onTap: () => markerCallBack(data.pid??0)
           )
         ))
@@ -169,6 +169,7 @@ class GlobalModel with ChangeNotifier{
   num rid = 0;
   List<LatLng> recordLine = [];
   List<Marker> recordMarker =[];
+  Events currentEvent = Events();
 
   void changeRid(num id){
     rid = id;
@@ -178,10 +179,17 @@ class GlobalModel with ChangeNotifier{
   Future<void> getRecordDetail() async {
     RecordDetail recordDetail = await Api.instance.getRecordDetail(rid);
     recordLine = recordDetail.points??[];
+    recordMarker = [];
     recordDetail.events!.forEach((event)=>
       recordMarker.add(Marker(
+        width: 160, height: 160,
         point: event.point??LatLng(30, 114),
-        child: Image.network("http://121.41.170.185:5000/user/download/${event.id}.jpg")))
+        child: GestureDetector(
+          onTap: () {
+            currentEvent = event;
+            changeState(mapState.view_event);
+          },
+          child: Image.network("http://121.41.170.185:5000/user/download/${event.id}.jpg"))))
     );
     notifyListeners();
   }

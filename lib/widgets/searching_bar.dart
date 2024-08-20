@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intellij_tourism_designer/constants/constants.dart';
+import 'package:intellij_tourism_designer/constants/theme.dart';
 import 'package:intellij_tourism_designer/helpers/search_result_data.dart';
 import 'package:intellij_tourism_designer/models/search_model.dart';
 import 'package:latlong2/latlong.dart';
@@ -23,6 +26,8 @@ class _SearchingBarState extends State<SearchingBar> {
   
   SearchModel searchModel = SearchModel();
   final FloatingSearchBarController controller = FloatingSearchBarController();
+
+  String type = ConstantString.poi[0];
 
   @override
   Widget build(BuildContext context) {
@@ -66,17 +71,16 @@ class _SearchingBarState extends State<SearchingBar> {
 
   Widget _buildExpandableBody(SearchModel model, BuildContext context){
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 16),
+      padding: EdgeInsets.symmetric(vertical: 42.h),
       child: Material(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
+        elevation: 16.r,
+        borderRadius: BorderRadius.circular(20.r),
         clipBehavior: Clip.antiAlias,
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 42.w),
           child: Column(
-            children: List.generate(model.itemList.length,
-              (index)=>Builder(builder: (context) => _searchItem(context, model.itemList[index]!, model.itemList.length-1==index),
-                
+            children: List.generate(model.itemList.length, (index)=>Builder(
+              builder: (context) => _searchItem(context, model.itemList[index]!, model.itemList.length-1==index),
               )
             )
           )
@@ -86,38 +90,42 @@ class _SearchingBarState extends State<SearchingBar> {
   }
 
   Widget _searchItem(BuildContext context, SearchItemData item, bool isLast){
-    return Column(
-      children: [
-        InkWell(
-          onTap: (){
-            widget.callBack.call(LatLng(item.y??30.5, item.x??114.2), 16.5);
-            FloatingSearchBar.of(context)?.close();
-          },
-          child: Row(
-              children: [
-                SizedBox(
-                  width: 36,
-                  child: Icon(Icons.place, key: Key('place')),
+    return SizedBox(
+      height: 240.h,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 42.w, vertical: 20.h),
+            child: InkWell(
+              onTap: (){
+                widget.callBack.call(LatLng(item.y??30.5, item.x??114.2), 16.5);
+                FloatingSearchBar.of(context)?.close();
+              },
+              child: Row(
+                children: [
+                  Icon(Icons.place, key: const Key('place'), size: 84.r,),
+                  SizedBox(width: 64.h),
+                  Expanded(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(item.pname??"",maxLines: 1, style: AppText.Head2,),
+                        SizedBox(height: 5.h),
+                        Text(item.pintroduceShort??"",maxLines: 1, style: AppText.matter,),
+                        SizedBox(height: 5.h),
+                        Text(item.paddress??"",maxLines: 1, style: AppText.detail,),
+                       ],
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(item.pname??"",maxLines: 1,),
-                      const SizedBox(height: 2),
-                      Text(item.pintroduceShort??"",maxLines: 1,),
-                      const SizedBox(height: 2),
-                      Text(item.paddress??"",maxLines: 1,),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+              ),
           ),
-        if(!isLast) Divider(height: 0,)
-      ],
+          if(!isLast) const Divider(height: 0,)
+        ],
+      ),
     );
   }
 }

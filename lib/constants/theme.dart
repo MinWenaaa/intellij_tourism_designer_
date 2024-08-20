@@ -21,11 +21,13 @@ class AppColors {
 class AppText {
   AppText._();
 
+  static TextStyle bigHead = TextStyle(color: AppColors.headline, fontSize: 64.r);
   static TextStyle Head1 = TextStyle(color: AppColors.headline, fontSize: 48.r);
   static TextStyle primaryHead = TextStyle(color: AppColors.primary, fontSize: 48.r);
   static TextStyle secodaryHead = TextStyle(color: AppColors.deepSecondary, fontSize: 48.r);
   static TextStyle whiteHead = TextStyle(color: Colors.white, fontSize: 48.r);
   static TextStyle Head2 = TextStyle(color: AppColors.headline, fontSize: 42.r);
+  static TextStyle lightHead2 = TextStyle(color: AppColors.matter, fontSize: 42.r);
   static TextStyle matter = TextStyle(color: AppColors.matter, fontSize: 36.r);
   static TextStyle detail = TextStyle(color: AppColors.detail, fontSize: 36.r);
 
@@ -36,13 +38,21 @@ Widget primaryInkWell({
   required callback, required String text,
   double width=180, double height=52
 }){
-  return InkWell(
+  return GestureDetector(
     onTap: callback,
     child: Container(
       width: width, height: height, alignment: Alignment.center,
-      decoration: const BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(26)),
-        color: AppColors.primary
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(height/2)),
+        color: AppColors.primary,
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.detail.withOpacity(0.15),
+            spreadRadius: 3.r,
+            blurRadius: 7.r,
+            offset: Offset(0, 6.r),
+          )
+        ] //
       ),
       child: Text(text, style: AppText.whiteHead,),
     ),
@@ -51,15 +61,23 @@ Widget primaryInkWell({
 
 Widget secondaryInkWell({
   required callback, required String text,
-  double width=180, double height=52
+  double? width, double? height,
 }){
-  return InkWell(
+  return GestureDetector(
     onTap: callback,
     child: Container(
-      width: width, height: height, alignment: Alignment.center,
-      decoration: const BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(26)),
-          color: AppColors.secondary
+      width: width??460.w, height: height??134.h, alignment: Alignment.center,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(height??134.h/2)),
+          color: AppColors.secondary,
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.detail.withOpacity(0.15),
+              spreadRadius: 3.r,
+              blurRadius: 7.r,
+              offset: Offset(0, 6.r),
+            )
+          ] // changes position of shadow
       ),
       child: Text(text, style: AppText.Head1,),
     ),
@@ -76,7 +94,7 @@ Widget transpDeepSecGesture({
       width: width, height: height, alignment: Alignment.center,
       decoration: BoxDecoration(
         border: Border.all(color: AppColors.deepSecondary, width: 1),
-        borderRadius: BorderRadius.all(Radius.circular(26))
+        borderRadius: BorderRadius.all(Radius.circular(height/2))
       ),
       child: Text(text, style: AppText.secodaryHead),
     ),

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intellij_tourism_designer/constants/constants.dart';
 import 'package:intellij_tourism_designer/constants/theme.dart';
 import 'package:intellij_tourism_designer/helpers/Iti_data.dart';
@@ -21,10 +22,9 @@ class POIListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         width: double.infinity, height: height,
-        margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+        margin: EdgeInsets.symmetric(vertical: 14.h, horizontal: 26.w),
         decoration: BoxDecoration(
-          //border: Border.all(color: AppColors.detail, width:0.5),
-          borderRadius: BorderRadius.all(Radius.circular(8)),
+          borderRadius: BorderRadius.all(Radius.circular(20.r)),
           color: AppColors.highlight
         ),
         clipBehavior: Clip.hardEdge,
@@ -34,7 +34,7 @@ class POIListItem extends StatelessWidget {
             Flexible(
               flex: 3,
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: EdgeInsets.symmetric(horizontal: 42.w, vertical: 22.h),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -76,11 +76,11 @@ class ItiCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: double.infinity, height: 120,
-      margin: EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+      width: double.infinity, height: 320.h,
+      margin: EdgeInsets.symmetric(vertical: 14.h, horizontal: 26.w),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(8)),
-        color: AppColors.secondary
+          borderRadius: BorderRadius.all(Radius.circular(20.r)),
+          color: AppColors.highlight
       ),
       clipBehavior: Clip.hardEdge,
       child: Row(
@@ -89,7 +89,7 @@ class ItiCard extends StatelessWidget {
           Flexible(
             flex: 3,
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              padding: EdgeInsets.symmetric(horizontal: 42.w, vertical: 22.h),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -125,11 +125,11 @@ class RecordCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: double.infinity, height: 120,
-      margin: EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+      width: double.infinity, height: 320.h,
+      margin: EdgeInsets.symmetric(vertical: 14.h, horizontal: 26.w),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(8)),
-          color: AppColors.secondary
+          borderRadius: BorderRadius.all(Radius.circular(20.r)),
+          color: AppColors.highlight
       ),
       clipBehavior: Clip.hardEdge,
       child: Row(

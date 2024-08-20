@@ -1,17 +1,20 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:intellij_tourism_designer/constants/Markers.dart';
 import 'package:intellij_tourism_designer/constants/constants.dart';
 import 'package:intellij_tourism_designer/constants/theme.dart';
 import 'package:intellij_tourism_designer/http/Api.dart';
 import 'package:intellij_tourism_designer/models/global_model.dart';
+import 'package:intellij_tourism_designer/widgets/event_page.dart';
 import 'package:intellij_tourism_designer/pages/poi_detail_page.dart';
 import 'package:intellij_tourism_designer/widgets/tools_button.dart';
 import 'package:intellij_tourism_designer/widgets/upload_event.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
+import '../helpers/record_list_data.dart';
 import '../helpers/tile_providers.dart';
 import '../widgets/detail_view.dart';
 import '../widgets/searching_bar.dart';
@@ -107,7 +110,8 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin{
                   point: _mapController.camera.center,
                   rid: vm.rid,
                   back: ()=> setState((){loadEvent = false;},)
-                ): const SizedBox()
+                ): const SizedBox(),
+                _view_Event()
               ],
             )
         )
@@ -137,8 +141,11 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin{
           builder: (context, data, child) => (data==mapState.view_record||data==mapState.record)?
             Selector<GlobalModel,List<LatLng>>(
             selector: (context, provider) => provider.recordLine,
-            builder: (context, line, child) =>PolylineLayer(polylines: [planPolyline(line)])
-          ) : const SizedBox()
+            builder: (context, line, child) {
+              print("MapPage.recordLayer: animated: ${line[0]}");
+              _animatedMapMove(line[1], 16.5);
+              return PolylineLayer(polylines: [planPolyline(line)]);
+            }) : const SizedBox()
         ),
         Selector<GlobalModel,mapState>(
             selector: (context, provider) => provider.state,
@@ -204,9 +211,9 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin{
       selector: (context, model) => model.state,
       builder: (context, state, child) => Positioned(
           top: state==mapState.map ? 80 : 10, right: 10,
-          child: const WeatherText(
-              height: 180, width: 280,
-              location: LatLng(30.56,114.32)
+          child: WeatherText(
+              height: 460.h, width: 720.w,
+              location: const LatLng(30.56,114.32)
           )
       ),
     );
@@ -235,7 +242,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin{
       builder: (context, state, child) => state==mapState.map ? Align(
           alignment: Alignment.bottomCenter,
           child: Padding(
-            padding: const EdgeInsets.all(24),
+            padding: EdgeInsets.all(64.h),
             child: primaryInkWell(
               callback: () {
                 vm.changeState(mapState.record);
@@ -254,19 +261,21 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin{
         builder: (context, state, child) => state==mapState.record ? Align(
             alignment: Alignment.bottomCenter,
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 24),
+              padding: EdgeInsets.only(bottom: 64.h),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   primaryInkWell(
                     callback: () => vm.changeState(mapState.map),
                     text: "结束",
+                    width: 420.w, height: 134.h,
                   ),
                   secondaryInkWell(
                     callback: () => setState(() {
                       loadEvent = true;
                     }),
-                    text: "添加日记"
+                    text: "添加日记",
+                    width: 420.w, height: 134.h,
                   )
                 ],
               ),
@@ -304,6 +313,19 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin{
             child: Icon(Icons.arrow_back_ios, size: 36,),
             onTap: () => vm.changeState(mapState.map),
         )),
+      ),
+    );
+  }
+
+  Widget _view_Event(){
+    return Selector<GlobalModel, mapState>(
+      selector: (context, provider) => provider.state,
+      builder: (context, data, child) => Visibility(
+        visible: data == mapState.view_event,
+        child: Selector<GlobalModel, Events>(
+          selector: (context, provider) => provider.currentEvent,
+          builder: (context, data, child) => EventPage(event: data,)
+        )
       ),
     );
   }

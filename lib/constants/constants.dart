@@ -32,7 +32,8 @@ class ConstantString{
     "https://gd-hbimg.huaban.com/4a9eef2cf5a8b205bd2bea27cd84dcfc94d5462e20ae-E1Hlcp_fw1200webp",
     "https://gd-hbimg.huaban.com/8b01201be4b9085ab7e57dd60834ab7186c75ab01da4-J3cQpJ_fw1200webp",
     "https://gd-hbimg.huaban.com/dc13a2c8b6fbf2a0c56d757eb6f681516b4fbe2520f5-5apI0K_fw1200webp",
-    "https://gd-hbimg.huaban.com/d1e8f2d805c155d794efd267e22eab1dcc7e0cd116a8-tnr1eo_fw1200webp"
+    "https://gd-hbimg.huaban.com/d1e8f2d805c155d794efd267e22eab1dcc7e0cd116a8-tnr1eo_fw1200webp",
+    "https://gd-hbimg.huaban.com/2f6bcc6468b90b81bd252a48e3b881a560077a581a82-K5UJxF_fw1200webp"
   ];
 
   static const List<String> weather_icon = [
@@ -103,6 +104,12 @@ class ConstantString{
   static const String send = "https://gd-hbimg.huaban.com/afda5f1edb2e51ed1ad5fd32761e473666299cfa17f5-rvW2Mu_fw1200webp";
   static const String user = "https://gd-hbimg.huaban.com/0012232547458c7ce4599d0896c6ad5fc2cd8e4f368b7-bK8xeo_fw480webp";
   static const String blank = "https://gd-hbimg.huaban.com/06d08b2d6d94f745b5be990970cf4dba675d256a19da-XjGKTM_fw1200webp";
+
+  static const List<String> Icon_decoration = [
+    "https://gd-hbimg.huaban.com/b103762e60fcfefcfc95eda005b25a98f551d8921849-WVffFG_fw1200webp",
+    "https://gd-hbimg.huaban.com/febee266b7307d6f82879085a1afc7c638843fe8fd9-mCgo9l_fw1200webp",
+    "https://gd-hbimg.huaban.com/3a75247eb3d4691af94767a456368750241a2fe1169a-bxFoKQ_fw1200webp",
+  ];
 
 }
 

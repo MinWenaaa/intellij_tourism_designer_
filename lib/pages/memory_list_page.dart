@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intellij_tourism_designer/constants/theme.dart';
 import 'package:intellij_tourism_designer/helpers/record_list_data.dart';
 import 'package:intellij_tourism_designer/widgets/calendar.dart';
@@ -42,24 +43,20 @@ class _MemoryListPageState extends State<MemoryListPage> {
   @override
   Widget build(BuildContext context) {
 
-    return Scaffold(
-      body: SmartRefresher(
-            controller: refreshController,
-            enablePullDown: true,
-            enablePullUp: true,
-            header: const ClassicHeader(),
-            onRefresh: () async{
-              recordData = fetch(context);
-              setState(() {});
-              refreshController.refreshCompleted();
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: _Future()
-            )
-          ),
+    return SmartRefresher(
+      controller: refreshController,
+      enablePullDown: true, enablePullUp: true,
+      header: const ClassicHeader(),
+      onRefresh: () async{
+        recordData = fetch(context);
+        setState(() {});
+        refreshController.refreshCompleted();
+      },
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 42.h),
+        child: _Future()
+      )
     );
-
   }
 
 
