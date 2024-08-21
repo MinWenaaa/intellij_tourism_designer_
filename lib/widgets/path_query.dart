@@ -32,7 +32,6 @@ class _PathQueryWidgetState extends State<PathQueryWidget> {
                 padding:const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0,),
                 child: TextButton(
                   onPressed:(){},
-                  style:AppButton.button2,
                   child:SizedBox()//POICard(style:1,poi:wayPoint[index]),
                 ),
               )
@@ -51,7 +50,6 @@ class _PathQueryWidgetState extends State<PathQueryWidget> {
           width:150,
           child: TextButton(
             onPressed:(){setState((){});},
-            style:AppButton.button1,
             child:const Text("添加途径点"),
           ),
         ),
@@ -111,7 +109,6 @@ class _PathQueryWidgetState extends State<PathQueryWidget> {
   Widget strategyButton(int s,String child){
     return TextButton(
       onPressed:(){setState(() {strategy=s;});},
-      style: strategy==s? AppButton.button1 : AppButton.button2,
       child:Text(child),
     );
   }
@@ -119,7 +116,6 @@ class _PathQueryWidgetState extends State<PathQueryWidget> {
   Widget transportButton(int t,String child){
     return TextButton(
       onPressed:(){setState(() {transport=t;});},
-      style: strategy==t? AppButton.button1 : AppButton.button2,
       child:Text(child),
     );
   }

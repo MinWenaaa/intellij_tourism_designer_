@@ -53,10 +53,9 @@ dependencies:
   oktoast: ^3.4.0
   pull_to_refresh: ^2.0.0
   flutter_swiper_view: ^1.1.8
-  geolocator: ^7.0.0
   material_floating_search_bar_2: ^0.5.0
   flutter_localization: ^0.2.1
-  image_picker: ^1.1.2
+
 
 dev_dependencies:
   flutter_test:

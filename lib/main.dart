@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intellij_tourism_designer/pages/login_page.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:intellij_tourism_designer/pages/mobile/mobile_page.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
 import 'http/dio_instance.dart';

@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:intellij_tourism_designer/constants/Markers.dart';
 import 'package:intellij_tourism_designer/constants/constants.dart';
 import 'package:intellij_tourism_designer/helpers/User.dart';
@@ -65,15 +63,6 @@ class GlobalModel with ChangeNotifier{
 
   Future<void> changeState(mapState newState) async {
     state = newState;
-    //发送新建记录请求
-    if(state==mapState.record){
-      Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-      LatLng location = LatLng(position.latitude, position.longitude);
-      dynamic id = await Api.instance.startRecord(user.uid??200, location);
-      rid = id;
-      recordLine.add(location);
-      print("record ${id} start!");
-    }
     notifyListeners();
   }
 
@@ -160,40 +149,6 @@ class GlobalModel with ChangeNotifier{
     currentPOI = pid;
     changeState(mapState.detail);
     itiMapCardData = await Api.instance.getMapPOICard(id: pid);
-    notifyListeners();
-  }
-
-
-
-
-  num rid = 0;
-  List<LatLng> recordLine = [];
-  List<Marker> recordMarker =[];
-
-  void changeRid(num id){
-    rid = id;
-    notifyListeners();
-  }
-
-  Future<void> getRecordDetail() async {
-    RecordDetail recordDetail = await Api.instance.getRecordDetail(rid);
-    recordLine = recordDetail.points??[];
-    recordDetail.events!.forEach((event)=>
-      recordMarker.add(Marker(
-        point: event.point??LatLng(30, 114),
-        child: Image.network("http://121.41.170.185:5000/user/download/${event.id}.jpg")))
-    );
-    notifyListeners();
-  }
-
-  void pushPoint(LatLng point){
-    recordLine.add(point);
-    print(recordLine);
-    notifyListeners();
-  }
-
-  void pushRecordMarker({required Marker marker}){
-    recordMarker.add(marker);
     notifyListeners();
   }
 

@@ -4,9 +4,8 @@ import 'package:intellij_tourism_designer/pages/register_page.dart';
 import 'package:intellij_tourism_designer/route_utils.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
-
 import '../models/global_model.dart';
-import 'mobile/mobile_page.dart';
+import 'desktop_page.dart';
 
 //登录界面
 
@@ -48,7 +47,7 @@ class _LoginPageState extends State<LoginPage> {
                   bool flag = await vm.Login(name: _userName, password: _passWord);
                   if(flag){
                     RouteUtils.pop(context);
-                    RouteUtils.push(context, MobilePage());//MobilePage()  DeskTopPage()
+                    RouteUtils.push(context,  DeskTopPage());
                   }else{
                     showToast("账号或密码错误");
                   }

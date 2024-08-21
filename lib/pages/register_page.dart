@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:intellij_tourism_designer/pages/mobile/mobile_page.dart';
+import 'package:intellij_tourism_designer/pages/desktop_page.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
 import '../constants/theme.dart';
@@ -45,7 +45,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     if(flag){
                       RouteUtils.pop(context);
                       RouteUtils.pop(context);
-                      RouteUtils.push(context, MobilePage());
+                      RouteUtils.push(context, DeskTopPage());
                     } else {
                       showToast("用户已注册");
                     }

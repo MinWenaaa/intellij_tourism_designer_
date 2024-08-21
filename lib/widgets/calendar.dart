@@ -67,7 +67,8 @@ class Calendar extends StatelessWidget {
         return true;
       },
     );
-    return SizedBox(
+    return Container(
+      color: AppColors.backGroundColor,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
