@@ -7,9 +7,8 @@ import 'package:intellij_tourism_designer/route_utils.dart';
 import 'package:provider/provider.dart';
 
 class LayerSettingDemo extends StatefulWidget {
-  const LayerSettingDemo({super.key, required this.height});
+  const LayerSettingDemo({super.key,});
 
-  final double height;
   @override
   State<LayerSettingDemo> createState() => _LayerSettingDemoState();
 }
@@ -26,32 +25,40 @@ class _LayerSettingDemoState extends State<LayerSettingDemo> {
   Widget build(BuildContext context) {
     final vm = Provider.of<GlobalModel>(context,listen: false);
 
-    return Container(
-      height: widget.height,
-      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 24),
-      child: ListView(
-        children: [
+    return Scaffold(
+      appBar: _appBar(),
+      body: Padding(
+        padding: const EdgeInsets.only(left: 24, right: 48),
+        child: ListView(
+            children: [
 
-          Center(child: Text("图层设置", style: AppText.Head1,)),
-          const SizedBox(height: 20,),
-          Text("底图切换"),
-          _baseLayerSetting(vm),
-          const SizedBox(height: 20,),
-          Text("显示标记"),
-          _markersSetting(vm),
-          const SizedBox(height: 20,),
-          _sunsetButton(),
-          const SizedBox(height: 20,),
-          _HeatMapButtons(),
-          const SizedBox(height: 20,),
-          _FeatureButtons(),
+              const SizedBox(height: 40,),
+              _baseLayerSetting(vm),
+              const SizedBox(height: 40,),
+              _markersSetting(vm),
+              const SizedBox(height: 40,),
+              _sunsetButton(),
+              const SizedBox(height: 40,),
+              _HeatMapButtons(),
+              const SizedBox(height: 40,),
+              _FeatureButtons(),
 
-        ],
+            ],
+        ),
       ),
     );
   }
 
-
+  AppBar _appBar(){
+    final vm = Provider.of<GlobalModel>(context,listen: false);
+    return AppBar(
+      title: const Text("图层设置"),
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back), tooltip: 'Navigate back',
+        onPressed: () => vm.changeSetting(false),
+      ),
+    );
+  }
 
   Widget _baseLayerSetting(vm){
     return Container(
@@ -75,7 +82,7 @@ class _LayerSettingDemoState extends State<LayerSettingDemo> {
       builder: (context, provider, child)=>InkWell(
         onTap: () => model.changeBaseLayer(index),
         child: Container(
-          width: 120, height: 40,
+          width: 108, height: 40,
           color: provider==index ? AppColors.primary : null,
           alignment: Alignment.center,
           child: Text(text[index]),
@@ -89,12 +96,15 @@ class _LayerSettingDemoState extends State<LayerSettingDemo> {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.symmetric(horizontal: 20),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Column(
+          const Text("地图图钉"),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [_makersButton(index: 0, model: vm),_makersButton(index: 1, model: vm)],),
-          Column(
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [_makersButton(index: 2, model: vm),_makersButton(index: 3, model: vm)],)
         ],
       )

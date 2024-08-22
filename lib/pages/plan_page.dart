@@ -5,7 +5,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:intellij_tourism_designer/constants/theme.dart';
 import 'package:intellij_tourism_designer/helpers/poi_list_view_data.dart';
 import 'package:intellij_tourism_designer/models/plan_edit_model.dart';
-import 'package:intellij_tourism_designer/widgets/buttom_sheet.dart';
+import 'package:intellij_tourism_designer/widgets/layyer_setting.dart';
 import 'package:intellij_tourism_designer/widgets/calendar.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:oktoast/oktoast.dart';
@@ -19,14 +19,14 @@ import 'map_page.dart';
 
 //行程规划模块
 
-class ItineraryPage extends StatefulWidget {
-  const ItineraryPage({super.key});
+class PlanPage extends StatefulWidget {
+  const PlanPage({super.key});
 
   @override
-  State<ItineraryPage> createState() => _ItineraryPageState();
+  State<PlanPage> createState() => _PlanPageState();
 }
 
-class _ItineraryPageState extends State<ItineraryPage> with TickerProviderStateMixin{
+class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin{
 
   Timer? _timer;
 
@@ -94,7 +94,7 @@ class _ItineraryPageState extends State<ItineraryPage> with TickerProviderStateM
                visible: setting,
                child: const Padding(
                  padding: EdgeInsets.symmetric(horizontal: 16),
-                 child: LayerSettingDemo(height: double.infinity,),
+                 child: LayerSettingDemo(),
                )
            ),
             Visibility(
@@ -350,10 +350,10 @@ class _ItineraryPageState extends State<ItineraryPage> with TickerProviderStateM
   Widget _poiCard() {
     return Align(
       alignment: Alignment.bottomCenter,
-      child: Selector<GlobalModel, mapState>(
-        selector: (context, provider) => provider.state,
+      child: Selector<GlobalModel, bool>(
+        selector: (context, provider) => provider.state[1],
         builder: (context, state, child) => Visibility(
-          visible: state==mapState.detail,
+          visible: state,
           child: Selector<GlobalModel, PoiListViewData?>(
               selector: (context, provider) => provider.itiMapCardData,
               builder: (context, data, child) => data==null ? const SizedBox(): _pushPosition(data)
@@ -436,22 +436,6 @@ class _ItineraryPageState extends State<ItineraryPage> with TickerProviderStateM
         ],
       ),
     );
-      // Align(
-      // alignment: Alignment.bottomRight,
-      // child: Selector<GlobalModel, mapState>(
-      //   selector: (context, provider) => provider.state,
-      //   builder: (context, state, child) => Visibility(
-      //     visible: state==mapState.detail,
-      //     child: Selector<GlobalModel, int>(
-      //       selector: (context, provider) => provider.currentPOI,
-      //       builder: (context, data, child) => GestureDetector(
-      //         onTap: () => vm.pushLocation(id: data),
-      //         child: Icon(Icons.add, color: AppColors.primary,),
-      //       )
-      //       ),
-      //     ),
-      //   ),
-      //);
   }
 
 

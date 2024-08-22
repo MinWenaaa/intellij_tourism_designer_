@@ -85,6 +85,11 @@ class ConstantString{
   static const String user = "https://gd-hbimg.huaban.com/0012232547458c7ce4599d0896c6ad5fc2cd8e4f368b7-bK8xeo_fw480webp";
   static const String blank = "https://gd-hbimg.huaban.com/06d08b2d6d94f745b5be990970cf4dba675d256a19da-XjGKTM_fw1200webp";
 
+  static const List<String> Icon_decoration = [
+    "https://gd-hbimg.huaban.com/b103762e60fcfefcfc95eda005b25a98f551d8921849-WVffFG_fw1200webp",
+    "https://gd-hbimg.huaban.com/febee266b7307d6f82879085a1afc7c638843fe8fd9-mCgo9l_fw1200webp",
+    "https://gd-hbimg.huaban.com/3a75247eb3d4691af94767a456368750241a2fe1169a-bxFoKQ_fw1200webp",
+  ];
 }
 
 const Duration defaultTime = const Duration(seconds: 10);

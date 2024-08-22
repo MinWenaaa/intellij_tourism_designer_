@@ -1,12 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:intellij_tourism_designer/constants/Markers.dart';
 import 'package:intellij_tourism_designer/constants/constants.dart';
 import 'package:intellij_tourism_designer/constants/theme.dart';
 import 'package:intellij_tourism_designer/models/global_model.dart';
-import 'package:intellij_tourism_designer/pages/poi_detail_page.dart';
-import 'package:intellij_tourism_designer/widgets/buttom_sheet.dart';
+import 'package:intellij_tourism_designer/widgets/poi_detail_page.dart';
+import 'package:intellij_tourism_designer/widgets/layyer_setting.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 import '../helpers/tile_providers.dart';
@@ -31,9 +30,8 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin{
   Timer? _timer;
   late final MapController _mapController;
 
-  int state = 0;
-  //0-Map，1-detail, 2-plan
-  bool setting = false;
+  bool isPlan = false;
+  //0-Map，1-plan
 
   @override
   void initState() {
@@ -87,50 +85,45 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin{
 
     return Row(
       children: [
-        Visibility(
-          visible: state!=0 && !setting,
-          child: Flexible(
-            flex: 3,
-            child: Stack(children: [
-              Visibility(
-                visible: state==1,
-                child: Selector<GlobalModel, int>(
-                  selector: (context, provider) => provider.currentPOI,
-                  builder: (context, id, child) => Poidetailpage(id: id)
-                ),
-              ),
-              Visibility(
-                visible: state!=0,
-                child: Positioned(
-                  top: 12, left: 12,
-                  child: GestureDetector(
-                    child: Icon(Icons.arrow_back_ios),
-                    onTap: () => setState(() {state = 0;}),
+        Selector<GlobalModel, List<bool>>(
+          selector: (context, provider) => provider.state,
+          builder: (context, state, child) => Visibility(
+            visible: state[0]||state[1]||isPlan,
+            child: Flexible(
+              flex: 3,
+              child: Stack(
+                children: [
+                  _detailView(state[1]),
+                  Visibility(
+                    visible: state[0],
+                    child: LayerSettingDemo(),
                   ),
-                ),
-              ),
-              Visibility(
-                visible: setting,
-                child: LayerSettingDemo(height: 680,),
-              ),
-              Visibility(
-                visible: setting,
-                child: Positioned(
-                  top: 12, left: 12,
-                  child: GestureDetector(
-                    child: Icon(Icons.arrow_back_ios),
-                    onTap: () => setState(() {setting = false;}),
-                  ),
-                ),
-              ),
-            ]),
-          ),
+                ],
+              )
+            ),
+          )
         ),
         Flexible(
           flex: 5,
-          child: _mapLayers()
+          child: Stack(
+            children: [
+              _mapLayers(),
+              _weatherCard(),
+              _searchBar(),
+            ],
+          )
         ),
       ],
+    );
+  }
+
+  Widget _detailView(bool show){
+    return Selector<GlobalModel, int>(
+      selector: (context, provider) => provider.currentPOI,
+      builder: (context, poi, child) => Visibility(
+        visible: show,
+        child: Poidetailpage(id: poi,),
+      )
     );
   }
 
@@ -143,18 +136,17 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin{
       options: initMapOption(),
       children: [
         _baseLayer(),
+        _sunSetLayer(),
         ..._HeatMap(),
         ..._Feature(),
-        _markerLayer(),
-        _weatherCard(),
-        _searchBar(),
+        ..._markerLayer(),
         Align(
             alignment: Alignment.topLeft,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: GestureDetector(
                 child: Icon(Icons.settings, size: 36, color: AppColors.primary,),
-                onTap: () => setState(() {setting = true;})
+                onTap: () => vm.changeSetting(true)
               ),
             )
         )
@@ -183,22 +175,27 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin{
     ),);
   }
 
-  Widget _markerLayer(){
-    return Selector<GlobalModel, List<Marker>>(
-      selector: (context, provider) => provider.markers[0],
-      builder: (context, data, child) => MarkerLayer(markers: data),
+  List<Widget> _markerLayer(){
+    return List.generate(4, (index)=>Selector<GlobalModel, List<Marker>>(
+    selector: (context, provider) => provider.markers[index],
+    builder: (context, data, child) => MarkerLayer(markers: data),
+    ),);
+  }
+
+  Widget _sunSetLayer(){
+    return Selector<GlobalModel, int>(
+      selector: (context, provider) => provider.showSunset,
+      builder: (context, data, child) =>
+      data!=-1 ? WMS_ours(layerName: ConstantString.sunsetLayer[data]) : const SizedBox(),
     );
   }
 
   Widget _weatherCard(){
-    return Selector<GlobalModel, mapState>(
-      selector: (context, model) => model.state,
-      builder: (context, state, child) => Positioned(
-          top: state==mapState.map ? 80 : 10, right: 10,
-          child: const WeatherText(
-              height: 180, width: 280,
-              location: LatLng(30.56,114.32)
-          )
+    return const Positioned(
+      top: 80, right: 10,
+      child: WeatherText(
+        height: 180, width: 280,
+        location: LatLng(30.56,114.32)
       ),
     );
   }

@@ -6,19 +6,10 @@ import 'package:intellij_tourism_designer/constants/constants.dart';
 import 'package:intellij_tourism_designer/helpers/User.dart';
 import 'package:intellij_tourism_designer/helpers/poi_list_view_data.dart';
 import 'package:intellij_tourism_designer/helpers/poi_marker_data.dart';
-import 'package:intellij_tourism_designer/helpers/record_list_data.dart';
 import 'package:intellij_tourism_designer/http/Api.dart';
 import 'package:latlong2/latlong.dart';
 import '../helpers/Iti_data.dart';
 
-
-enum mapState{
-  map(0), detail(1), record(2), view_record(3), view_iti(4);
-
-  final int intValue;
-
-  const mapState(this.intValue);
-}
 
 class GlobalModel with ChangeNotifier{
 
@@ -53,22 +44,22 @@ class GlobalModel with ChangeNotifier{
 
 
 
+  List<bool> state = [false, false];
+
+  void changeSetting(bool value){
+    state = [value, state[1]];
+    notifyListeners();
+  }
+  void changeDetail(bool value){
+    state = [state[0], value];
+    notifyListeners();
+  }
+
+
+
+
+
   int baseProvider = 0;
-  mapState state = mapState.map;
-
-  void changeBaseLayer(int provider){
-    baseProvider = provider;
-    notifyListeners();
-  }
-
-  Future<void> changeState(mapState newState) async {
-    state = newState;
-    notifyListeners();
-  }
-
-
-
-
   int showSunset = -1;
   List<bool> showPOI = [false, false, false, false];
   List<bool> showHeatMap = [false, false, false, false];
@@ -78,6 +69,10 @@ class GlobalModel with ChangeNotifier{
   List<List<Marker>> markers = [[],[],[],[]];
   int currentPOI = -1;
 
+  void changeBaseLayer(int provider){
+    baseProvider = provider;
+    notifyListeners();
+  }
   void changeSunset(int i){
     showSunset = i;
     notifyListeners();
@@ -106,9 +101,10 @@ class GlobalModel with ChangeNotifier{
           //print("got point: ${list!.length}");
       list?.forEach((data) =>
         markers[index].add(Marker(
+          width: 48, height: 48,
           point: LatLng(data.latitude ?? 0, data.longitude ?? 0),
           child: GestureDetector(
-            child: Image.network(ConstantString.poi_icon_url[index], width: 36, height: 36,),
+            child: Image.network(ConstantString.poi_icon_url[index], width: 48, height: 48,),
             onTap: () => markerCallBack(data.pid??0)
           )
         ))
@@ -132,9 +128,10 @@ class GlobalModel with ChangeNotifier{
           Api.instance.getMarkers(newCenter.longitude-(radius??0.025), newCenter.latitude-(radius??0.025), newCenter.longitude+(radius??0.025), newCenter.latitude+(radius??0.025), type: i);
           //print("got ${list!.length} point: ${list[0].longitude}");
         list?.forEach((data) => markers[i].add(Marker(
+          width: 48, height: 48,
           point: LatLng(data.latitude??0, data.longitude??0),
           child: GestureDetector(
-            child: Image.network(ConstantString.poi_icon_url[i], width: 36, height: 36,),
+            child: Image.network(ConstantString.poi_icon_url[i], width: 48, height: 48,),
             onTap: () => markerCallBack(data.pid??0)
           )
         )));
@@ -147,7 +144,7 @@ class GlobalModel with ChangeNotifier{
   Future<void> markerCallBack(int pid) async {
     print("Global: currentPoi changed ${pid}");
     currentPOI = pid;
-    changeState(mapState.detail);
+    changeDetail(true);
     itiMapCardData = await Api.instance.getMapPOICard(id: pid);
     notifyListeners();
   }
@@ -179,7 +176,7 @@ class GlobalModel with ChangeNotifier{
         child: GestureDetector(
           child: Image.network(ConstantString.poi_icon_url[4], width: 36, height: 36,),
           onTap: (){
-            changeState(mapState.detail);
+            changeDetail(true);
             currentPOI = iti.pid!.toInt();
           },
         )
@@ -197,7 +194,7 @@ class GlobalModel with ChangeNotifier{
 
     if (this.hasListeners) {
       print("GlobalModel.getpoint : notifyListener");
-      changeState(mapState.view_iti);
+      notifyListeners();
     }
 
   }
