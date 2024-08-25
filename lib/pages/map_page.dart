@@ -38,7 +38,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin{
   late final MapController _mapController;
 
   bool loadEvent = false;
-
+  late LatLng geolocation;
 
 
   @override
@@ -68,9 +68,9 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin{
       }
       if(vm.state==mapState.record){
         Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-        LatLng location = LatLng(position.latitude, position.longitude);
-        Api.instance.pushPoint(vm.rid, location);
-        vm.pushPoint(location);
+        geolocation= LatLng(position.latitude, position.longitude);
+        Api.instance.pushPoint(vm.rid, geolocation);
+        vm.pushPoint(geolocation);
       }
     });
   }
@@ -143,7 +143,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin{
             selector: (context, provider) => provider.recordLine,
             builder: (context, line, child) {
               print("MapPage.recordLayer: animated: ${line[0]}");
-              _animatedMapMove(line[1], 16.5);
+              _animatedMapMove(line[0], 16.5);
               return PolylineLayer(polylines: [planPolyline(line)]);
             }) : const SizedBox()
         ),
@@ -244,7 +244,9 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin{
           child: Padding(
             padding: EdgeInsets.all(64.h),
             child: primaryInkWell(
-              callback: () {
+              callback: () async {
+                Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+                geolocation = LatLng(position.latitude, position.longitude);
                 vm.changeState(mapState.record);
               },
               text: "开始记录",

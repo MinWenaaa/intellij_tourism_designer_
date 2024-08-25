@@ -116,7 +116,7 @@ class GlobalModel with ChangeNotifier{
           lastRefreshCenter.longitude + (radius??0.025), lastRefreshCenter.latitude + (radius??0.025), type: index);
           //print("got point: ${list!.length}");
       list?.forEach((data) =>
-        markers[index].add(Marker(
+        markers[index].add(Marker(width: 108.r, height: 108.r,
           point: LatLng(data.latitude ?? 0, data.longitude ?? 0),
           child: GestureDetector(
             child: Image.network(ConstantString.poi_icon_url[index], width: 108.r, height: 108.r,),
@@ -142,7 +142,7 @@ class GlobalModel with ChangeNotifier{
         List<POIMarkerData>? list = await
           Api.instance.getMarkers(newCenter.longitude-(radius??0.025), newCenter.latitude-(radius??0.025), newCenter.longitude+(radius??0.025), newCenter.latitude+(radius??0.025), type: i);
           //print("got ${list!.length} point: ${list[0].longitude}");
-        list?.forEach((data) => markers[i].add(Marker(
+        list?.forEach((data) => markers[i].add(Marker(width: 108.r, height: 108.r,
           point: LatLng(data.latitude??0, data.longitude??0),
           child: GestureDetector(
             child: Image.network(ConstantString.poi_icon_url[i], width: 36, height: 36,),
@@ -227,7 +227,7 @@ class GlobalModel with ChangeNotifier{
     final futures = <Future<void>>[];
 
     itiList.forEach((iti) {
-      planMarker.add(Marker(
+      planMarker.add(Marker(width: 108.r, height: 108.r,
         point: LatLng(iti.y??31, iti.x??114),
         child: GestureDetector(
           child: Image.network(ConstantString.poi_icon_url[4], width: 36, height: 36,),

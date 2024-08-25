@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_swiper_view/flutter_swiper_view.dart';
@@ -56,6 +54,10 @@ class _PoidetailpageState extends State<Poidetailpage> {
                   _Text(snapshot.data),
                   const SizedBox(height: 30,),
                   Divider(),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 64.w, vertical: 32.h),
+                    child: Text("用户评论", style: AppText.Head1,),
+                  ),
                   _CommentList()
                     ],
                   ),
@@ -176,31 +178,32 @@ class _PoidetailpageState extends State<Poidetailpage> {
 
   Widget _CommentView(CommentData? data){
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+      padding: EdgeInsets.symmetric(horizontal: 36.w, vertical: 24.h),
       child: Column(
         children: [
           Row(
             children: [
               ClipOval(
                 child: Image.network("https://gd-hbimg.huaban.com/0012232547458c7ce4599d0896c6ad5fc2cd8e4f368b7-bK8xeo_fw480webp",
-                    width:30,height:30,
+                    width:92.r ,height:92.r,
                     fit:BoxFit.cover
                 ),
               ),
-              Text("UserName"),
-              Expanded(child: SizedBox()),
-              Text(data?.ctime??"")
+              SizedBox(width: 10.w),
+              Text("UserName", style: AppText.Head2),
+              const Expanded(child: SizedBox()),
+              Text(data?.ctime??"", style: AppText.detail,)
             ],
           ),
-          Text(data?.ccontent??""),
+          Text(data?.ccontent??"", style: AppText.matter),
           SizedBox(
             height:100,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: data!.cphoto?.length??0,
               itemBuilder: (comtext, index){
-                return Image.network(data.cphoto?[index]??"",
-                    fit:BoxFit.cover
+                return Image.network(data.cphoto?[index]??"", width: 480.w, height: 360.h,
+                    fit: BoxFit.cover
                 );
               }
             ),
