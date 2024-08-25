@@ -67,10 +67,13 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin{
   Widget build(BuildContext context) {
     //print(state);
     return Row(children: [
-        _operator(),
+        Flexible(
+          flex: 2,
+          child: _operator()
+        ),
         Flexible(
           flex: 3,
-            child: MapPage()),
+          child: MapPage()),
       ]
     );
   }
@@ -78,35 +81,25 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin{
   Widget _operator(){
     return Selector<PlanEditModel, bool>(
       selector: (context, provider) => provider.isEditing,
-      builder: (context, isEditing, child) => Flexible(
-        flex: 2,
-        child: Stack(
+      builder: (context, isEditing, child) => Stack(
          children:[
            Visibility(
-              visible: !isEditing && !setting,
+              visible: !isEditing,
               child: _createFab()
           ),
            Visibility(
-             visible: isEditing && !setting,
+             visible: isEditing,
              child: ItiEditWidget(callBack: _animatedMapMove)
            ),
-           Visibility(
-               visible: setting,
-               child: const Padding(
-                 padding: EdgeInsets.symmetric(horizontal: 16),
+           Selector<GlobalModel, bool>(
+             selector: (context, provider) => provider.state[0],
+             builder: (context, state, child) => Visibility(
+                 visible: state,
                  child: LayerSettingDemo(),
-               )
-           ),
-            Visibility(
-                visible: setting,
-                child: Align(
-                  alignment: Alignment.topLeft, child: GestureDetector(
-                  child: Icon(Icons.arrow_back_ios), onTap: () => setState(() {
-                  setting = false;
-           }),),)),
+                 )
+             ),
          ]
         )
-      ),
     );
   }
 
@@ -222,6 +215,7 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin{
 
 
   Widget MapPage(){
+    final gm = Provider.of<GlobalModel>(context,listen: false);
     return FlutterMap(
       mapController: _mapController,
       options: initMapOption(),
@@ -252,8 +246,14 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin{
           builder: (context, data, child) {
             print("ItiPage Map: rebuild ${data.length} routes");
             return PolylineLayer(polylines: data);
-
           }
+        ),
+        Selector<PlanEditModel, List<Marker>>(
+            selector: (context, provider) => provider.planMarker,
+            builder: (context, data, child) {
+              print("ItiPage Map: rebuild ${data.length} routes");
+              return MarkerLayer(markers: data,);
+            }
         ),
         Align(
           alignment: Alignment.topRight,
@@ -267,9 +267,7 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin{
               padding: const EdgeInsets.all(8.0),
               child: GestureDetector(
                 child: const Icon(Icons.settings, size: 36, color: AppColors.primary,),
-                onTap: () => setState(() {
-                  setting = true;
-                }),
+                onTap: () => gm.changeSetting(true)
               ),
             )
         ),

@@ -1,9 +1,15 @@
 import 'dart:async';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:intellij_tourism_designer/constants/Markers.dart';
 import 'package:intellij_tourism_designer/constants/constants.dart';
 import 'package:intellij_tourism_designer/constants/theme.dart';
 import 'package:intellij_tourism_designer/models/global_model.dart';
+import 'package:intellij_tourism_designer/models/path_plan_model.dart';
+import 'package:intellij_tourism_designer/models/plan_edit_model.dart';
+import 'package:intellij_tourism_designer/widgets/path_query.dart';
 import 'package:intellij_tourism_designer/widgets/poi_detail_page.dart';
 import 'package:intellij_tourism_designer/widgets/layyer_setting.dart';
 import 'package:latlong2/latlong.dart';
@@ -30,8 +36,9 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin{
   Timer? _timer;
   late final MapController _mapController;
 
-  bool isPlan = false;
+  bool isNavigation = false;
   //0-Map，1-plan
+  MapEvent? _tapMap;
 
   @override
   void initState() {
@@ -47,6 +54,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin{
     super.dispose();
   }
 
+  PathPlanModel pathPlanModel = PathPlanModel();
 
   void _startTimer() {
 
@@ -65,6 +73,8 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin{
 
   MapOptions initMapOption() {
     return MapOptions(
+      onTap: (tapPosition, geolocation) {pathPlanModel.addPoint(geolocation);
+        print("Map tap: add point $geolocation");},
       initialCenter: const LatLng(30.5,114.4),
       initialZoom: 16.5,
       maxZoom: MAXZOOM,
@@ -83,39 +93,83 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin{
 
     final vm = Provider.of<GlobalModel>(context,listen: false);
 
-    return Row(
-      children: [
-        Selector<GlobalModel, List<bool>>(
-          selector: (context, provider) => provider.state,
-          builder: (context, state, child) => Visibility(
-            visible: state[0]||state[1]||isPlan,
-            child: Flexible(
-              flex: 3,
-              child: Stack(
-                children: [
-                  _detailView(state[1]),
-                  Visibility(
-                    visible: state[0],
-                    child: LayerSettingDemo(),
-                  ),
-                ],
-              )
-            ),
-          )
-        ),
-        Flexible(
-          flex: 5,
-          child: Stack(
-            children: [
-              _mapLayers(),
-              _weatherCard(),
-              _searchBar(),
-            ],
-          )
-        ),
-      ],
+    return ChangeNotifierProvider<PathPlanModel>(
+      create: (context) => pathPlanModel,
+      child: Row(
+        children: [
+          Selector<GlobalModel, List<bool>>(
+            selector: (context, provider) => provider.state,
+            builder: (context, state, child) => Visibility(
+              visible: state[0]||state[1]||isNavigation,
+              child: Flexible(
+                flex: 3,
+                child: Stack(
+                  children: [
+                    _detailView(state[1]),
+                    Visibility(
+                      visible: state[0],
+                      child: LayerSettingDemo(),
+                    ),
+                    Visibility(
+                      visible: isNavigation,
+                      child: PathQueryWidget(
+                        back: ()=>setState(() {
+                          isNavigation = false;
+                        }),
+                        move: _animatedMapMove,
+                      ),
+                    )
+                  ],
+                )
+              ),
+            )
+          ),
+          Flexible(
+            flex: 5,
+            child: Stack(
+              children: [
+                _mapLayers(),
+                _weatherCard(),
+                _searchBar(),
+                _Buttons()
+              ],
+            )
+          ),
+        ],
+      ),
     );
   }
+
+  Widget _Buttons(){
+    final vm = Provider.of<GlobalModel>(context,listen: false);
+    return Align(
+        alignment: Alignment.bottomRight,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: SizedBox(
+            height: 128,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                FloatingActionButton(
+                  backgroundColor: AppColors.primary,
+                  child: Text("导航", style: AppText.whiteHead,),
+                  onPressed: () => setState(() {
+                    isNavigation = true;
+                  }),
+                ),
+                FloatingActionButton(
+                    backgroundColor: AppColors.secondary,
+                    child: Icon(Icons.settings, size: 36, color: AppColors.deepSecondary,),
+                    onPressed: () => vm.changeSetting(true)
+                ),
+              ],
+            ),
+          ),
+        )
+    );
+  }
+
 
   Widget _detailView(bool show){
     return Selector<GlobalModel, int>(
@@ -129,8 +183,6 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin{
 
   Widget _mapLayers(){
 
-    final vm = Provider.of<GlobalModel>(context,listen: false);
-
     return FlutterMap(
       mapController: _mapController,
       options: initMapOption(),
@@ -140,16 +192,8 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin{
         ..._HeatMap(),
         ..._Feature(),
         ..._markerLayer(),
-        Align(
-            alignment: Alignment.topLeft,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: GestureDetector(
-                child: Icon(Icons.settings, size: 36, color: AppColors.primary,),
-                onTap: () => vm.changeSetting(true)
-              ),
-            )
-        )
+        _planMarker(),
+        _planRouteLayer()
       ],
     );
   }
@@ -181,6 +225,22 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin{
     builder: (context, data, child) => MarkerLayer(markers: data),
     ),);
   }
+
+  Widget _planRouteLayer(){
+    return Selector<PathPlanModel, List<Polyline>>(
+      selector: (context, provider) => provider.Route,
+      builder: (context, data, child) => PolylineLayer(polylines: data)
+    );
+  }
+
+  Widget _planMarker(){
+    return Selector<PathPlanModel, List<Marker>>(
+        selector: (context, provider) => provider.markers,
+        builder: (context, data, child) => MarkerLayer(markers: data)
+    );
+  }
+
+
 
   Widget _sunSetLayer(){
     return Selector<GlobalModel, int>(

@@ -79,7 +79,7 @@ class ItiCard extends StatelessWidget {
       margin: EdgeInsets.symmetric(vertical: 10, horizontal: 8),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(8)),
-        color: AppColors.secondary
+        color: AppColors.highlight
       ),
       clipBehavior: Clip.hardEdge,
       child: Row(
@@ -125,10 +125,10 @@ class RecordCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity, height: 120,
-      margin: EdgeInsets.symmetric(vertical: 10, horizontal: 8),
-      decoration: BoxDecoration(
+      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+      decoration: const BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(8)),
-          color: AppColors.secondary
+          color: AppColors.highlight
       ),
       clipBehavior: Clip.hardEdge,
       child: Row(
@@ -175,7 +175,7 @@ class ActCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
           color: AppColors.secondary
       ),
-      margin: EdgeInsets.only(left: 28, right: 42, top: 20, bottom: 12),
+      margin: EdgeInsets.only(top: 20, bottom: 12),
       clipBehavior: Clip.hardEdge,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -32,7 +32,8 @@ class ConstantString{
     "https://gd-hbimg.huaban.com/4a9eef2cf5a8b205bd2bea27cd84dcfc94d5462e20ae-E1Hlcp_fw1200webp",
     "https://gd-hbimg.huaban.com/8b01201be4b9085ab7e57dd60834ab7186c75ab01da4-J3cQpJ_fw1200webp",
     "https://gd-hbimg.huaban.com/dc13a2c8b6fbf2a0c56d757eb6f681516b4fbe2520f5-5apI0K_fw1200webp",
-    "https://gd-hbimg.huaban.com/d1e8f2d805c155d794efd267e22eab1dcc7e0cd116a8-tnr1eo_fw1200webp"
+    "https://gd-hbimg.huaban.com/d1e8f2d805c155d794efd267e22eab1dcc7e0cd116a8-tnr1eo_fw1200webp",
+    "https://gd-hbimg.huaban.com/2f6bcc6468b90b81bd252a48e3b881a560077a581a82-K5UJxF_fw1200webp"
   ];
 
   static const List<String> weather_icon = [
@@ -89,6 +90,39 @@ class ConstantString{
     "https://gd-hbimg.huaban.com/b103762e60fcfefcfc95eda005b25a98f551d8921849-WVffFG_fw1200webp",
     "https://gd-hbimg.huaban.com/febee266b7307d6f82879085a1afc7c638843fe8fd9-mCgo9l_fw1200webp",
     "https://gd-hbimg.huaban.com/3a75247eb3d4691af94767a456368750241a2fe1169a-bxFoKQ_fw1200webp",
+  ];
+
+  static const List<String> district = [
+    "江岸区", "江汉区", "硚口区", "汉阳区", "武昌区", "青山区", "洪山区", "东西湖区", "汉南区", "蔡甸区", "江夏区", "黄陂区", "新洲区"
+  ];
+
+  static const List<String> chart = [
+    "https://gd-hbimg.huaban.com/f1094f0a24b5c741fed0b4c039db6cdca0da2f86936a-XhG6my_fw1200webp",
+    "https://gd-hbimg.huaban.com/1cecabb68d153c9d72ec8e58a3586bbd5a770fc0103f8-cZBCRK_fw1200webp",
+    "https://gd-hbimg.huaban.com/b4347a7507dca6ccf52b4eeb2b120284c8c66fee16b3b-eDhCa4",
+  ];
+
+  static const List<String> pie = [
+    "https://gd-hbimg.huaban.com/cf2bf40934840712821925d443ccd819aba110242804-537ILf_fw1200webp",
+    "https://gd-hbimg.huaban.com/c2b33b76fd8e6fec5942f1b487140047e907e39127f5-pFYTKY_fw1200webp",
+    "https://gd-hbimg.huaban.com/b429eb953ec10485e93f6877a704b5a7786bbe9f40fb-qRodM0_fw1200webp",
+    "https://gd-hbimg.huaban.com/8e51e2f8450cb547b88ea5d2137c1c39f04a3ef6423b-UuuZCI_fw1200webp",
+    "https://gd-hbimg.huaban.com/2d8a365ad189c615b0a0ef0303247c0213f6671f3dec-LHyHbj_fw1200webp",
+    "https://gd-hbimg.huaban.com/c3a5a1a6ea22d7afccdd63afb2cb5ec86445cd9b4094-WCS6Ul_fw1200webp",
+    "https://gd-hbimg.huaban.com/350df8d8a4f9c885eb12233d59a645990bb48fb52846-Wf8LQV_fw1200webp",
+  ];
+
+  static const List<String> word = [
+    "https://gd-hbimg.huaban.com/74dc9d5d71f5d7ed4a73a530f302d38ee1cfe0bd98701-5aWDMh_fw1200webp",
+    "https://gd-hbimg.huaban.com/099e8d3dca6f5fa83fa6e2833f3a92b80b21ec3c986e2-xVkXE1_fw1200webp",
+    "https://gd-hbimg.huaban.com/ebe496a03684f5812aace5297762ca1274488497e681d-3Qcn3d_fw1200webp",
+    "https://gd-hbimg.huaban.com/4c3dfb22453106f61e4e630a32061a5dd59d4138f4507-OMEzLa_fw1200webp",
+    "https://gd-hbimg.huaban.com/a741dfc52028e715aec22840dfffd004b48d80deec865-GM0XVo_fw1200webp",
+    "https://gd-hbimg.huaban.com/4e141306c390e099e8aece419c2709b59afc7718acb23-OE7Rxz_fw1200webp",
+    "https://gd-hbimg.huaban.com/467581b10ff3aa8a593a6cc30f968e56172054bbfae9f-V8Al5H_fw1200webp",
+    "https://gd-hbimg.huaban.com/38fce74cc3edc17a1c46632e9e1f9b2f4b06702fea107-Vswgkc_fw1200webp",
+    "https://gd-hbimg.huaban.com/0a383410a1c6481faf8f031db6c2460a3a2c66ffd92f3-ya4IUY_fw1200webp",
+    "https://gd-hbimg.huaban.com/609044f116ecb2fe564cff89d98393bfe2276b2ad29ce-4T5YhR_fw1200webp",
   ];
 }
 

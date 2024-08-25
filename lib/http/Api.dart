@@ -1,5 +1,9 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:intellij_tourism_designer/helpers/geoPolygon.dart';
 import 'package:intellij_tourism_designer/helpers/record_list_data.dart';
 import 'package:intl/intl.dart';
 import 'package:intellij_tourism_designer/constants/constants.dart';
@@ -297,5 +301,11 @@ class Api {
     response.data.forEach((data) => itiList.add(ItiData.fromJson(data)));
     print("Api.getChatLLM: get result $itiList");
     return itiList;
+  }
+
+  Future<List<Features>> readLocalJson() async {
+    final jsonString = await rootBundle.loadString('assets/json/wuhan2.json');
+    GeoPolygon geoPolygon = GeoPolygon.fromJson(jsonDecode(jsonString));
+    return geoPolygon.features;
   }
 }

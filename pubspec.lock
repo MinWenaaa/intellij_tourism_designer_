@@ -65,6 +65,14 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.0.8"
+  dart_earcut:
+    dependency: transitive
+    description:
+      name: dart_earcut
+      sha256: "41b493147e30a051efb2da1e3acb7f38fe0db60afba24ac1ea5684cee272721e"
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "1.1.0"
   data_table_2:
     dependency: "direct main"
     description:
@@ -167,18 +175,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_map
-      sha256: "87cc8349b8fa5dccda5af50018c7374b6645334a0d680931c1fe11bce88fa5bb"
+      sha256: "2ecb34619a4be19df6f40c2f8dce1591675b4eff7a6857bd8f533706977385da"
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "6.2.1"
-  flutter_map_cancellable_tile_provider:
-    dependency: "direct main"
-    description:
-      name: flutter_map_cancellable_tile_provider
-      sha256: ae18dd59faf74f3eca1d28f83e59b47741bbff962e123bbebe9335c04d432f44
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "2.0.0"
+    version: "7.0.2"
   flutter_map_geojson:
     dependency: "direct main"
     description:

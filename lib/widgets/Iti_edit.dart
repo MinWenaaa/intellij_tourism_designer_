@@ -67,17 +67,20 @@ class _ItiEditWidgetState extends State<ItiEditWidget> {
                       List<Widget> widgets = [];
                       curData.forEach((iti) => widgets.add(ActCard(itiData: iti)));
                       print("provider.planData.itidata![provider.curday] changed");
-                      return ListView(
+                      return ReorderableListView(
+                        onReorder: (oldIndex, newIndex) => vm.reorderPlan(oldIndex, newIndex),
                         children: List.generate(widgets.length, (index) => GestureDetector(
+                          key: ValueKey(curData[index]),
                           onTap: () => widget.callBack.call(LatLng(curData[index].y??30, curData[index].x??114), 16.5),
-                          child: widgets[index],
+                          child: ListTile(
+                            title: widgets[index]),
                         ))
                       );
                     }
                   )
-                ) : Center(
+                ) : const Center(
                   child: SizedBox(height: 36, width: 36,
-                  child: const CircularProgressIndicator(color: AppColors.primary,))
+                  child: CircularProgressIndicator(color: AppColors.primary,))
                 )
               )
             ]

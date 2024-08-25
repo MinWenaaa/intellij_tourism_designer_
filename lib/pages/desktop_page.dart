@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intellij_tourism_designer/constants/constants.dart';
 import 'package:intellij_tourism_designer/constants/theme.dart';
-import 'package:intellij_tourism_designer/pages/city_stats.dart';
+import 'package:intellij_tourism_designer/models/state_model.dart';
+import 'package:intellij_tourism_designer/pages/stats_page.dart';
 import 'package:intellij_tourism_designer/pages/plan_page.dart';
 import 'package:intellij_tourism_designer/pages/map_page.dart';
 import 'package:intellij_tourism_designer/pages/personal_page.dart';
@@ -60,7 +61,9 @@ class _DeskTopPageState extends State<DeskTopPage> {
                   PersonalPage(callBack: _onItemTapped,),
                   MapPage(),
                   PlanPage(),
-                  CityStatsPage(),
+                  ChangeNotifierProvider<StateModel>(
+                      create: (context) => StateModel(),
+                      child: CityStatsPage()),
                 ],
               ),
             )

@@ -1,10 +1,14 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:get/get.dart';
 import 'package:intellij_tourism_designer/helpers/Iti_data.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:provider/provider.dart';
 import '../constants/Markers.dart';
+import '../constants/constants.dart';
 import '../http/Api.dart';
+import 'global_model.dart';
 
 class PlanEditModel with ChangeNotifier{
 
@@ -19,6 +23,7 @@ class PlanEditModel with ChangeNotifier{
   PlanData planData = PlanData();
   int curday = 0;
   List<ItiData> curData = [];
+
 
 
   void changeEditState(bool v){
@@ -60,6 +65,7 @@ class PlanEditModel with ChangeNotifier{
       print("create with llm : ${requirement}");
 
       List<List<ItiData>> list = await Api.instance.design_LLM(poinNum: numDays, requirement: requirement)??[[]];
+      getPlanMarker(list);
       plan.itidata = list;
       //curData = plan.itidata![0];
       print("widget data: ${plan}");
@@ -84,6 +90,7 @@ class PlanEditModel with ChangeNotifier{
 
     points = [];
     plan.itidata?.forEach((itis)=> itis.forEach((iti)=> points.add(LatLng(iti.y??30, iti.x??114))));
+    getPlanMarker(plan.itidata!);
     getRoute();
     planData = plan;
     //curData = plan.itidata![0];
@@ -105,6 +112,12 @@ class PlanEditModel with ChangeNotifier{
     planData.itidata![curday].forEach((iti) => curData.add(iti));
     print("PlanEditModel.pushLocation: pushed $itiData");
     notifyListeners();
+    planMarker.add(Marker( width: 48, height: 48,
+      point: LatLng(itiData.y ?? 31, itiData.x ?? 114),
+      child: Image.network(
+        ConstantString.poi_icon_url[4], width: 48, height: 48,
+      ),)
+    );
     points = [];
     planData.itidata?.forEach((itis)=> itis.forEach((iti)=> points.add(LatLng(iti.y??30, iti.x??114))));
     getRoute();
@@ -117,6 +130,17 @@ class PlanEditModel with ChangeNotifier{
     changeCurDay(planData.itidata!.length-1);
   }
 
+  void reorderPlan(int old, int New){
+    ItiData temp = planData.itidata![curday][old];
+    planData.itidata![curday][old] = planData.itidata![curday][New];
+    planData.itidata![curday][New] = temp;
+    curData = [];
+    planData.itidata![curday].forEach((iti) => curData.add(iti));
+    points = [];
+    planData.itidata?.forEach((itis)=> itis.forEach((iti)=> points.add(LatLng(iti.y??30, iti.x??114))));
+    getRoute();
+  }
+
   Future<void> uploadPlan() async {
     print("PanEditModel.uploadPlan: start");
     int id = await Api.instance.push_plan(planData: planData);
@@ -126,8 +150,20 @@ class PlanEditModel with ChangeNotifier{
 
   List<LatLng> points = [];
   List<Polyline> route = [];
+  List<Marker> planMarker = [];
 
 
+  void getPlanMarker(List<List<ItiData>> itiList){
+    itiList.forEach((itis) {
+      itis.forEach((iti) =>
+          planMarker.add(Marker( width: 48, height: 48,
+            point: LatLng(iti.y ?? 31, iti.x ?? 114),
+            child: Image.network(
+              ConstantString.poi_icon_url[4], width: 48, height: 48,
+            ),
+          )));
+    });
+  }
 
 
   Future<void> getRoute() async {
@@ -167,7 +203,6 @@ class PlanEditModel with ChangeNotifier{
       print("PlanEditModel._fetchNavigationData: Navigation response was null.");
     }
   }
-
 
 
 }
