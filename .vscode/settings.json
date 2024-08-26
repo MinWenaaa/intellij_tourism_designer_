@@ -1,9 +1,0 @@
-{
-    "python.defaultInterpreterPath": "C:\\Users\\18327\\.conda\\envs\\designer\\python.exe",
-    "python.autoComplete.extraPaths": [],
-    "python.analysis.extraPaths": [
-        "./models",
-        "./routes",
-        "./intellij_designer"
-    ]
-}

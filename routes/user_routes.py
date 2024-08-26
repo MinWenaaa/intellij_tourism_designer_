@@ -38,10 +38,23 @@ def login():
 
 @user_bp.route("/signup")
 def add_user():
-    user = Users(uname="a", upassword="1234556")
-    db.session.add(user)
-    db.session.commit()
-    return "创建成功"
+    name = request.args.get('name')
+    password = request.args.get('password')
+
+    query = Users.query.filter_by(
+        uname = name).first()
+    
+    print(query)
+    
+    if not query:
+        user = Users(uname=name, upassword=password)
+        db.session.add(user)
+        db.session.commit()
+        result = to_dict(user)
+        return jsonify(success(result))
+    
+    else:
+        return jsonify(data_not_exist())
 
 
 @user_bp.route("/create_record", methods=['POST'])
@@ -98,8 +111,9 @@ def get_record_detail():
         event_list.append(Dict)
     #print(type(result), type(event_list))
 
-    result = {"points": json.loads(record.point),
-              "events": event_list},
+    print(record.point)
+    result = {"points": record.point,
+              "events": event_list}
 
     return jsonify(success(result))
 
@@ -114,21 +128,15 @@ def push_point():
     newPoint = data['point']
 
     record = Record.query.get(id)
-    if not isinstance(record.point, list):
-        if isinstance(record.point, str):
-            record.point = json.loads(record.point)
-        else:
-            record.point = [] 
     
     #print(record.point)
-    record.point.append(newPoint)
-    record.point = json.dumps(record.point)
-    #print(record.point)
+    record.point = record.point + [newPoint]
     try:
         db.session.commit()
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": str(e)}), 500
+    print(record.point)
     return jsonify(success({}))
 
 
